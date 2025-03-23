@@ -1,0 +1,294 @@
+---
+title: Literate programming with Quarto
+---
+
+# Literate Programming {.section}
+
+## Literate Programming^[[https://en.wikipedia.org/wiki/Literate_programming](https://en.wikipedia.org/wiki/Literate_programming)]
+
+> Donald Knuth first defined literate programming as a script, notebook, or computational document that contains an explanation of the program logic in a natural language, interspersed with snippets of macros and source code, which can be compiled and rerun
+
+For example **jupyter notebooks**, **R Markdown** and now **Quarto** are literate programming frameworks to integrate code and text.
+
+![](img/lp.svg){fig-align="center"}
+
+## Literate Programming, the markup language
+
+Beyond the coding part, the markup language is the core element of a literate programming framework. The idea of a markup language is separating the result from what you actually write. Some examples are:
+
+- LaTeX
+- HTML
+- Markdown
+- XML
+- ...
+
+## LaTeX ^[[https://latexbase.com/](https://www.overleaf.com/project/6658541939d95ad2ae3d8c99)]
+
+![](img/latex-example.png)
+
+## HTML
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.
+
+<h2>My Second Heading</h2>
+
+Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. 
+
+Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo 
+
+tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. 
+
+È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. 
+
+Fu reso popolare, negli anni ’60, con la diffusione dei 
+
+fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum
+
+più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.
+
+</body>
+</html>
+```
+
+## Markdown^[[https://markdownlivepreview.com/](https://markdownlivepreview.com/)]
+
+<iframe src="https://markdownlivepreview.com/" height="500" width="1000" style="border: 1px solid #464646;display:block;" allowfullscreen="" allow="autoplay"></iframe>
+
+## Markdown
+
+Markdown is one of the most popular markup languages for several reasons:
+
+- easy to write and read compared to Latex and HTML
+- easy to convert from Markdown to basically every other format using `pandoc`
+- easy to implement new features
+
+## Markdown (source code)
+
+```markdown
+## Markdown
+
+Markdown is one of the most popular markup languages for several reasons:
+
+- easy to write and read compared to Latex and HTML
+- easy to convert from Markdown to basically every other format using `pandoc`
+- easy to implement new features
+```
+. . .
+
+Also the source code can be used, compared to Latex or HTML, to take notes and read. Latex and HTML need to be compiled otherwise they are very hard to read.
+
+## What's wrong about Microsoft Word?
+
+MS Word is a WYSIWYG (*what you see is what you get editor*) that force users to think about formatting, numbering, etc. Markup languages receive the content (plain text) and the rules and creates the final document.
+
+:::: {.columns}
+::: {.column width='50%'}
+
+![](img/wordmeme1.jpg)
+
+:::
+::: {.column width='50%'}
+
+![](img/wordmeme2.jpg)
+
+:::
+::::
+
+## What's wrong about Microsoft Word?
+
+Beyond the pure writing process, there are other aspects related to research data.
+
+::: {.nonincremental}
+- writing math formulas
+- reporting statistics in the text
+- producing tables
+- producing plots
+:::
+
+In MS Word (or similar) we need to produce everything outside and then manually put figures and tables.
+
+## The solution... Quarto
+
+Quarto ([https://quarto.org/](https://quarto.org/)) is the evolution of R Markdown that integrate a programming language with the Markdown markup language. It is very simple but quite powerful.
+
+<center>
+
+:::: {.columns}
+::: {.column width='50%'}
+
+![](https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/rmarkdown.svg){width="300px"}
+
+:::
+::: {.column width='50%'}
+
+![](https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/quarto.svg){width="300px"}
+
+:::
+::::
+
+</center>
+
+## Basic Markdown
+
+Markdown can be learned in minutes. You can go to the following link [https://quarto.org/docs/authoring/markdown-basics.html](https://quarto.org/docs/authoring/markdown-basics.html) and try to understand the syntax.
+
+<iframe src='https://quarto.org/docs/authoring/markdown-basics.html' style='width:1000px; height:500px;'></iframe>
+
+# Let's see a practical example! {.section}
+
+## More about Quarto and R Markdown
+
+The topic is extremely vast. You can do everything in Quarto, a website, thesis, your CV, etc.
+
+- Yihui Xie - R Markdown Cookbook [https://bookdown.org/yihui/rmarkdown-cookbook/](https://bookdown.org/yihui/rmarkdown-cookbook/)
+- Yihui Xie - R Markdown: The Definitive Guide [https://bookdown.org/yihui/rmarkdown/](https://bookdown.org/yihui/rmarkdown/)
+- Quarto documentation [https://quarto.org/docs/guide/](https://quarto.org/docs/guide/)
+
+## Writing papers, `papaja`
+
+![[https://github.com/crsh/papaja](https://github.com/crsh/papaja)](img/papaja.png)
+
+## Writing papers, `apaquarto`
+
+![[https://github.com/wjschne/apaquarto](https://github.com/wjschne/apaquarto)](img/apaquarto.png)
+
+## Collaborating! (TBH not so easy)
+
+The `trackdown` package can be used to collaborate on `Rmd` or `qmd` documents using Google Docs.
+
+![[https://github.com/ClaudioZandonella/trackdown](https://github.com/ClaudioZandonella/trackdown)](img/trackdown.png)
+
+## Collaborating! Overleaf
+
+With Overleaf you can collaborate on `.tex` documents but also `.Rnw` documents. No `Rmd` or `qmd` unfortunately. See an [example document](https://www.overleaf.com/project/6759ac59ce1401a5fd86791b).
+
+![](img/overleaf.png)
+
+# Git and Github {.section}
+
+## Git and Github
+
+- The basic idea is to track changes within a folder, assign a `message` and eventually a `tag` to a specific version obtaining a version hystory. The version history is completely navigable, you can go back to a previous version of the code.
+- The are advanced features like `branches` for creating an independent version of the project to test new features and then `merge` into the main streamline.
+- The entire (local) Git project can be hosted on Github to improve collaboration. Other people or collaborators can `clone` the repository and `push` their changes to the project.
+
+# Veeeery basic Git workflow {.section}
+
+## Veeeery basic Git workflow
+
+After installing Git, you can start a new repository opening a terminal on a folder and typing `git init`. The folder is now a git project you can notice by the hidden `.git` folder.
+
+```bash
+cd ~/some/folder
+git init
+```
+
+Then you can `add` files to the staging area. Basically these files are ready to be `committed` i.e. "written" in the Git history.
+
+```bash
+git add file1.txt
+# git add . # add everyting
+```
+
+Finally you can commit the modified version of the file using `git commit -m message`
+
+```bash
+git commit -m "my first amazing commit"
+```
+
+you can see the Git hystory with all your commits:
+
+```bash
+git log
+```
+
+## Github
+
+Imagine to put everyting into a server with nice viewing options and advanced features. Github is just an hosting service for your `git` folder.
+
+You can create an empty repository on Github named `git-test`. Now my repo has the path `git@github.com:filippogambarota/git-test.git`.
+
+```bash
+git remote add origin git@github.com:filippogambarota/git-test.git
+git push
+```
+
+Now our local repository is linked with the remote repository. Every time we do `git push` our local commits will be uploaded.
+
+If you worked on the repository from another machine or a colleague add some changes, you can do `git pull` and your local machine will be updated.
+
+</br>
+
+The repository `git-test` is online and can be seen here [filippogambarota/git-test](https://github.com/filippogambarota/git-test).
+
+## Github
+
+An now let's see on Github the result:
+
+```{r}
+#| fig-align: center
+#| echo: false
+knitr::include_graphics("img/git-test.png")
+```
+
+## More about Git and Github
+
+There are a lot of resources online:
+
+- The Open Science Manual - Zandonella and Massidda - [Git](https://arca-dpss.github.io/manual-open-science/git-chapter.html) and [Github](https://arca-dpss.github.io/manual-open-science/github-chapter.html) chapters.
+- [https://agripongit.vincenttunru.com/](https://agripongit.vincenttunru.com/)
+- [https://git-scm.com/docs/gittutorial](https://agripongit.vincenttunru.com/)
+
+# Open Science Framework {.section}
+
+## Open Science Framework
+
+> OSF is a free, open platform to support your research and enable collaboration.
+
+Is a great tool to upload and share materials with others and collaborate on a project. Similarly to Github you can track the changes made to a project.
+
+The great addition is having a DOI thus the project is persistently online and can be cited.
+
+It is now common practice to create a OSF project supporting a research paper and put the link within the paper containing supplementary materials, raw data, scripts etc.
+
+![](img/osf.jpeg)
+
+## Open Science Framework
+
+It's very easy to create a new project, then you simply need to add files and share it.
+
+![](img/osf-test.png)
+
+The project can be accessed here (depending on the visibility) [https://osf.io/yf9tg/](https://osf.io/yf9tg/).
+
+## Open Science Framework
+
+### OSF and Github
+
+An interesting feature is linking a Github repository to OSF. Now all changes made on Github (easier to manage) are mirrored into OSF. You can easily work in Github for the coding part and use OSF to upload other data or information and to assign a DOI to the project.
+
+### Preprints
+
+OSF is also linked to a popular service for preprints called PsyArXiv [https://psyarxiv.com/](https://psyarxiv.com/) thus you can link a preprint to an OSF project.
+
+## More on OSF
+
+- https://help.osf.io/article/342-getting-started-on-the-osf
+- https://arca-dpss.github.io/manual-open-science/osf-chapter.html
+
+## More on reproducibility
+
+In general, I highly suggest the online book **The Open Science Manual** [https://arca-dpss.github.io/manual-open-science/](https://arca-dpss.github.io/manual-open-science/) written by my friend **Claudio Zandonella** and **Davide Massidda** where these and other topics are explained in details:
+
+<center>
+
+<iframe src='https://arca-dpss.github.io/manual-open-science/' style='width:1000px; height:500px;'></iframe>
+
+</center>

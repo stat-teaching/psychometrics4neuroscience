@@ -1,0 +1,56 @@
+---
+title: Introduzione al corso
+---
+
+## About me
+
+- Sono uno Psicologo Clinico e assegnista di ricerca in Psicometria al Dipartimento di Psicologia dello Sviluppo e della Socializzazione
+- Mi occupo di **analisi dei dati in Psicologia**, in particolare: meta-analysis, simulazioni monte carlo per la power analysis, replicabilità e multiverse analysis
+
+## Ricevimento
+
+- Lavoro al Dipartimento di Psicologia dello Sviluppo e della Socializzazione, Via Venezia 16, 35131 (edificio CLA). Il mio ufficio è 05-025 (5° piano).
+- Il mio orario di ricevimento è Venerdì dalle 10:00 alle 12:00. Possiamo vederci sia in presenza che su Zoom. Potete prenotarvi qui [https://calendar.app.google/Go7B6GBKBeRPCpU27](https://calendar.app.google/Go7B6GBKBeRPCpU27).
+- Per ogni cosa potete scrivermi a [filippo.gambarota@unipd.it](mailto:filippo.gambarota@unipd.it)
+
+## Argomenti
+
+- **Open science tools**: R, Quarto, Git e Github
+- **Replicabilità e riproducibilità** nelle neuroscienze cognitive
+- **Meta-analysis**
+- **Generalized Linear Mixed-Effects models**
+- **Simulazioni Monte Carlo**
+
+## Organizzazione delle lezioni
+
+Cosa faremo?
+
+- Presentazione dei concetti teorici principali
+- Esempi con dati reali e simulati
+- Intepretazione dei risultati in ottica applicativa
+- Tanto codice
+
+Cosa non faremo?
+
+- dimostrazioni
+- molto focus sulle formule
+
+## Materiale
+
+Per il materiale, trovate tutto su Github [https://github.com/stat-teaching/psychometrics4neuroscience](https://github.com/stat-teaching/psychometrics4neuroscience). Trovate i vari link anche su Moodle ma Github è molto più comodo per tenere e organizzare tutto (lo vedremo nel dettaglio).
+
+La repository contiene il codice, le slide (sia in formato `.qmd` che compilate), i dataset e tutto il resto del materiale.
+
+## Esami
+
+Fate sempre riferimento alla pagina ufficiale [https://www.stat.unipd.it/studenti-iscritti/calendario-appelli-desame](https://www.stat.unipd.it/studenti-iscritti/calendario-appelli-desame).
+
+- 16/06/2025 aula SC60 10:30-12:30
+- 07/07/2025 aula SC60 10:30-12:30
+- 01/09/2025 aula SC60 14:30-16:30
+
+## Lavori di gruppo
+
+Parleremo dei lavori di gruppo assieme al Prof. Maffei il **28/04/2025** (salvo modifiche) dove vi presenteremo i lavori nel dettaglio.
+
+In breve, vi sarà richiesto partendo da un dataset e/o un problema di ricerca, analizzare e/o simulare dei dati, produrre un report in Quarto e fare una presentazione del lavoro fatto.

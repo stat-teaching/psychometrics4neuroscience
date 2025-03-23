@@ -1,0 +1,80 @@
+---
+title: "Getting started"
+---
+
+There are few tools that we need to install and configure for the course.
+
+- **R/Rstudio (or another IDE)**
+- **Quarto**
+- **Git/Github**
+
+## Quarto
+
+Quarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here [https://quarto.org/docs/get-started/](https://quarto.org/docs/get-started/).
+
+To check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:
+
+```bash
+quarto --version
+```
+
+This should return the version of Quarto without errors or strange messages.
+
+## Git/Github
+
+Git is a version-control system that you can easily install from here [https://git-scm.com/](https://git-scm.com/). You can use Git from the command line depending on your operating system or you can use the Github Desktop software [https://desktop.github.com/download/](https://desktop.github.com/download/) to work with a GUI.
+
+Github is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:
+
+- create an account [https://github.com/](https://github.com/)
+- configure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool [https://cli.github.com/](https://cli.github.com/) where you can configure your account using SSH very easily. The instructions can be found here [https://cli.github.com/manual/gh_auth_login](https://cli.github.com/manual/gh_auth_login) and we need to use the `gh auth login` command.
+
+Also here you can check the Git installation typing this command in the terminal:
+
+```bash
+git --version
+```
+
+## Cloning the repository
+
+Now that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:
+
+```bash
+git clone git@github.com:stat-teaching/psychometrics4neuroscience.git
+```
+Or manually (but there will not be the Git-Github link) downloading the zip folder from [https://github.com/stat-teaching/psychometrics4neuroscience](https://github.com/stat-teaching/psychometrics4neuroscience).
+
+If you cloned the repository you can navigate into the folder and type:
+
+```bash
+git status
+```
+
+This should return some info or messages not errors or messages related to non being in a Git repository.
+
+Now you have the repository of the course. I will update this repository during the course with new slides and materials. 
+
+Do not modify the files and everytime you start working or using this repository run:
+
+```bash
+git pull
+```
+
+And your local repository will be updated.
+
+## Creating your repository
+
+For the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:
+
+- create an R Project
+- create an R/ folder
+- init the git repository with the command `git init`
+- add all files with `git add .`
+- commit the changes with `git commit -m "message"`
+
+Then you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run `git remote add origin <ssh link>`. Then run `git push`. In this way your local and online Git repositories will be linked.
+
+Check these other resources to learn Git:
+
+- [https://rogerdudler.github.io/git-guide/](https://rogerdudler.github.io/git-guide/)
+- [https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/](https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/)

@@ -1,0 +1,580 @@
+---
+title: Modern R
+incremental: true
+from: markdown+emoji
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = FALSE,
+                      dev = "svg",
+                      fig.width = 7,
+                      fig.asp = 0.618,
+                      fig.align = "center",
+                      comment = "#>")
+```
+
+```{r}
+#| label: packages
+#| include: false
+library(ggplot2)
+library(viridis)
+library(kableExtra)
+```
+
+```{r}
+#| label: ggplot2
+#| include: false
+mtheme <- function(size = 15){
+  theme_minimal(base_size = size, 
+                base_family = "sans") +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5),
+        strip.text = element_text(face = "bold"),
+        panel.grid.minor = element_blank())
+}
+
+theme_set(mtheme())
+
+# palettes
+options(ggplot2.continuous.colour="viridis")
+options(ggplot2.continuous.fill = "viridis")
+scale_colour_discrete <- scale_colour_viridis_d
+scale_fill_discrete <- scale_fill_viridis_d
+```
+
+# Reproducibility starter pack {.section}
+ 
+## Reproducibility starter pack :construction_worker:
+
+- A general purpose (or flexible enough) [programming language]{.imp} such as `r icons::fontawesome("r-project")` or `r icons::fontawesome("python")`
+- A [literate programming]{.imp} framework to integrate code and text
+- A [version control system]{.imp} to track projects
+- An [online repository]{.imp} for future-proof sharing
+
+## Disclaimers
+
+<center> **The best tool is the tool that does the job.** </center>
+
+- But there are some features that makes a tool better in terms of reproducibility, reducing the probability of errors and improve your coding skills.
+- There is nothing bad about using SPSS, Jasp or Jamovi. The real problem is that using a point-and-click software reduce the reproducibility. If you can use the scripting part, whatever the tool.
+- A general suggestion is to invest some of your time learning/improving a programming language for data pre-processing, analysis and reporting (tables, figures, etc.)
+
+# R Programming Language {.section}
+
+## R
+
+> R is a free software environment for statistical computing and graphics.
+
+- (TBH) It is not a proper general purpose programming language (such as C++ or Python).
+- R *packages* allow to do almost everything (file manager, image processing, webscraping, sending emails, coffee :smile:, etc.)
+- It is free and open-source
+- The community is wide, active thus solving problems is very easy
+- Force you to learn scripting but the are R-based GUI software (e.g., JAMOVI)
+
+## R - CRAN
+
+The CRAN is the repository where package developers upload their packages and other users can install them.
+
+<center>
+
+```{r}
+#| echo: false
+knitr::include_url("https://cran.r-project.org/web/packages/")
+```
+
+</center>
+
+. . .
+
+> As the saying goes: if something exist, there is an R package for doing it! :smile:
+
+## R - PYPL Index
+
+```{r}
+#| echo: false
+#| output: asis
+#| fig-cap: "Source: [https://pypl.github.io/PYPL.html](https://pypl.github.io/PYPL.html)"
+
+knitr::include_graphics("img/r-pypl.png")
+```
+
+## R - PYPL Index
+
+The popularity is on a different scale compared to Python but still increasing:
+
+![Source: [https://pypl.github.io/PYPL.html](https://pypl.github.io/PYPL.html)
+](img/pypl.svg){height=500}
+
+## R or Python?
+
+- Python is a very general-purpose language more powerful for general tasks.
+- I find python very useful for programming experiments, image processing, automatizing tasks and interacting with the operating system
+- R is still a little bit superior in terms of data manipulation and visualization. Python is faster and more powerful for complex models (e.g., machine learning, etc.)
+
+## Positron
+
+Sometimes Python is not so easy to setup. In addition is not as interactive as R (i.e., line by line evaluation). Posit (ex. R Studio) recently created [Positron](https://positron.posit.co/) that is a new IDE working with R and Python at the same way.
+
+![](https://positron.posit.co/images/astropy.png){fig-align="center"}
+
+## Modern R
+
+- For purist programmers, R is weird: arrays starts with 1, object-oriented programming is hidden, a lot of built-in vectorized functions, etc. The [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf) book is really funny showing the strange R-stuff.
+- Despite the weirdness, R is widely used because it is intuitive (for non-programmers) and made for statistics and data manipulation
+- R is a language and as in spoken languages you can elegant, rude, ambiguous, funny, etc.
+- There are some tips to improve the readability and reproducibility of your code
+
+## Functional Programming
+
+> In computer science, functional programming is a programming paradigm where programs are constructed by applying and composing functions.
+
+- Despite R can be used both with an **imperative** and **object-oriented approach**, the functional side is quite powerful.
+- The basic idea is to decompose your code into small, testable and re-usable functions
+
+## Functional Programming, example...
+
+We have a dataset (`mtcars`) and we want to calculate the mean, median, standard deviation, minimum and maximum of each column and store the result in a table.
+
+```{r}
+#| echo: true
+head(mtcars)
+str(mtcars)
+```
+
+## Functional Programming
+
+The standard (~imperative) option is using a `for` loop, iterating through columns, calculate the values and store into another data structure.
+
+```{r}
+#| echo: true
+ncols <- ncol(mtcars)
+means <- medians <- mins <- maxs <- rep(0, ncols)
+
+for(i in 1:ncols){
+  means[i] <- mean(mtcars[[i]])
+  medians[i] <- median(mtcars[[i]])
+  mins[i] <- min(mtcars[[i]])
+  maxs[i] <- max(mtcars[[i]])
+}
+
+results <- data.frame(means, medians, mins, maxs)
+results$col <- names(mtcars)
+
+results
+```
+
+## Functional Programming
+
+The main idea is to decompose the problem writing a function and loop over the columns of the dataframe:
+
+```{r}
+#| echo: true
+summ <- function(x){
+  data.frame(means = mean(x), 
+             medians = median(x), 
+             mins = min(x), 
+             maxs = max(x))
+}
+ncols <- ncol(mtcars)
+dfs <- vector(mode = "list", length = ncols)
+
+for(i in 1:ncols){
+  dfs[[i]] <- summ(mtcars[[i]])
+}
+```
+
+## Functional Programming
+
+```{r}
+#| echo: true
+
+results <- do.call(rbind, dfs)
+results
+```
+
+## Functional Programming
+
+The actual real functional way require using the built-in iteration tools `*apply`. In this way you avoid writing the verbose `for` loop.
+
+```{r}
+#| echo: true
+results <- lapply(mtcars, summ)
+results <- do.call(rbind, results)
+results
+```
+
+## Functional Programming, `*apply`
+
+- The `*apply` family is one of the best tool in R. The idea is pretty simple: apply a function to each element of a list. 
+- The powerful side is that in R everything can be considered as a list. A vector is a list of single elements, a dataframe is a list of columns etc.
+- Internally, R is still using a `for` loop but the verbose part (preallocation, choosing the iterator, indexing) is encapsulated into the `*apply` function.
+
+. . .
+
+```{r}
+#| eval: false
+#| echo: true
+means <- rep(0, ncol(mtcars))
+for(i in 1:length(means)){
+  means[i] <- mean(mtcars[[i]])
+}
+
+# the same with sapply
+means <- sapply(mtcars, mean)
+```
+
+## `for` loops are bad?
+
+`for` loops are the core of each operation in R (and in every programming language). For complex operation thery are more readable and effective compared to `*apply`. In R we need extra care for writing efficent `for` loops.
+
+Extremely slow, no preallocation:
+
+```{r}
+#| eval: false
+#| echo: true
+res <- c()
+for(i in 1:1000){
+  # do something
+  res[i] <- x
+}
+```
+
+Very fast, no difference compared to `*apply`
+
+```{r}
+#| eval: false
+res <- rep(0, 1000)
+for(i in 1:length(res)){
+  # do something
+  res[i] <- x
+}
+```
+
+## With `*apply` you can do crazy stuff!
+
+```{r}
+#| echo: true
+funs <- list(mean = mean, sd = sd, min = min, max = max, median = median)
+sapply(funs, function(f) lapply(mtcars, function(x) f(x)))
+```
+
+
+## Why functional programming?
+
+- We can write less and reusable code that can be shared and used in multiple projects
+- The scripts are more compact, easy to modify and less error prone (imagine that you want to improve the `summ` function, you only need to change it once instead of touching the `for` loop)
+- Functions can be easily and consistently documented (see [roxygen](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) documentation) improving the reproducibility and readability of your code
+
+## More about functional programming in R
+
+- Advanced R by Hadley Wickham, section on Functional Programming ([https://adv-r.hadley.nz/fp.html](https://adv-r.hadley.nz/fp.html))
+- Hands-On Programming with R by Garrett Grolemund [https://rstudio-education.github.io/hopr/](https://rstudio-education.github.io/hopr/)
+- Hadley Wickham: [The Joy of Functional Programming (for Data Science)](https://www.youtube.com/watch?v=bzUmK0Y07ck)
+- [Bruno Rodrigues Youtube Channel](https://www.youtube.com/@brodriguesco/videos)
+
+. . .
+
+<center>
+
+::: {layout-ncol=2}
+![Advanced R](img/advanced-r.jpg){width=200 fig-align="center"}
+![Hands-on Programming With R](img/hand-on-programming.jpeg){width=200 fig-align="center"}
+:::
+
+</center>
+
+## A more advanced approach, R packages
+
+R packages are not only on CRAN. You can (pretty) easily create a package and put it on Github. For example, if you keep using some functions in your project, write a general version and put them into a package.
+
+![[github.com/filippogambarota/filor](https://github.com/filippogambarota/filor)](img/filor.png)
+
+## A more advanced approach, R packages
+
+If your functions are project-specific you can define them into your scripts or write some R scripts only with functions and `source()` them into the global environment.
+
+```
+project/
+├─ R/
+│  ├─ utils.R
+├─ analysis.R
+```
+
+And inside `utils.R` you have some functions:
+
+```{r}
+#| eval: false
+#| echo: true
+
+myfun <- function(x) {
+  # something
+}
+```
+
+Then you can load the function using `source("R/utils.R)` at the beginning of `analysis.R`:
+
+```{r}
+#| eval: false
+#| echo: true
+source("R/utils.R")
+```
+
+## Analysis project as R package
+
+The R project structure is really interesting to organize a data analysis pipeline. In fact, you can use the project structure. @Vuorre2021-dr and @Marwick2018-zm describe in details the idea.
+
+The general approach is:
+
+1. Create an R Studio project `.Rproj` file
+2. Create your directories, put scripts, data, etc.
+3. Create an `R/` folder and put your scripts with functions
+4. Create a `DESCRIPTION` file using `usethis::use_description(check_name = FALSE)`
+5. Then you can load your functions without source and with `devtools::load_all()` (same as `library()`)
+
+# Let's see an example!
+
+## The Tidy approach
+
+The `tidyverse` is a series of high-quality R packages to do modern data science:
+
+::: {.nonincremental}
+- data manipulation (`dplyr`, `tidyr`)
+- plotting (`ggplot2`)
+- reporting (`rmarkdown`)
+- string manipulation (`stringr`)
+- functionals (`purrr`)
+- ...
+:::
+
+![](https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/tidyverse.svg){fig-align="center" width=400}
+
+## The Tidy approach - Pipes
+
+One of the great improvement from the `tidyverse` is the usage of the pipe `%>%` now introduced in base R as `|>`. You will se these symbols a lot when looking at modern R code.
+
+. . .
+
+The idea is very simple, the standard pattern to apply a function is `function(argument)`. The pipe can reverse the pattern as `argument |> function()`. Normally when we apply multiple functions progressively the pattern is this:
+
+. . .
+
+```{r}
+#| eval: false
+#| echo: true
+x <- rnorm(100)
+x <- round(x, 3)
+x <- abs(x)
+x <- as.character(x)
+```
+
+## The Tidy approach - Pipes
+
+When using the pipe, we remove the redundand assignment `<-` pattern:
+
+```{r}
+#| eval: false
+#| echo: true
+x <- rnorm(100)
+x |>
+  round(3) |>
+  abs() |>
+  as.character()
+```
+
+The pipe can be read as *"from **x** apply `round`, then `abs`, etc.".* The first argument of the piped function is assumed to be the result of the previus call.
+
+## More about the Tidy approach
+
+The `tidy` approach contains tons of functions and packages. The overall philosophy can be deepen in the R for Data Science book.
+
+![[https://r4ds.hadley.nz/](https://r4ds.hadley.nz/)](img/r4ds.jpg)
+
+## ggplot2
+
+Only an quick mention to `ggplot2` [https://ggplot2-book.org/](https://ggplot2-book.org/) (part of the `tidyverse`) that is an amazing package for data visualization following the *piping* and *tidy* approach. Is the implementation of the **grammar of graphics** idea.
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(tidyverse)
+
+iris |>
+  mutate(wi = runif(n())) |>
+  ggplot(aes(x = Sepal.Length, y = Petal.Width, color = Species)) +
+  geom_point(aes(size = wi)) +
+  geom_smooth(method = "lm", se = FALSE)
+  guides(size = "none") +
+  theme_minimal(15)
+```
+
+## ggplot2
+
+```{r}
+#| echo: false
+library(tidyverse)
+iris |>
+  mutate(wi = runif(n())) |>
+  ggplot(aes(x = Sepal.Length, y = Petal.Width, color = Species)) +
+  geom_point(aes(size = wi)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  guides(size = "none") +
+  theme_minimal(15)
+```
+
+## Base R version
+
+More verbose, more hard coding, more steps and intermediate objects.
+
+```{r}
+#| eval: false
+#| echo: true
+iris_l <- split(iris, iris$Species)
+lms <- lapply(iris_l, function(x) lm(Petal.Width ~ Sepal.Length, data = x))
+
+plot(iris$Sepal.Length, 
+     iris$Petal.Width, 
+     col = as.numeric(iris$Species), pch = 19)
+
+abline(lms[[1]], col = 1, lwd = 2)
+abline(lms[[2]], col = 2, lwd = 2)
+abline(lms[[3]], col = 3, lwd = 2)
+
+legend("topleft", legend = levels(iris$Species), fill = 1:3)
+```
+
+## Base R version
+
+```{r}
+#| echo: false
+
+iris_l <- split(iris, iris$Species)
+lms <- lapply(iris_l, function(x) lm(Petal.Width ~ Sepal.Length, data = x))
+
+plot(iris$Sepal.Length, 
+     iris$Petal.Width, 
+     col = as.numeric(iris$Species), pch = 19)
+
+abline(lms[[1]], col = 1, lwd = 2)
+abline(lms[[2]], col = 2, lwd = 2)
+abline(lms[[3]], col = 3, lwd = 2)
+
+legend("topleft", legend = levels(iris$Species), fill = 1:3)
+```
+
+## More on ggplot2
+
+The `ggplot2` book [https://ggplot2-book.org/](https://ggplot2-book.org/) is a great resource to produce high-quality, publication ready plots. Clearly, the advantage of producing the figures entirely writing code are immense in terms of reusability and reproducibility.
+
+::: {layout-ncol=2}
+
+![](https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/ggplot2.svg){width=300 fig-align="center"}
+
+![](img/ggplot2.jpg){width=300 fig-align="center"}
+:::
+
+## Something crazy in the `tidyverse`
+
+Without going into details, I want to show you a very interesting approach that you can do with the `tidyverse` functions.
+
+Let's assume you want to do a leave-one-out analysis thus fitting the same models on a dataset, removing one observation at time.
+
+You can do it in base R with a loop or other methods, but the see so-called *many-models* approach. See [https://r4ds.had.co.nz/many-models.html](https://r4ds.had.co.nz/many-models.html) and [https://www.youtube.com/watch?v=rz3_FDVt9eg](https://www.youtube.com/watch?v=rz3_FDVt9eg).
+
+## Something crazy in the `tidyverse`
+
+Let's define some functions:
+
+```{r}
+#| echo: true
+leave1out <- function(data){
+  idx <- 1:nrow(data)
+  ll <- lapply(idx, function(i) data[-i, ])
+  names(ll) <- paste0("no", idx)
+  c(no0 = list(data), ll)
+}
+
+fit_model <- function(data){
+  lm(Sepal.Length ~ Petal.Width, data = data)
+}
+```
+
+## Something crazy in the `tidyverse`
+
+```{r}
+#| echo: true
+dat <- tibble(data = leave1out(iris[1:20, ]))
+dat |> 
+  mutate(removed = names(data)) |> 
+  head()
+```
+
+## Something crazy in the `tidyverse`
+
+```{r}
+dat |> 
+  mutate(removed = names(data)) |> 
+  mutate(fit = map(data, fit_model),
+         results = map(fit, broom::tidy)) |> 
+  head()
+```
+
+## Something crazy in the `tidyverse`
+
+```{r}
+#| eval: false
+#| echo: true
+dat |> 
+  mutate(removed = names(data)) |> 
+  mutate(fit = map(data, fit_model),
+         results = map(fit, broom::tidy)) |> 
+  unnest(results) |> 
+  ggplot(aes(x = removed, y = estimate)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~term, scales = "free")
+```
+
+## Something crazy in the `tidyverse`
+
+```{r}
+#| echo: false
+dat |> 
+  mutate(removed = names(data)) |> 
+  mutate(fit = map(data, fit_model),
+         results = map(fit, broom::tidy)) |> 
+  unnest(results) |> 
+  ggplot(aes(x = parse_number(removed), y = estimate)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~term, scales = "free") +
+  xlab("Removed")
+```
+
+## Quick tables
+
+```{r}
+gtsummary::tbl_summary(iris)
+```
+
+## Quick tables from models
+
+```{r}
+#| echo: true
+
+fit <- lm(Sepal.Length ~ Petal.Width, data = iris)
+sjPlot::tab_model(fit)
+```
+
+## Quick tables from models
+
+```{r}
+#| echo: true
+
+gtsummary::tbl_regression(fit)
+```
+
+## References {.refs}
+

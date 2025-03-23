@@ -1,0 +1,90 @@
+/*-- scss:defaults --*/
+
+$base-color: #191919;
+$link-color: #FA3F9F;
+
+$p-font-size: 0.75em !default;
+$h1-font-size: 1.5em !default;
+$h2-font-size: 1.3em !default;
+$h3-font-size: 1em !default;
+$h4-font-size: 1em !default;
+$refs-font-size: 0.5em!default;
+$toc-font-size: 0.7em!default;
+$cap-font-size: 0.6em!default;
+$quest-font-size: 1.2em !default;
+
+/*-- scss:rules --*/
+
+.reveal a {
+    color: $link-color;
+}
+
+.reveal h1 {
+    font-size: $h1-font-size;
+}
+
+.title-slide h1 {
+    font-size: $h1-font-size!important;
+}
+
+h1:not(.title):not(.question)::before {
+    content: "> ";
+}
+
+.reveal h2 {
+    font-size: $h2-font-size;
+}
+
+.reveal h3 {
+    font-size: $h3-font-size;
+}
+
+.reveal h4 {
+    font-size: $h4-font-size;
+}
+
+summary {
+    font-size: 60%;
+}
+
+.reveal p {
+    font-size: $p-font-size;
+}
+
+.reveal .slide-menu-button {
+    display: none!important;
+}
+  
+.reveal .progress {
+    display: none!important;
+}
+
+/* REFERENCES */
+
+.refs h2 {
+    font-size: $h2-font-size!important;
+}
+  
+.refs {
+    font-size: 100%!important;
+}
+  
+.csl-entry {
+    font-size: $refs-font-size;
+}
+
+ul {
+    font-size: $p-font-size;
+}
+
+ol {
+    font-size: $p-font-size;
+}
+
+.question h1 {
+    color: #1f618d!important;
+}
+
+.question h1::before {
+    content: ""!important;
+}

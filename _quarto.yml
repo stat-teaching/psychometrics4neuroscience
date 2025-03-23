@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+  # post-render: 
+  #  - quarto-scripts/qmd2R.R
+
+website:
+  title: "Psychometrics4Neuroscience"
+  navbar:
+    left:
+      - href: index.qmd
+        text: home
+      - href: slides.qmd
+        text: slides
+    tools:
+      - icon: github
+        href: https://github.com/stat-teaching/psychometrics4neuroscience
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    
+execute:
+  warning: false
+  message: false
+  freeze: auto  # re-render only when source changes
+  
+author: Filippo Gambarota

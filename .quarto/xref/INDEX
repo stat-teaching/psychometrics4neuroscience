@@ -1,0 +1,28 @@
+{
+  "about.qmd": {
+    "about.html": "94c2a65b"
+  },
+  "getting-started.qmd": {
+    "getting-started.html": "5dcdfd5d"
+  },
+  "index.qmd": {
+    "index.html": "69afdb29"
+  },
+  "slides/00-course-intro/00-course-intro.qmd": {
+    "00-course-intro.tex": "eb552e42",
+    "00-course-intro.html": "b957611f"
+  },
+  "slides/01-psychological-research/01-psychological-research.qmd": {
+    "01-psychological-research.tex": "10134602",
+    "01-psychological-research.html": "a368c0cd"
+  },
+  "slides.qmd": {
+    "slides.html": "ac36e117"
+  },
+  "slides/03-modern-r/03-modern-r.qmd": {
+    "03-modern-r.html": "5cc85ca5"
+  },
+  "slides/04-quarto/04-quarto.qmd": {
+    "04-quarto.html": "cad75f2d"
+  }
+}

@@ -1,0 +1,7 @@
+---
+listing:
+  contents: slides
+  type: table
+  sort: filename
+  fields: [title, script]
+---
