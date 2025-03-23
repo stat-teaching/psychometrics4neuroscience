@@ -1,0 +1,674 @@
+[
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-1",
+    "href": "slides/04-quarto/04-quarto.html#literate-programming-1",
+    "title": "Literate programming with Quarto",
+    "section": "Literate Programming1",
+    "text": "Literate Programming1\n\nDonald Knuth first defined literate programming as a script, notebook, or computational document that contains an explanation of the program logic in a natural language, interspersed with snippets of macros and source code, which can be compiled and rerun\n\nFor example jupyter notebooks, R Markdown and now Quarto are literate programming frameworks to integrate code and text.\n\n\n\n\n\nhttps://en.wikipedia.org/wiki/Literate_programming"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
+    "href": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
+    "title": "Literate programming with Quarto",
+    "section": "Literate Programming, the markup language",
+    "text": "Literate Programming, the markup language\nBeyond the coding part, the markup language is the core element of a literate programming framework. The idea of a markup language is separating the result from what you actually write. Some examples are:\n\nLaTeX\nHTML\nMarkdown\nXML\n…"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#latex",
+    "href": "slides/04-quarto/04-quarto.html#latex",
+    "title": "Literate programming with Quarto",
+    "section": "LaTeX 1",
+    "text": "LaTeX 1\n\nhttps://latexbase.com/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#html",
+    "href": "slides/04-quarto/04-quarto.html#html",
+    "title": "Literate programming with Quarto",
+    "section": "HTML",
+    "text": "HTML\n&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;body&gt;\n\n&lt;h1&gt;My First Heading&lt;/h1&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;h2&gt;My Second Heading&lt;/h2&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. \n\nLorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo \n\ntipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. \n\nÈ sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. \n\nFu reso popolare, negli anni ’60, con la diffusione dei \n\nfogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum\n\npiù recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;/body&gt;\n&lt;/html&gt;"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown",
+    "href": "slides/04-quarto/04-quarto.html#markdown",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown1",
+    "text": "Markdown1\n\n\nhttps://markdownlivepreview.com/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown-1",
+    "href": "slides/04-quarto/04-quarto.html#markdown-1",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown",
+    "text": "Markdown\nMarkdown is one of the most popular markup languages for several reasons:\n\neasy to write and read compared to Latex and HTML\neasy to convert from Markdown to basically every other format using pandoc\neasy to implement new features"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown-source-code",
+    "href": "slides/04-quarto/04-quarto.html#markdown-source-code",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown (source code)",
+    "text": "Markdown (source code)\n## Markdown\n\nMarkdown is one of the most popular markup languages for several reasons:\n\n- easy to write and read compared to Latex and HTML\n- easy to convert from Markdown to basically every other format using `pandoc`\n- easy to implement new features\n\nAlso the source code can be used, compared to Latex or HTML, to take notes and read. Latex and HTML need to be compiled otherwise they are very hard to read."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
+    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
+    "title": "Literate programming with Quarto",
+    "section": "What’s wrong about Microsoft Word?",
+    "text": "What’s wrong about Microsoft Word?\nMS Word is a WYSIWYG (what you see is what you get editor) that force users to think about formatting, numbering, etc. Markup languages receive the content (plain text) and the rules and creates the final document."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
+    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
+    "title": "Literate programming with Quarto",
+    "section": "What’s wrong about Microsoft Word?",
+    "text": "What’s wrong about Microsoft Word?\nBeyond the pure writing process, there are other aspects related to research data.\n\n\nwriting math formulas\nreporting statistics in the text\nproducing tables\nproducing plots\n\n\nIn MS Word (or similar) we need to produce everything outside and then manually put figures and tables."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#the-solution-quarto",
+    "href": "slides/04-quarto/04-quarto.html#the-solution-quarto",
+    "title": "Literate programming with Quarto",
+    "section": "The solution… Quarto",
+    "text": "The solution… Quarto\nQuarto (https://quarto.org/) is the evolution of R Markdown that integrate a programming language with the Markdown markup language. It is very simple but quite powerful."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#basic-markdown",
+    "href": "slides/04-quarto/04-quarto.html#basic-markdown",
+    "title": "Literate programming with Quarto",
+    "section": "Basic Markdown",
+    "text": "Basic Markdown\nMarkdown can be learned in minutes. You can go to the following link https://quarto.org/docs/authoring/markdown-basics.html and try to understand the syntax."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
+    "href": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
+    "title": "Literate programming with Quarto",
+    "section": "More about Quarto and R Markdown",
+    "text": "More about Quarto and R Markdown\nThe topic is extremely vast. You can do everything in Quarto, a website, thesis, your CV, etc.\n\nYihui Xie - R Markdown Cookbook https://bookdown.org/yihui/rmarkdown-cookbook/\nYihui Xie - R Markdown: The Definitive Guide https://bookdown.org/yihui/rmarkdown/\nQuarto documentation https://quarto.org/docs/guide/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
+    "href": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
+    "title": "Literate programming with Quarto",
+    "section": "Writing papers, papaja",
+    "text": "Writing papers, papaja\n\nhttps://github.com/crsh/papaja"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
+    "href": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
+    "title": "Literate programming with Quarto",
+    "section": "Writing papers, apaquarto",
+    "text": "Writing papers, apaquarto\n\nhttps://github.com/wjschne/apaquarto"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
+    "href": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
+    "title": "Literate programming with Quarto",
+    "section": "Collaborating! (TBH not so easy)",
+    "text": "Collaborating! (TBH not so easy)\nThe trackdown package can be used to collaborate on Rmd or qmd documents using Google Docs.\n\nhttps://github.com/ClaudioZandonella/trackdown"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
+    "href": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
+    "title": "Literate programming with Quarto",
+    "section": "Collaborating! Overleaf",
+    "text": "Collaborating! Overleaf\nWith Overleaf you can collaborate on .tex documents but also .Rnw documents. No Rmd or qmd unfortunately. See an example document."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#git-and-github-1",
+    "href": "slides/04-quarto/04-quarto.html#git-and-github-1",
+    "title": "Literate programming with Quarto",
+    "section": "Git and Github",
+    "text": "Git and Github\n\nThe basic idea is to track changes within a folder, assign a message and eventually a tag to a specific version obtaining a version hystory. The version history is completely navigable, you can go back to a previous version of the code.\nThe are advanced features like branches for creating an independent version of the project to test new features and then merge into the main streamline.\nThe entire (local) Git project can be hosted on Github to improve collaboration. Other people or collaborators can clone the repository and push their changes to the project."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#veeeery-basic-git-workflow-1",
+    "href": "slides/04-quarto/04-quarto.html#veeeery-basic-git-workflow-1",
+    "title": "Literate programming with Quarto",
+    "section": "Veeeery basic Git workflow",
+    "text": "Veeeery basic Git workflow\nAfter installing Git, you can start a new repository opening a terminal on a folder and typing git init. The folder is now a git project you can notice by the hidden .git folder.\ncd ~/some/folder\ngit init\nThen you can add files to the staging area. Basically these files are ready to be committed i.e. “written” in the Git history.\ngit add file1.txt\n# git add . # add everyting\nFinally you can commit the modified version of the file using git commit -m message\ngit commit -m \"my first amazing commit\"\nyou can see the Git hystory with all your commits:\ngit log"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#github",
+    "href": "slides/04-quarto/04-quarto.html#github",
+    "title": "Literate programming with Quarto",
+    "section": "Github",
+    "text": "Github\nImagine to put everyting into a server with nice viewing options and advanced features. Github is just an hosting service for your git folder.\nYou can create an empty repository on Github named git-test. Now my repo has the path git@github.com:filippogambarota/git-test.git.\ngit remote add origin git@github.com:filippogambarota/git-test.git\ngit push\nNow our local repository is linked with the remote repository. Every time we do git push our local commits will be uploaded.\nIf you worked on the repository from another machine or a colleague add some changes, you can do git pull and your local machine will be updated.\n\nThe repository git-test is online and can be seen here filippogambarota/git-test."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#github-1",
+    "href": "slides/04-quarto/04-quarto.html#github-1",
+    "title": "Literate programming with Quarto",
+    "section": "Github",
+    "text": "Github\nAn now let’s see on Github the result:"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#more-about-git-and-github",
+    "href": "slides/04-quarto/04-quarto.html#more-about-git-and-github",
+    "title": "Literate programming with Quarto",
+    "section": "More about Git and Github",
+    "text": "More about Git and Github\nThere are a lot of resources online:\n\nThe Open Science Manual - Zandonella and Massidda - Git and Github chapters.\nhttps://agripongit.vincenttunru.com/\nhttps://git-scm.com/docs/gittutorial"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-1",
+    "href": "slides/04-quarto/04-quarto.html#open-science-framework-1",
+    "title": "Literate programming with Quarto",
+    "section": "Open Science Framework",
+    "text": "Open Science Framework\n\nOSF is a free, open platform to support your research and enable collaboration.\n\nIs a great tool to upload and share materials with others and collaborate on a project. Similarly to Github you can track the changes made to a project.\nThe great addition is having a DOI thus the project is persistently online and can be cited.\nIt is now common practice to create a OSF project supporting a research paper and put the link within the paper containing supplementary materials, raw data, scripts etc."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-2",
+    "href": "slides/04-quarto/04-quarto.html#open-science-framework-2",
+    "title": "Literate programming with Quarto",
+    "section": "Open Science Framework",
+    "text": "Open Science Framework\nIt’s very easy to create a new project, then you simply need to add files and share it.\n\nThe project can be accessed here (depending on the visibility) https://osf.io/yf9tg/."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-3",
+    "href": "slides/04-quarto/04-quarto.html#open-science-framework-3",
+    "title": "Literate programming with Quarto",
+    "section": "Open Science Framework",
+    "text": "Open Science Framework\nOSF and Github\nAn interesting feature is linking a Github repository to OSF. Now all changes made on Github (easier to manage) are mirrored into OSF. You can easily work in Github for the coding part and use OSF to upload other data or information and to assign a DOI to the project.\nPreprints\nOSF is also linked to a popular service for preprints called PsyArXiv https://psyarxiv.com/ thus you can link a preprint to an OSF project."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#more-on-osf",
+    "href": "slides/04-quarto/04-quarto.html#more-on-osf",
+    "title": "Literate programming with Quarto",
+    "section": "More on OSF",
+    "text": "More on OSF\n\nhttps://help.osf.io/article/342-getting-started-on-the-osf\nhttps://arca-dpss.github.io/manual-open-science/osf-chapter.html"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#more-on-reproducibility",
+    "href": "slides/04-quarto/04-quarto.html#more-on-reproducibility",
+    "title": "Literate programming with Quarto",
+    "section": "More on reproducibility",
+    "text": "More on reproducibility\nIn general, I highly suggest the online book The Open Science Manual https://arca-dpss.github.io/manual-open-science/ written by my friend Claudio Zandonella and Davide Massidda where these and other topics are explained in details:"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
+    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Paradigmi sperimentali",
+    "text": "Paradigmi sperimentali\nCon il prof. Maffei avete affrontato come rilevare attività celebrale ad esempio con fMRI o EEG/ERP.\nSolitamente (ma non sempre) queste rilevazioni sono eseguite mentre il soggetto sperimentale esegue un compito.\nOltre al dato neurofisiologico abbiamo quindi anche sempre un dato comportamentale che viene analizzato separatamente o in relazione a quello cerebrale.\nCi sono anche casi dove ai fini della ricerca è rilevante solo il dato comportamentale."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Paradigmi sperimentali",
+    "text": "Paradigmi sperimentali\nQuando si parla di paradigma sperimentale, si intende un insieme di stimoli (visivi, uditivi, tattili, etc.) che vengono presentati ai soggetti.\nSolitamente i paradigmi vengono studiati e programmati nel dettaglio controllando il numero dei trials, le proprieta fisiche (durata, dimensione, etc.) degli stimoli, l’organizzazione temporale (durata esperimento, pause, ordine degli stimoli)."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
+    "href": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Change-detection Task",
+    "text": "Change-detection Task\nQuesto compito è utilizzato per stimare la capacità della memoria visiva a breve termine. Possiamo vedere un esempio pratico a questo link https://run.pavlovia.org/demos/change_detection/.\nCon questo tipo di esperimenti è possibile stimare la quantità di informazione che riusciamo a memorizzare.\n\nRouder et al. (2011)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
+    "href": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Facial expressions",
+    "text": "Facial expressions\nAltri ricercatori sono più interessati ad utilizzare stimoli con una valenza sociale ed evoluzionistica come i volti. C’è moltissima ricerca riguardo il modo in cui elaboriamo volti ed espressioni facciali. Un altro esempio qui http://run.pavlovia.org/demos/emotion_rating/.\n\nMünkler et al. (2015)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
+    "href": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Unconscious processing",
+    "text": "Unconscious processing\nAltri (tipo me) si sono interessati a come elaboriamo informazioni (ad esempio visive) in modo non consapevole o subliminale. Trovate un esempio con volti qui https://www.youtube.com/watch?v=ln-uXcC2Y_8&t=6s."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
+    "href": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Altri paradigmi da provare",
+    "text": "Altri paradigmi da provare\nSe volete provare altri esperimenti potete andare su https://pavlovia.org/explore?sort=DEFAULT&search=demos. Alcuni interessanti sono:\n\nStroop https://run.pavlovia.org/demos/stroop/\nDigit Span https://run.pavlovia.org/demos/digit_span/\nSemantic Priming https://run.pavlovia.org/demos/semantic_priming/"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
+    "href": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Quali misure?",
+    "text": "Quali misure?\nSolitamente a livello comportamentale siamo interessati a:\n\ntempi di reazione/risposta: i vari software permettono di rilevare con estrema precisione la velocità di risposta\naccuratezza nelle varie condizioni sperimentali\nstile di risposta\n…"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
+    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Tempi di reazione",
+    "text": "Tempi di reazione\nAd esempio possiamo ipotizzare che una condizione sperimentale più difficile richieda maggiore tempo di risposta. Spesso si parla di qualche decina di millisecondi."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Tempi di reazione",
+    "text": "Tempi di reazione\nE possiamo anche essere interessati a stimare le differenze individuali che in Psicologia sono consistenti."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nSpesso siamo interessati non tanto ad effetti principali ma a interazioni tra condizioni sperimentali. Ad esempio, se vogliamo studiare come elaboriamo le espressioni facciali possiamo indagare:\n\nsiamo più veloci e/o accurati ad elaborare volti rispetto ad altri stimoli (effetto principale della categoria)\nsiamo più veloci e/o accurati ad elaborare alcune espressioni facciali rispetto ad altre? (effetto principale dell’espressione facciale)\nsiamo più veloci e/o accurati ad elaborare espressioni facciali di diversa intensità (effetto principale dell’espressione facciale)?"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nMentre alcuni effetti sono noti in letteratura (alcune emozioni sono più facili da riconoscere) possiamo essere interessati a vedere se la relazione tra intensità ed accuratezza cambia in funzione dell’emozione (interazione):\n\nShimizu et al. (2024)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nIn questo tipo di esperimenti ci sono diverse cose da considerare:\n\nquanti trial per ogni condizione?\nquanti soggetti mi servono?\nesperimenti più lunghi portano a maggiore precisione di stima ma anche maggiore stanchezza\nquali stimoli utilizzo? il tipo di stimolo può avere un effetto?\n…"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
+    "href": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Altre misure in Psicologia",
+    "text": "Altre misure in Psicologia"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#references",
+    "href": "slides/01-psychological-research/01-psychological-research.html#references",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "References",
+    "text": "References\n\n\n\n\nMünkler, Paula, Marcus Rothkirch, Yasmin Dalati, Katharina Schmack, and Philipp Sterzer. 2015. “Biased Recognition of Facial Affect in Patients with Major Depressive Disorder Reflects Clinical State.” PloS One 10 (June): e0129863. https://doi.org/10.1371/journal.pone.0129863.\n\n\nRouder, Jeffrey N, Richard D Morey, Candice C Morey, and Nelson Cowan. 2011. “How to Measure Working Memory Capacity in the Change Detection Paradigm.” Psychonomic Bulletin & Review 18 (April): 324–30. https://doi.org/10.3758/s13423-011-0055-3.\n\n\nShimizu, Yunoshin, Kazumi Ogawa, Masanori Kimura, Ken Fujiwara, and Nobuyuki Watanabe. 2024. “The Influence of Emotional Facial Expression Intensity on Decoding Accuracy: High Intensity Does Not Yield High Accuracy.” The Japanese Psychological Research 66 (October): 521–40. https://doi.org/10.1111/jpr.12529."
+  },
+  {
+    "objectID": "slides.html",
+    "href": "slides.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nIntroduzione al corso\n\n\n \n\n\n\n\nExperimental Psychology and Neuroscience\n\n\n \n\n\n\n\nModern R\n\n\n \n\n\n\n\nLiterate programming with Quarto\n\n\n \n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "There are few tools that we need to install and configure for the course."
+  },
+  {
+    "objectID": "index.html#quarto",
+    "href": "index.html#quarto",
+    "title": "Getting started",
+    "section": "Quarto",
+    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
+  },
+  {
+    "objectID": "index.html#gitgithub",
+    "href": "index.html#gitgithub",
+    "title": "Getting started",
+    "section": "Git/Github",
+    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
+  },
+  {
+    "objectID": "index.html#cloning-the-repository",
+    "href": "index.html#cloning-the-repository",
+    "title": "Getting started",
+    "section": "Cloning the repository",
+    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
+  },
+  {
+    "objectID": "index.html#creating-your-repository",
+    "href": "index.html#creating-your-repository",
+    "title": "Getting started",
+    "section": "Creating your repository",
+    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#about-me",
+    "href": "slides/00-course-intro/00-course-intro.html#about-me",
+    "title": "Introduzione al corso",
+    "section": "About me",
+    "text": "About me\n\nSono uno Psicologo Clinico e assegnista di ricerca in Psicometria al Dipartimento di Psicologia dello Sviluppo e della Socializzazione\nMi occupo di analisi dei dati in Psicologia, in particolare: meta-analysis, simulazioni monte carlo per la power analysis, replicabilità e multiverse analysis"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#ricevimento",
+    "href": "slides/00-course-intro/00-course-intro.html#ricevimento",
+    "title": "Introduzione al corso",
+    "section": "Ricevimento",
+    "text": "Ricevimento\n\nLavoro al Dipartimento di Psicologia dello Sviluppo e della Socializzazione, Via Venezia 16, 35131 (edificio CLA). Il mio ufficio è 05-025 (5° piano).\nIl mio orario di ricevimento è Venerdì dalle 10:00 alle 12:00. Possiamo vederci sia in presenza che su Zoom. Potete prenotarvi qui https://calendar.app.google/Go7B6GBKBeRPCpU27.\nPer ogni cosa potete scrivermi a filippo.gambarota@unipd.it"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#argomenti",
+    "href": "slides/00-course-intro/00-course-intro.html#argomenti",
+    "title": "Introduzione al corso",
+    "section": "Argomenti",
+    "text": "Argomenti\n\nOpen science tools: R, Quarto, Git e Github\nReplicabilità e riproducibilità nelle neuroscienze cognitive\nMeta-analysis\nGeneralized Linear Mixed-Effects models\nSimulazioni Monte Carlo"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
+    "href": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
+    "title": "Introduzione al corso",
+    "section": "Organizzazione delle lezioni",
+    "text": "Organizzazione delle lezioni\nCosa faremo?\n\nPresentazione dei concetti teorici principali\nEsempi con dati reali e simulati\nIntepretazione dei risultati in ottica applicativa\nTanto codice\n\nCosa non faremo?\n\ndimostrazioni\nmolto focus sulle formule"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#materiale",
+    "href": "slides/00-course-intro/00-course-intro.html#materiale",
+    "title": "Introduzione al corso",
+    "section": "Materiale",
+    "text": "Materiale\nPer il materiale, trovate tutto su Github https://github.com/stat-teaching/psychometrics4neuroscience. Trovate i vari link anche su Moodle ma Github è molto più comodo per tenere e organizzare tutto (lo vedremo nel dettaglio).\nLa repository contiene il codice, le slide (sia in formato .qmd che compilate), i dataset e tutto il resto del materiale."
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#esami",
+    "href": "slides/00-course-intro/00-course-intro.html#esami",
+    "title": "Introduzione al corso",
+    "section": "Esami",
+    "text": "Esami\nFate sempre riferimento alla pagina ufficiale https://www.stat.unipd.it/studenti-iscritti/calendario-appelli-desame.\n\n16/06/2025 aula SC60 10:30-12:30\n07/07/2025 aula SC60 10:30-12:30\n01/09/2025 aula SC60 14:30-16:30"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
+    "href": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
+    "title": "Introduzione al corso",
+    "section": "Lavori di gruppo",
+    "text": "Lavori di gruppo\nParleremo dei lavori di gruppo assieme al Prof. Maffei il 28/04/2025 (salvo modifiche) dove vi presenteremo i lavori nel dettaglio.\nIn breve, vi sarà richiesto partendo da un dataset e/o un problema di ricerca, analizzare e/o simulare dei dati, produrre un report in Quarto e fare una presentazione del lavoro fatto."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#reproducibility-starter-pack-1",
+    "href": "slides/03-modern-r/03-modern-r.html#reproducibility-starter-pack-1",
+    "title": "Modern R",
+    "section": "Reproducibility starter pack 👷",
+    "text": "Reproducibility starter pack 👷\n\nA general purpose (or flexible enough) programming language such as   or  \nA literate programming framework to integrate code and text\nA version control system to track projects\nAn online repository for future-proof sharing"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#disclaimers",
+    "href": "slides/03-modern-r/03-modern-r.html#disclaimers",
+    "title": "Modern R",
+    "section": "Disclaimers",
+    "text": "Disclaimers\n\nThe best tool is the tool that does the job.\n\n\nBut there are some features that makes a tool better in terms of reproducibility, reducing the probability of errors and improve your coding skills.\nThere is nothing bad about using SPSS, Jasp or Jamovi. The real problem is that using a point-and-click software reduce the reproducibility. If you can use the scripting part, whatever the tool.\nA general suggestion is to invest some of your time learning/improving a programming language for data pre-processing, analysis and reporting (tables, figures, etc.)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#r",
+    "href": "slides/03-modern-r/03-modern-r.html#r",
+    "title": "Modern R",
+    "section": "R",
+    "text": "R\n\nR is a free software environment for statistical computing and graphics.\n\n\n(TBH) It is not a proper general purpose programming language (such as C++ or Python).\nR packages allow to do almost everything (file manager, image processing, webscraping, sending emails, coffee 😄, etc.)\nIt is free and open-source\nThe community is wide, active thus solving problems is very easy\nForce you to learn scripting but the are R-based GUI software (e.g., JAMOVI)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#r---cran",
+    "href": "slides/03-modern-r/03-modern-r.html#r---cran",
+    "title": "Modern R",
+    "section": "R - CRAN",
+    "text": "R - CRAN\nThe CRAN is the repository where package developers upload their packages and other users can install them.\n\n\n\n\n\n\n\n\nAs the saying goes: if something exist, there is an R package for doing it! 😄"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#r---pypl-index",
+    "href": "slides/03-modern-r/03-modern-r.html#r---pypl-index",
+    "title": "Modern R",
+    "section": "R - PYPL Index",
+    "text": "R - PYPL Index\n\nSource: https://pypl.github.io/PYPL.html"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#r---pypl-index-1",
+    "href": "slides/03-modern-r/03-modern-r.html#r---pypl-index-1",
+    "title": "Modern R",
+    "section": "R - PYPL Index",
+    "text": "R - PYPL Index\nThe popularity is on a different scale compared to Python but still increasing:\n\n\n\nSource: https://pypl.github.io/PYPL.html"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#r-or-python",
+    "href": "slides/03-modern-r/03-modern-r.html#r-or-python",
+    "title": "Modern R",
+    "section": "R or Python?",
+    "text": "R or Python?\n\nPython is a very general-purpose language more powerful for general tasks.\nI find python very useful for programming experiments, image processing, automatizing tasks and interacting with the operating system\nR is still a little bit superior in terms of data manipulation and visualization. Python is faster and more powerful for complex models (e.g., machine learning, etc.)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#positron",
+    "href": "slides/03-modern-r/03-modern-r.html#positron",
+    "title": "Modern R",
+    "section": "Positron",
+    "text": "Positron\nSometimes Python is not so easy to setup. In addition is not as interactive as R (i.e., line by line evaluation). Posit (ex. R Studio) recently created Positron that is a new IDE working with R and Python at the same way."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#modern-r",
+    "href": "slides/03-modern-r/03-modern-r.html#modern-r",
+    "title": "Modern R",
+    "section": "Modern R",
+    "text": "Modern R\n\nFor purist programmers, R is weird: arrays starts with 1, object-oriented programming is hidden, a lot of built-in vectorized functions, etc. The The R Inferno book is really funny showing the strange R-stuff.\nDespite the weirdness, R is widely used because it is intuitive (for non-programmers) and made for statistics and data manipulation\nR is a language and as in spoken languages you can elegant, rude, ambiguous, funny, etc.\nThere are some tips to improve the readability and reproducibility of your code"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming",
+    "title": "Modern R",
+    "section": "Functional Programming",
+    "text": "Functional Programming\n\nIn computer science, functional programming is a programming paradigm where programs are constructed by applying and composing functions.\n\n\nDespite R can be used both with an imperative and object-oriented approach, the functional side is quite powerful.\nThe basic idea is to decompose your code into small, testable and re-usable functions"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-example",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-example",
+    "title": "Modern R",
+    "section": "Functional Programming, example…",
+    "text": "Functional Programming, example…\nWe have a dataset (mtcars) and we want to calculate the mean, median, standard deviation, minimum and maximum of each column and store the result in a table.\n\nhead(mtcars)\n\n#&gt;                    mpg cyl disp  hp drat    wt  qsec vs am gear carb\n#&gt; Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\n#&gt; Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\n#&gt; Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\n#&gt; Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\n#&gt; Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\n#&gt; Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n\nstr(mtcars)\n\n#&gt; 'data.frame':    32 obs. of  11 variables:\n#&gt;  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...\n#&gt;  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...\n#&gt;  $ disp: num  160 160 108 258 360 ...\n#&gt;  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...\n#&gt;  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...\n#&gt;  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...\n#&gt;  $ qsec: num  16.5 17 18.6 19.4 17 ...\n#&gt;  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...\n#&gt;  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...\n#&gt;  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...\n#&gt;  $ carb: num  4 4 1 1 2 1 4 2 2 4 ..."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-1",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-1",
+    "title": "Modern R",
+    "section": "Functional Programming",
+    "text": "Functional Programming\nThe standard (~imperative) option is using a for loop, iterating through columns, calculate the values and store into another data structure.\n\nncols &lt;- ncol(mtcars)\nmeans &lt;- medians &lt;- mins &lt;- maxs &lt;- rep(0, ncols)\n\nfor(i in 1:ncols){\n  means[i] &lt;- mean(mtcars[[i]])\n  medians[i] &lt;- median(mtcars[[i]])\n  mins[i] &lt;- min(mtcars[[i]])\n  maxs[i] &lt;- max(mtcars[[i]])\n}\n\nresults &lt;- data.frame(means, medians, mins, maxs)\nresults$col &lt;- names(mtcars)\n\nresults\n\n#&gt;         means medians   mins    maxs  col\n#&gt; 1   20.090625  19.200 10.400  33.900  mpg\n#&gt; 2    6.187500   6.000  4.000   8.000  cyl\n#&gt; 3  230.721875 196.300 71.100 472.000 disp\n#&gt; 4  146.687500 123.000 52.000 335.000   hp\n#&gt; 5    3.596563   3.695  2.760   4.930 drat\n#&gt; 6    3.217250   3.325  1.513   5.424   wt\n#&gt; 7   17.848750  17.710 14.500  22.900 qsec\n#&gt; 8    0.437500   0.000  0.000   1.000   vs\n#&gt; 9    0.406250   0.000  0.000   1.000   am\n#&gt; 10   3.687500   4.000  3.000   5.000 gear\n#&gt; 11   2.812500   2.000  1.000   8.000 carb"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-2",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-2",
+    "title": "Modern R",
+    "section": "Functional Programming",
+    "text": "Functional Programming\nThe main idea is to decompose the problem writing a function and loop over the columns of the dataframe:\n\nsumm &lt;- function(x){\n  data.frame(means = mean(x), \n             medians = median(x), \n             mins = min(x), \n             maxs = max(x))\n}\nncols &lt;- ncol(mtcars)\ndfs &lt;- vector(mode = \"list\", length = ncols)\n\nfor(i in 1:ncols){\n  dfs[[i]] &lt;- summ(mtcars[[i]])\n}"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-3",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-3",
+    "title": "Modern R",
+    "section": "Functional Programming",
+    "text": "Functional Programming\n\nresults &lt;- do.call(rbind, dfs)\nresults\n\n#&gt;         means medians   mins    maxs\n#&gt; 1   20.090625  19.200 10.400  33.900\n#&gt; 2    6.187500   6.000  4.000   8.000\n#&gt; 3  230.721875 196.300 71.100 472.000\n#&gt; 4  146.687500 123.000 52.000 335.000\n#&gt; 5    3.596563   3.695  2.760   4.930\n#&gt; 6    3.217250   3.325  1.513   5.424\n#&gt; 7   17.848750  17.710 14.500  22.900\n#&gt; 8    0.437500   0.000  0.000   1.000\n#&gt; 9    0.406250   0.000  0.000   1.000\n#&gt; 10   3.687500   4.000  3.000   5.000\n#&gt; 11   2.812500   2.000  1.000   8.000"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-4",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-4",
+    "title": "Modern R",
+    "section": "Functional Programming",
+    "text": "Functional Programming\nThe actual real functional way require using the built-in iteration tools *apply. In this way you avoid writing the verbose for loop.\n\nresults &lt;- lapply(mtcars, summ)\nresults &lt;- do.call(rbind, results)\nresults\n\n#&gt;           means medians   mins    maxs\n#&gt; mpg   20.090625  19.200 10.400  33.900\n#&gt; cyl    6.187500   6.000  4.000   8.000\n#&gt; disp 230.721875 196.300 71.100 472.000\n#&gt; hp   146.687500 123.000 52.000 335.000\n#&gt; drat   3.596563   3.695  2.760   4.930\n#&gt; wt     3.217250   3.325  1.513   5.424\n#&gt; qsec  17.848750  17.710 14.500  22.900\n#&gt; vs     0.437500   0.000  0.000   1.000\n#&gt; am     0.406250   0.000  0.000   1.000\n#&gt; gear   3.687500   4.000  3.000   5.000\n#&gt; carb   2.812500   2.000  1.000   8.000"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#functional-programming-apply",
+    "href": "slides/03-modern-r/03-modern-r.html#functional-programming-apply",
+    "title": "Modern R",
+    "section": "Functional Programming, *apply",
+    "text": "Functional Programming, *apply\n\nThe *apply family is one of the best tool in R. The idea is pretty simple: apply a function to each element of a list.\nThe powerful side is that in R everything can be considered as a list. A vector is a list of single elements, a dataframe is a list of columns etc.\nInternally, R is still using a for loop but the verbose part (preallocation, choosing the iterator, indexing) is encapsulated into the *apply function.\n\n\n\nmeans &lt;- rep(0, ncol(mtcars))\nfor(i in 1:length(means)){\n  means[i] &lt;- mean(mtcars[[i]])\n}\n\n# the same with sapply\nmeans &lt;- sapply(mtcars, mean)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad",
+    "href": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad",
+    "title": "Modern R",
+    "section": "for loops are bad?",
+    "text": "for loops are bad?\nfor loops are the core of each operation in R (and in every programming language). For complex operation thery are more readable and effective compared to *apply. In R we need extra care for writing efficent for loops.\nExtremely slow, no preallocation:\n\nres &lt;- c()\nfor(i in 1:1000){\n  # do something\n  res[i] &lt;- x\n}\n\nVery fast, no difference compared to *apply"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#with-apply-you-can-do-crazy-stuff",
+    "href": "slides/03-modern-r/03-modern-r.html#with-apply-you-can-do-crazy-stuff",
+    "title": "Modern R",
+    "section": "With *apply you can do crazy stuff!",
+    "text": "With *apply you can do crazy stuff!\n\nfuns &lt;- list(mean = mean, sd = sd, min = min, max = max, median = median)\nsapply(funs, function(f) lapply(mtcars, function(x) f(x)))\n\n#&gt;      mean     sd        min   max   median\n#&gt; mpg  20.09062 6.026948  10.4  33.9  19.2  \n#&gt; cyl  6.1875   1.785922  4     8     6     \n#&gt; disp 230.7219 123.9387  71.1  472   196.3 \n#&gt; hp   146.6875 68.56287  52    335   123   \n#&gt; drat 3.596563 0.5346787 2.76  4.93  3.695 \n#&gt; wt   3.21725  0.9784574 1.513 5.424 3.325 \n#&gt; qsec 17.84875 1.786943  14.5  22.9  17.71 \n#&gt; vs   0.4375   0.5040161 0     1     0     \n#&gt; am   0.40625  0.4989909 0     1     0     \n#&gt; gear 3.6875   0.7378041 3     5     4     \n#&gt; carb 2.8125   1.6152    1     8     2"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#why-functional-programming",
+    "href": "slides/03-modern-r/03-modern-r.html#why-functional-programming",
+    "title": "Modern R",
+    "section": "Why functional programming?",
+    "text": "Why functional programming?\n\nWe can write less and reusable code that can be shared and used in multiple projects\nThe scripts are more compact, easy to modify and less error prone (imagine that you want to improve the summ function, you only need to change it once instead of touching the for loop)\nFunctions can be easily and consistently documented (see roxygen documentation) improving the reproducibility and readability of your code"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#more-about-functional-programming-in-r",
+    "href": "slides/03-modern-r/03-modern-r.html#more-about-functional-programming-in-r",
+    "title": "Modern R",
+    "section": "More about functional programming in R",
+    "text": "More about functional programming in R\n\nAdvanced R by Hadley Wickham, section on Functional Programming (https://adv-r.hadley.nz/fp.html)\nHands-On Programming with R by Garrett Grolemund https://rstudio-education.github.io/hopr/\nHadley Wickham: The Joy of Functional Programming (for Data Science)\nBruno Rodrigues Youtube Channel"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#a-more-advanced-approach-r-packages",
+    "href": "slides/03-modern-r/03-modern-r.html#a-more-advanced-approach-r-packages",
+    "title": "Modern R",
+    "section": "A more advanced approach, R packages",
+    "text": "A more advanced approach, R packages\nR packages are not only on CRAN. You can (pretty) easily create a package and put it on Github. For example, if you keep using some functions in your project, write a general version and put them into a package.\n\ngithub.com/filippogambarota/filor"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#a-more-advanced-approach-r-packages-1",
+    "href": "slides/03-modern-r/03-modern-r.html#a-more-advanced-approach-r-packages-1",
+    "title": "Modern R",
+    "section": "A more advanced approach, R packages",
+    "text": "A more advanced approach, R packages\nIf your functions are project-specific you can define them into your scripts or write some R scripts only with functions and source() them into the global environment.\nproject/\n├─ R/\n│  ├─ utils.R\n├─ analysis.R\nAnd inside utils.R you have some functions:\n\nmyfun &lt;- function(x) {\n  # something\n}\n\nThen you can load the function using source(\"R/utils.R) at the beginning of analysis.R:\n\nsource(\"R/utils.R\")"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#analysis-project-as-r-package",
+    "href": "slides/03-modern-r/03-modern-r.html#analysis-project-as-r-package",
+    "title": "Modern R",
+    "section": "Analysis project as R package",
+    "text": "Analysis project as R package\nThe R project structure is really interesting to organize a data analysis pipeline. In fact, you can use the project structure. Vuorre and Crump (2021) and Marwick, Boettiger, and Mullen (2018) describe in details the idea.\nThe general approach is:\n\nCreate an R Studio project .Rproj file\nCreate your directories, put scripts, data, etc.\nCreate an R/ folder and put your scripts with functions\nCreate a DESCRIPTION file using usethis::use_description(check_name = FALSE)\nThen you can load your functions without source and with devtools::load_all() (same as library())"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#the-tidy-approach",
+    "href": "slides/03-modern-r/03-modern-r.html#the-tidy-approach",
+    "title": "Modern R",
+    "section": "The Tidy approach",
+    "text": "The Tidy approach\nThe tidyverse is a series of high-quality R packages to do modern data science:\n\n\ndata manipulation (dplyr, tidyr)\nplotting (ggplot2)\nreporting (rmarkdown)\nstring manipulation (stringr)\nfunctionals (purrr)\n…"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#the-tidy-approach---pipes",
+    "href": "slides/03-modern-r/03-modern-r.html#the-tidy-approach---pipes",
+    "title": "Modern R",
+    "section": "The Tidy approach - Pipes",
+    "text": "The Tidy approach - Pipes\nOne of the great improvement from the tidyverse is the usage of the pipe %&gt;% now introduced in base R as |&gt;. You will se these symbols a lot when looking at modern R code.\n\nThe idea is very simple, the standard pattern to apply a function is function(argument). The pipe can reverse the pattern as argument |&gt; function(). Normally when we apply multiple functions progressively the pattern is this:\n\n\n\nx &lt;- rnorm(100)\nx &lt;- round(x, 3)\nx &lt;- abs(x)\nx &lt;- as.character(x)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#the-tidy-approach---pipes-1",
+    "href": "slides/03-modern-r/03-modern-r.html#the-tidy-approach---pipes-1",
+    "title": "Modern R",
+    "section": "The Tidy approach - Pipes",
+    "text": "The Tidy approach - Pipes\nWhen using the pipe, we remove the redundand assignment &lt;- pattern:\n\nx &lt;- rnorm(100)\nx |&gt;\n  round(3) |&gt;\n  abs() |&gt;\n  as.character()\n\nThe pipe can be read as “from x apply round, then abs, etc.”. The first argument of the piped function is assumed to be the result of the previus call."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#more-about-the-tidy-approach",
+    "href": "slides/03-modern-r/03-modern-r.html#more-about-the-tidy-approach",
+    "title": "Modern R",
+    "section": "More about the Tidy approach",
+    "text": "More about the Tidy approach\nThe tidy approach contains tons of functions and packages. The overall philosophy can be deepen in the R for Data Science book.\n\nhttps://r4ds.hadley.nz/"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#ggplot2",
+    "href": "slides/03-modern-r/03-modern-r.html#ggplot2",
+    "title": "Modern R",
+    "section": "ggplot2",
+    "text": "ggplot2\nOnly an quick mention to ggplot2 https://ggplot2-book.org/ (part of the tidyverse) that is an amazing package for data visualization following the piping and tidy approach. Is the implementation of the grammar of graphics idea.\n\nlibrary(tidyverse)\n\niris |&gt;\n  mutate(wi = runif(n())) |&gt;\n  ggplot(aes(x = Sepal.Length, y = Petal.Width, color = Species)) +\n  geom_point(aes(size = wi)) +\n  geom_smooth(method = \"lm\", se = FALSE)\n  guides(size = \"none\") +\n  theme_minimal(15)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#ggplot2-1",
+    "href": "slides/03-modern-r/03-modern-r.html#ggplot2-1",
+    "title": "Modern R",
+    "section": "ggplot2",
+    "text": "ggplot2"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#base-r-version",
+    "href": "slides/03-modern-r/03-modern-r.html#base-r-version",
+    "title": "Modern R",
+    "section": "Base R version",
+    "text": "Base R version\nMore verbose, more hard coding, more steps and intermediate objects.\n\niris_l &lt;- split(iris, iris$Species)\nlms &lt;- lapply(iris_l, function(x) lm(Petal.Width ~ Sepal.Length, data = x))\n\nplot(iris$Sepal.Length, \n     iris$Petal.Width, \n     col = as.numeric(iris$Species), pch = 19)\n\nabline(lms[[1]], col = 1, lwd = 2)\nabline(lms[[2]], col = 2, lwd = 2)\nabline(lms[[3]], col = 3, lwd = 2)\n\nlegend(\"topleft\", legend = levels(iris$Species), fill = 1:3)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#base-r-version-1",
+    "href": "slides/03-modern-r/03-modern-r.html#base-r-version-1",
+    "title": "Modern R",
+    "section": "Base R version",
+    "text": "Base R version"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#more-on-ggplot2",
+    "href": "slides/03-modern-r/03-modern-r.html#more-on-ggplot2",
+    "title": "Modern R",
+    "section": "More on ggplot2",
+    "text": "More on ggplot2\nThe ggplot2 book https://ggplot2-book.org/ is a great resource to produce high-quality, publication ready plots. Clearly, the advantage of producing the figures entirely writing code are immense in terms of reusability and reproducibility."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse\nWithout going into details, I want to show you a very interesting approach that you can do with the tidyverse functions.\nLet’s assume you want to do a leave-one-out analysis thus fitting the same models on a dataset, removing one observation at time.\nYou can do it in base R with a loop or other methods, but the see so-called many-models approach. See https://r4ds.had.co.nz/many-models.html and https://www.youtube.com/watch?v=rz3_FDVt9eg."
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-1",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-1",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse\nLet’s define some functions:\n\nleave1out &lt;- function(data){\n  idx &lt;- 1:nrow(data)\n  ll &lt;- lapply(idx, function(i) data[-i, ])\n  names(ll) &lt;- paste0(\"no\", idx)\n  c(no0 = list(data), ll)\n}\n\nfit_model &lt;- function(data){\n  lm(Sepal.Length ~ Petal.Width, data = data)\n}"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-2",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-2",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse\n\ndat &lt;- tibble(data = leave1out(iris[1:20, ]))\ndat |&gt; \n  mutate(removed = names(data)) |&gt; \n  head()\n\n#&gt; # A tibble: 6 × 2\n#&gt;   data          removed\n#&gt;   &lt;named list&gt;  &lt;chr&gt;  \n#&gt; 1 &lt;df [20 × 5]&gt; no0    \n#&gt; 2 &lt;df [19 × 5]&gt; no1    \n#&gt; 3 &lt;df [19 × 5]&gt; no2    \n#&gt; 4 &lt;df [19 × 5]&gt; no3    \n#&gt; 5 &lt;df [19 × 5]&gt; no4    \n#&gt; 6 &lt;df [19 × 5]&gt; no5"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-3",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-3",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse\n\n\n#&gt; # A tibble: 6 × 4\n#&gt;   data          removed fit          results         \n#&gt;   &lt;named list&gt;  &lt;chr&gt;   &lt;named list&gt; &lt;named list&gt;    \n#&gt; 1 &lt;df [20 × 5]&gt; no0     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;\n#&gt; 2 &lt;df [19 × 5]&gt; no1     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;\n#&gt; 3 &lt;df [19 × 5]&gt; no2     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;\n#&gt; 4 &lt;df [19 × 5]&gt; no3     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;\n#&gt; 5 &lt;df [19 × 5]&gt; no4     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;\n#&gt; 6 &lt;df [19 × 5]&gt; no5     &lt;lm&gt;         &lt;tibble [2 × 5]&gt;"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-4",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-4",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse\n\ndat |&gt; \n  mutate(removed = names(data)) |&gt; \n  mutate(fit = map(data, fit_model),\n         results = map(fit, broom::tidy)) |&gt; \n  unnest(results) |&gt; \n  ggplot(aes(x = removed, y = estimate)) +\n  geom_point() +\n  geom_line() +\n  facet_wrap(~term, scales = \"free\")"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-5",
+    "href": "slides/03-modern-r/03-modern-r.html#something-crazy-in-the-tidyverse-5",
+    "title": "Modern R",
+    "section": "Something crazy in the tidyverse",
+    "text": "Something crazy in the tidyverse"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#quick-tables",
+    "href": "slides/03-modern-r/03-modern-r.html#quick-tables",
+    "title": "Modern R",
+    "section": "Quick tables",
+    "text": "Quick tables\n\n\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nN = 1501\n\n\n\n\nSepal.Length\n5.80 (5.10, 6.40)\n\n\nSepal.Width\n3.00 (2.80, 3.30)\n\n\nPetal.Length\n4.35 (1.60, 5.10)\n\n\nPetal.Width\n1.30 (0.30, 1.80)\n\n\nSpecies\n\n\n\n\n    setosa\n50 (33%)\n\n\n    versicolor\n50 (33%)\n\n\n    virginica\n50 (33%)\n\n\n\n1 Median (IQR); n (%)"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#quick-tables-from-models",
+    "href": "slides/03-modern-r/03-modern-r.html#quick-tables-from-models",
+    "title": "Modern R",
+    "section": "Quick tables from models",
+    "text": "Quick tables from models\n\nfit &lt;- lm(Sepal.Length ~ Petal.Width, data = iris)\nsjPlot::tab_model(fit)\n\n\n\n\n \nSepal.Length\n\n\nPredictors\nEstimates\nCI\np\n\n\n(Intercept)\n4.78\n4.63 – 4.92\n&lt;0.001\n\n\nPetal Width\n0.89\n0.79 – 0.99\n&lt;0.001\n\n\nObservations\n150\n\n\nR2 / R2 adjusted\n0.669 / 0.667"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#quick-tables-from-models-1",
+    "href": "slides/03-modern-r/03-modern-r.html#quick-tables-from-models-1",
+    "title": "Modern R",
+    "section": "Quick tables from models",
+    "text": "Quick tables from models\n\ngtsummary::tbl_regression(fit)\n\n\n\n\n\n\n\nCharacteristic\nBeta\n95% CI1\np-value\n\n\n\n\nPetal.Width\n0.89\n0.79, 0.99\n&lt;0.001\n\n\n\n1 CI = Confidence Interval"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#references",
+    "href": "slides/03-modern-r/03-modern-r.html#references",
+    "title": "Modern R",
+    "section": "References",
+    "text": "References\n\n\n\n\nMarwick, Ben, Carl Boettiger, and Lincoln Mullen. 2018. “Packaging Data Analytical Work Reproducibly Using r (and Friends).” The American Statistician 72 (January): 80–88. https://doi.org/10.1080/00031305.2017.1375986.\n\n\nVuorre, Matti, and Matthew J C Crump. 2021. “Sharing and Organizing Research Products as r Packages.” Behavior Research Methods 53 (April): 792–802. https://doi.org/10.3758/s13428-020-01436-x."
+  }
+]

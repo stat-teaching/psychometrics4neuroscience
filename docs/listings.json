@@ -1,0 +1,11 @@
+[
+  {
+    "listing": "/slides.html",
+    "items": [
+      "/slides/00-course-intro/00-course-intro.html",
+      "/slides/01-psychological-research/01-psychological-research.html",
+      "/slides/03-modern-r/03-modern-r.html",
+      "/slides/04-quarto/04-quarto.html"
+    ]
+  }
+]
