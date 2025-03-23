@@ -1,381 +1,73 @@
 [
   {
-    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-1",
-    "href": "slides/04-quarto/04-quarto.html#literate-programming-1",
-    "title": "Literate programming with Quarto",
-    "section": "Literate Programming1",
-    "text": "Literate Programming1\n\nDonald Knuth first defined literate programming as a script, notebook, or computational document that contains an explanation of the program logic in a natural language, interspersed with snippets of macros and source code, which can be compiled and rerun\n\nFor example jupyter notebooks, R Markdown and now Quarto are literate programming frameworks to integrate code and text.\n\n\n\n\n\nhttps://en.wikipedia.org/wiki/Literate_programming"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
-    "href": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
-    "title": "Literate programming with Quarto",
-    "section": "Literate Programming, the markup language",
-    "text": "Literate Programming, the markup language\nBeyond the coding part, the markup language is the core element of a literate programming framework. The idea of a markup language is separating the result from what you actually write. Some examples are:\n\nLaTeX\nHTML\nMarkdown\nXML\n…"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#latex",
-    "href": "slides/04-quarto/04-quarto.html#latex",
-    "title": "Literate programming with Quarto",
-    "section": "LaTeX 1",
-    "text": "LaTeX 1\n\nhttps://latexbase.com/"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#html",
-    "href": "slides/04-quarto/04-quarto.html#html",
-    "title": "Literate programming with Quarto",
-    "section": "HTML",
-    "text": "HTML\n&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;body&gt;\n\n&lt;h1&gt;My First Heading&lt;/h1&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;h2&gt;My Second Heading&lt;/h2&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. \n\nLorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo \n\ntipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. \n\nÈ sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. \n\nFu reso popolare, negli anni ’60, con la diffusione dei \n\nfogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum\n\npiù recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;/body&gt;\n&lt;/html&gt;"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#markdown",
-    "href": "slides/04-quarto/04-quarto.html#markdown",
-    "title": "Literate programming with Quarto",
-    "section": "Markdown1",
-    "text": "Markdown1\n\n\nhttps://markdownlivepreview.com/"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#markdown-1",
-    "href": "slides/04-quarto/04-quarto.html#markdown-1",
-    "title": "Literate programming with Quarto",
-    "section": "Markdown",
-    "text": "Markdown\nMarkdown is one of the most popular markup languages for several reasons:\n\neasy to write and read compared to Latex and HTML\neasy to convert from Markdown to basically every other format using pandoc\neasy to implement new features"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#markdown-source-code",
-    "href": "slides/04-quarto/04-quarto.html#markdown-source-code",
-    "title": "Literate programming with Quarto",
-    "section": "Markdown (source code)",
-    "text": "Markdown (source code)\n## Markdown\n\nMarkdown is one of the most popular markup languages for several reasons:\n\n- easy to write and read compared to Latex and HTML\n- easy to convert from Markdown to basically every other format using `pandoc`\n- easy to implement new features\n\nAlso the source code can be used, compared to Latex or HTML, to take notes and read. Latex and HTML need to be compiled otherwise they are very hard to read."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
-    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
-    "title": "Literate programming with Quarto",
-    "section": "What’s wrong about Microsoft Word?",
-    "text": "What’s wrong about Microsoft Word?\nMS Word is a WYSIWYG (what you see is what you get editor) that force users to think about formatting, numbering, etc. Markup languages receive the content (plain text) and the rules and creates the final document."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
-    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
-    "title": "Literate programming with Quarto",
-    "section": "What’s wrong about Microsoft Word?",
-    "text": "What’s wrong about Microsoft Word?\nBeyond the pure writing process, there are other aspects related to research data.\n\n\nwriting math formulas\nreporting statistics in the text\nproducing tables\nproducing plots\n\n\nIn MS Word (or similar) we need to produce everything outside and then manually put figures and tables."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#the-solution-quarto",
-    "href": "slides/04-quarto/04-quarto.html#the-solution-quarto",
-    "title": "Literate programming with Quarto",
-    "section": "The solution… Quarto",
-    "text": "The solution… Quarto\nQuarto (https://quarto.org/) is the evolution of R Markdown that integrate a programming language with the Markdown markup language. It is very simple but quite powerful."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#basic-markdown",
-    "href": "slides/04-quarto/04-quarto.html#basic-markdown",
-    "title": "Literate programming with Quarto",
-    "section": "Basic Markdown",
-    "text": "Basic Markdown\nMarkdown can be learned in minutes. You can go to the following link https://quarto.org/docs/authoring/markdown-basics.html and try to understand the syntax."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
-    "href": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
-    "title": "Literate programming with Quarto",
-    "section": "More about Quarto and R Markdown",
-    "text": "More about Quarto and R Markdown\nThe topic is extremely vast. You can do everything in Quarto, a website, thesis, your CV, etc.\n\nYihui Xie - R Markdown Cookbook https://bookdown.org/yihui/rmarkdown-cookbook/\nYihui Xie - R Markdown: The Definitive Guide https://bookdown.org/yihui/rmarkdown/\nQuarto documentation https://quarto.org/docs/guide/"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
-    "href": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
-    "title": "Literate programming with Quarto",
-    "section": "Writing papers, papaja",
-    "text": "Writing papers, papaja\n\nhttps://github.com/crsh/papaja"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
-    "href": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
-    "title": "Literate programming with Quarto",
-    "section": "Writing papers, apaquarto",
-    "text": "Writing papers, apaquarto\n\nhttps://github.com/wjschne/apaquarto"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
-    "href": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
-    "title": "Literate programming with Quarto",
-    "section": "Collaborating! (TBH not so easy)",
-    "text": "Collaborating! (TBH not so easy)\nThe trackdown package can be used to collaborate on Rmd or qmd documents using Google Docs.\n\nhttps://github.com/ClaudioZandonella/trackdown"
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
-    "href": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
-    "title": "Literate programming with Quarto",
-    "section": "Collaborating! Overleaf",
-    "text": "Collaborating! Overleaf\nWith Overleaf you can collaborate on .tex documents but also .Rnw documents. No Rmd or qmd unfortunately. See an example document."
-  },
-  {
-    "objectID": "slides/04-quarto/04-quarto.html#git-and-github-1",
-    "href": "slides/04-quarto/04-quarto.html#git-and-github-1",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#git-and-github-1",
+    "href": "slides/05-git-github/05-git-github.html#git-and-github-1",
+    "title": "Git and Github",
     "section": "Git and Github",
     "text": "Git and Github\n\nThe basic idea is to track changes within a folder, assign a message and eventually a tag to a specific version obtaining a version hystory. The version history is completely navigable, you can go back to a previous version of the code.\nThe are advanced features like branches for creating an independent version of the project to test new features and then merge into the main streamline.\nThe entire (local) Git project can be hosted on Github to improve collaboration. Other people or collaborators can clone the repository and push their changes to the project."
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#veeeery-basic-git-workflow-1",
-    "href": "slides/04-quarto/04-quarto.html#veeeery-basic-git-workflow-1",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#veeeery-basic-git-workflow-1",
+    "href": "slides/05-git-github/05-git-github.html#veeeery-basic-git-workflow-1",
+    "title": "Git and Github",
     "section": "Veeeery basic Git workflow",
     "text": "Veeeery basic Git workflow\nAfter installing Git, you can start a new repository opening a terminal on a folder and typing git init. The folder is now a git project you can notice by the hidden .git folder.\ncd ~/some/folder\ngit init\nThen you can add files to the staging area. Basically these files are ready to be committed i.e. “written” in the Git history.\ngit add file1.txt\n# git add . # add everyting\nFinally you can commit the modified version of the file using git commit -m message\ngit commit -m \"my first amazing commit\"\nyou can see the Git hystory with all your commits:\ngit log"
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#github",
-    "href": "slides/04-quarto/04-quarto.html#github",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#github",
+    "href": "slides/05-git-github/05-git-github.html#github",
+    "title": "Git and Github",
     "section": "Github",
     "text": "Github\nImagine to put everyting into a server with nice viewing options and advanced features. Github is just an hosting service for your git folder.\nYou can create an empty repository on Github named git-test. Now my repo has the path git@github.com:filippogambarota/git-test.git.\ngit remote add origin git@github.com:filippogambarota/git-test.git\ngit push\nNow our local repository is linked with the remote repository. Every time we do git push our local commits will be uploaded.\nIf you worked on the repository from another machine or a colleague add some changes, you can do git pull and your local machine will be updated.\n\nThe repository git-test is online and can be seen here filippogambarota/git-test."
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#github-1",
-    "href": "slides/04-quarto/04-quarto.html#github-1",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#github-1",
+    "href": "slides/05-git-github/05-git-github.html#github-1",
+    "title": "Git and Github",
     "section": "Github",
     "text": "Github\nAn now let’s see on Github the result:"
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#more-about-git-and-github",
-    "href": "slides/04-quarto/04-quarto.html#more-about-git-and-github",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#more-about-git-and-github",
+    "href": "slides/05-git-github/05-git-github.html#more-about-git-and-github",
+    "title": "Git and Github",
     "section": "More about Git and Github",
     "text": "More about Git and Github\nThere are a lot of resources online:\n\nThe Open Science Manual - Zandonella and Massidda - Git and Github chapters.\nhttps://agripongit.vincenttunru.com/\nhttps://git-scm.com/docs/gittutorial"
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-1",
-    "href": "slides/04-quarto/04-quarto.html#open-science-framework-1",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#open-science-framework-1",
+    "href": "slides/05-git-github/05-git-github.html#open-science-framework-1",
+    "title": "Git and Github",
     "section": "Open Science Framework",
     "text": "Open Science Framework\n\nOSF is a free, open platform to support your research and enable collaboration.\n\nIs a great tool to upload and share materials with others and collaborate on a project. Similarly to Github you can track the changes made to a project.\nThe great addition is having a DOI thus the project is persistently online and can be cited.\nIt is now common practice to create a OSF project supporting a research paper and put the link within the paper containing supplementary materials, raw data, scripts etc."
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-2",
-    "href": "slides/04-quarto/04-quarto.html#open-science-framework-2",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#open-science-framework-2",
+    "href": "slides/05-git-github/05-git-github.html#open-science-framework-2",
+    "title": "Git and Github",
     "section": "Open Science Framework",
     "text": "Open Science Framework\nIt’s very easy to create a new project, then you simply need to add files and share it.\n\nThe project can be accessed here (depending on the visibility) https://osf.io/yf9tg/."
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#open-science-framework-3",
-    "href": "slides/04-quarto/04-quarto.html#open-science-framework-3",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#open-science-framework-3",
+    "href": "slides/05-git-github/05-git-github.html#open-science-framework-3",
+    "title": "Git and Github",
     "section": "Open Science Framework",
     "text": "Open Science Framework\nOSF and Github\nAn interesting feature is linking a Github repository to OSF. Now all changes made on Github (easier to manage) are mirrored into OSF. You can easily work in Github for the coding part and use OSF to upload other data or information and to assign a DOI to the project.\nPreprints\nOSF is also linked to a popular service for preprints called PsyArXiv https://psyarxiv.com/ thus you can link a preprint to an OSF project."
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#more-on-osf",
-    "href": "slides/04-quarto/04-quarto.html#more-on-osf",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#more-on-osf",
+    "href": "slides/05-git-github/05-git-github.html#more-on-osf",
+    "title": "Git and Github",
     "section": "More on OSF",
     "text": "More on OSF\n\nhttps://help.osf.io/article/342-getting-started-on-the-osf\nhttps://arca-dpss.github.io/manual-open-science/osf-chapter.html"
   },
   {
-    "objectID": "slides/04-quarto/04-quarto.html#more-on-reproducibility",
-    "href": "slides/04-quarto/04-quarto.html#more-on-reproducibility",
-    "title": "Literate programming with Quarto",
+    "objectID": "slides/05-git-github/05-git-github.html#more-on-reproducibility",
+    "href": "slides/05-git-github/05-git-github.html#more-on-reproducibility",
+    "title": "Git and Github",
     "section": "More on reproducibility",
     "text": "More on reproducibility\nIn general, I highly suggest the online book The Open Science Manual https://arca-dpss.github.io/manual-open-science/ written by my friend Claudio Zandonella and Davide Massidda where these and other topics are explained in details:"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
-    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Paradigmi sperimentali",
-    "text": "Paradigmi sperimentali\nCon il prof. Maffei avete affrontato come rilevare attività celebrale ad esempio con fMRI o EEG/ERP.\nSolitamente (ma non sempre) queste rilevazioni sono eseguite mentre il soggetto sperimentale esegue un compito.\nOltre al dato neurofisiologico abbiamo quindi anche sempre un dato comportamentale che viene analizzato separatamente o in relazione a quello cerebrale.\nCi sono anche casi dove ai fini della ricerca è rilevante solo il dato comportamentale."
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
-    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Paradigmi sperimentali",
-    "text": "Paradigmi sperimentali\nQuando si parla di paradigma sperimentale, si intende un insieme di stimoli (visivi, uditivi, tattili, etc.) che vengono presentati ai soggetti.\nSolitamente i paradigmi vengono studiati e programmati nel dettaglio controllando il numero dei trials, le proprieta fisiche (durata, dimensione, etc.) degli stimoli, l’organizzazione temporale (durata esperimento, pause, ordine degli stimoli)."
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
-    "href": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Change-detection Task",
-    "text": "Change-detection Task\nQuesto compito è utilizzato per stimare la capacità della memoria visiva a breve termine. Possiamo vedere un esempio pratico a questo link https://run.pavlovia.org/demos/change_detection/.\nCon questo tipo di esperimenti è possibile stimare la quantità di informazione che riusciamo a memorizzare.\n\nRouder et al. (2011)"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
-    "href": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Facial expressions",
-    "text": "Facial expressions\nAltri ricercatori sono più interessati ad utilizzare stimoli con una valenza sociale ed evoluzionistica come i volti. C’è moltissima ricerca riguardo il modo in cui elaboriamo volti ed espressioni facciali. Un altro esempio qui http://run.pavlovia.org/demos/emotion_rating/.\n\nMünkler et al. (2015)"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
-    "href": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Unconscious processing",
-    "text": "Unconscious processing\nAltri (tipo me) si sono interessati a come elaboriamo informazioni (ad esempio visive) in modo non consapevole o subliminale. Trovate un esempio con volti qui https://www.youtube.com/watch?v=ln-uXcC2Y_8&t=6s."
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
-    "href": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Altri paradigmi da provare",
-    "text": "Altri paradigmi da provare\nSe volete provare altri esperimenti potete andare su https://pavlovia.org/explore?sort=DEFAULT&search=demos. Alcuni interessanti sono:\n\nStroop https://run.pavlovia.org/demos/stroop/\nDigit Span https://run.pavlovia.org/demos/digit_span/\nSemantic Priming https://run.pavlovia.org/demos/semantic_priming/"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
-    "href": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Quali misure?",
-    "text": "Quali misure?\nSolitamente a livello comportamentale siamo interessati a:\n\ntempi di reazione/risposta: i vari software permettono di rilevare con estrema precisione la velocità di risposta\naccuratezza nelle varie condizioni sperimentali\nstile di risposta\n…"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
-    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Tempi di reazione",
-    "text": "Tempi di reazione\nAd esempio possiamo ipotizzare che una condizione sperimentale più difficile richieda maggiore tempo di risposta. Spesso si parla di qualche decina di millisecondi."
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
-    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Tempi di reazione",
-    "text": "Tempi di reazione\nE possiamo anche essere interessati a stimare le differenze individuali che in Psicologia sono consistenti."
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
-    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Esperimenti complessi",
-    "text": "Esperimenti complessi\nSpesso siamo interessati non tanto ad effetti principali ma a interazioni tra condizioni sperimentali. Ad esempio, se vogliamo studiare come elaboriamo le espressioni facciali possiamo indagare:\n\nsiamo più veloci e/o accurati ad elaborare volti rispetto ad altri stimoli (effetto principale della categoria)\nsiamo più veloci e/o accurati ad elaborare alcune espressioni facciali rispetto ad altre? (effetto principale dell’espressione facciale)\nsiamo più veloci e/o accurati ad elaborare espressioni facciali di diversa intensità (effetto principale dell’espressione facciale)?"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
-    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Esperimenti complessi",
-    "text": "Esperimenti complessi\nMentre alcuni effetti sono noti in letteratura (alcune emozioni sono più facili da riconoscere) possiamo essere interessati a vedere se la relazione tra intensità ed accuratezza cambia in funzione dell’emozione (interazione):\n\nShimizu et al. (2024)"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
-    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Esperimenti complessi",
-    "text": "Esperimenti complessi\nIn questo tipo di esperimenti ci sono diverse cose da considerare:\n\nquanti trial per ogni condizione?\nquanti soggetti mi servono?\nesperimenti più lunghi portano a maggiore precisione di stima ma anche maggiore stanchezza\nquali stimoli utilizzo? il tipo di stimolo può avere un effetto?\n…"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
-    "href": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "Altre misure in Psicologia",
-    "text": "Altre misure in Psicologia"
-  },
-  {
-    "objectID": "slides/01-psychological-research/01-psychological-research.html#references",
-    "href": "slides/01-psychological-research/01-psychological-research.html#references",
-    "title": "Experimental Psychology and Neuroscience",
-    "section": "References",
-    "text": "References\n\n\n\n\nMünkler, Paula, Marcus Rothkirch, Yasmin Dalati, Katharina Schmack, and Philipp Sterzer. 2015. “Biased Recognition of Facial Affect in Patients with Major Depressive Disorder Reflects Clinical State.” PloS One 10 (June): e0129863. https://doi.org/10.1371/journal.pone.0129863.\n\n\nRouder, Jeffrey N, Richard D Morey, Candice C Morey, and Nelson Cowan. 2011. “How to Measure Working Memory Capacity in the Change Detection Paradigm.” Psychonomic Bulletin & Review 18 (April): 324–30. https://doi.org/10.3758/s13423-011-0055-3.\n\n\nShimizu, Yunoshin, Kazumi Ogawa, Masanori Kimura, Ken Fujiwara, and Nobuyuki Watanabe. 2024. “The Influence of Emotional Facial Expression Intensity on Decoding Accuracy: High Intensity Does Not Yield High Accuracy.” The Japanese Psychological Research 66 (October): 521–40. https://doi.org/10.1111/jpr.12529."
-  },
-  {
-    "objectID": "slides.html",
-    "href": "slides.html",
-    "title": "Psychometrics4Neuroscience",
-    "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nIntroduzione al corso\n\n\n \n\n\n\n\nExperimental Psychology and Neuroscience\n\n\n \n\n\n\n\nModern R\n\n\n \n\n\n\n\nLiterate programming with Quarto\n\n\n \n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "There are few tools that we need to install and configure for the course."
-  },
-  {
-    "objectID": "index.html#quarto",
-    "href": "index.html#quarto",
-    "title": "Getting started",
-    "section": "Quarto",
-    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
-  },
-  {
-    "objectID": "index.html#gitgithub",
-    "href": "index.html#gitgithub",
-    "title": "Getting started",
-    "section": "Git/Github",
-    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
-  },
-  {
-    "objectID": "index.html#cloning-the-repository",
-    "href": "index.html#cloning-the-repository",
-    "title": "Getting started",
-    "section": "Cloning the repository",
-    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
-  },
-  {
-    "objectID": "index.html#creating-your-repository",
-    "href": "index.html#creating-your-repository",
-    "title": "Getting started",
-    "section": "Creating your repository",
-    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#about-me",
-    "href": "slides/00-course-intro/00-course-intro.html#about-me",
-    "title": "Introduzione al corso",
-    "section": "About me",
-    "text": "About me\n\nSono uno Psicologo Clinico e assegnista di ricerca in Psicometria al Dipartimento di Psicologia dello Sviluppo e della Socializzazione\nMi occupo di analisi dei dati in Psicologia, in particolare: meta-analysis, simulazioni monte carlo per la power analysis, replicabilità e multiverse analysis"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#ricevimento",
-    "href": "slides/00-course-intro/00-course-intro.html#ricevimento",
-    "title": "Introduzione al corso",
-    "section": "Ricevimento",
-    "text": "Ricevimento\n\nLavoro al Dipartimento di Psicologia dello Sviluppo e della Socializzazione, Via Venezia 16, 35131 (edificio CLA). Il mio ufficio è 05-025 (5° piano).\nIl mio orario di ricevimento è Venerdì dalle 10:00 alle 12:00. Possiamo vederci sia in presenza che su Zoom. Potete prenotarvi qui https://calendar.app.google/Go7B6GBKBeRPCpU27.\nPer ogni cosa potete scrivermi a filippo.gambarota@unipd.it"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#argomenti",
-    "href": "slides/00-course-intro/00-course-intro.html#argomenti",
-    "title": "Introduzione al corso",
-    "section": "Argomenti",
-    "text": "Argomenti\n\nOpen science tools: R, Quarto, Git e Github\nReplicabilità e riproducibilità nelle neuroscienze cognitive\nMeta-analysis\nGeneralized Linear Mixed-Effects models\nSimulazioni Monte Carlo"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
-    "href": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
-    "title": "Introduzione al corso",
-    "section": "Organizzazione delle lezioni",
-    "text": "Organizzazione delle lezioni\nCosa faremo?\n\nPresentazione dei concetti teorici principali\nEsempi con dati reali e simulati\nIntepretazione dei risultati in ottica applicativa\nTanto codice\n\nCosa non faremo?\n\ndimostrazioni\nmolto focus sulle formule"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#materiale",
-    "href": "slides/00-course-intro/00-course-intro.html#materiale",
-    "title": "Introduzione al corso",
-    "section": "Materiale",
-    "text": "Materiale\nPer il materiale, trovate tutto su Github https://github.com/stat-teaching/psychometrics4neuroscience. Trovate i vari link anche su Moodle ma Github è molto più comodo per tenere e organizzare tutto (lo vedremo nel dettaglio).\nLa repository contiene il codice, le slide (sia in formato .qmd che compilate), i dataset e tutto il resto del materiale."
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#esami",
-    "href": "slides/00-course-intro/00-course-intro.html#esami",
-    "title": "Introduzione al corso",
-    "section": "Esami",
-    "text": "Esami\nFate sempre riferimento alla pagina ufficiale https://www.stat.unipd.it/studenti-iscritti/calendario-appelli-desame.\n\n16/06/2025 aula SC60 10:30-12:30\n07/07/2025 aula SC60 10:30-12:30\n01/09/2025 aula SC60 14:30-16:30"
-  },
-  {
-    "objectID": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
-    "href": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
-    "title": "Introduzione al corso",
-    "section": "Lavori di gruppo",
-    "text": "Lavori di gruppo\nParleremo dei lavori di gruppo assieme al Prof. Maffei il 28/04/2025 (salvo modifiche) dove vi presenteremo i lavori nel dettaglio.\nIn breve, vi sarà richiesto partendo da un dataset e/o un problema di ricerca, analizzare e/o simulare dei dati, produrre un report in Quarto e fare una presentazione del lavoro fatto."
   },
   {
     "objectID": "slides/03-modern-r/03-modern-r.html#reproducibility-starter-pack-1",
@@ -670,5 +362,313 @@
     "title": "Modern R",
     "section": "References",
     "text": "References\n\n\n\n\nMarwick, Ben, Carl Boettiger, and Lincoln Mullen. 2018. “Packaging Data Analytical Work Reproducibly Using r (and Friends).” The American Statistician 72 (January): 80–88. https://doi.org/10.1080/00031305.2017.1375986.\n\n\nVuorre, Matti, and Matthew J C Crump. 2021. “Sharing and Organizing Research Products as r Packages.” Behavior Research Methods 53 (April): 792–802. https://doi.org/10.3758/s13428-020-01436-x."
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#about-me",
+    "href": "slides/00-course-intro/00-course-intro.html#about-me",
+    "title": "Introduzione al corso",
+    "section": "About me",
+    "text": "About me\n\nSono uno Psicologo Clinico e assegnista di ricerca in Psicometria al Dipartimento di Psicologia dello Sviluppo e della Socializzazione\nMi occupo di analisi dei dati in Psicologia, in particolare: meta-analysis, simulazioni monte carlo per la power analysis, replicabilità e multiverse analysis"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#ricevimento",
+    "href": "slides/00-course-intro/00-course-intro.html#ricevimento",
+    "title": "Introduzione al corso",
+    "section": "Ricevimento",
+    "text": "Ricevimento\n\nLavoro al Dipartimento di Psicologia dello Sviluppo e della Socializzazione, Via Venezia 16, 35131 (edificio CLA). Il mio ufficio è 05-025 (5° piano).\nIl mio orario di ricevimento è Venerdì dalle 10:00 alle 12:00. Possiamo vederci sia in presenza che su Zoom. Potete prenotarvi qui https://calendar.app.google/Go7B6GBKBeRPCpU27.\nPer ogni cosa potete scrivermi a filippo.gambarota@unipd.it"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#argomenti",
+    "href": "slides/00-course-intro/00-course-intro.html#argomenti",
+    "title": "Introduzione al corso",
+    "section": "Argomenti",
+    "text": "Argomenti\n\nOpen science tools: R, Quarto, Git e Github\nReplicabilità e riproducibilità nelle neuroscienze cognitive\nMeta-analysis\nGeneralized Linear Mixed-Effects models\nSimulazioni Monte Carlo"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
+    "href": "slides/00-course-intro/00-course-intro.html#organizzazione-delle-lezioni",
+    "title": "Introduzione al corso",
+    "section": "Organizzazione delle lezioni",
+    "text": "Organizzazione delle lezioni\nCosa faremo?\n\nPresentazione dei concetti teorici principali\nEsempi con dati reali e simulati\nIntepretazione dei risultati in ottica applicativa\nTanto codice\n\nCosa non faremo?\n\ndimostrazioni\nmolto focus sulle formule"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#materiale",
+    "href": "slides/00-course-intro/00-course-intro.html#materiale",
+    "title": "Introduzione al corso",
+    "section": "Materiale",
+    "text": "Materiale\nPer il materiale, trovate tutto su Github https://github.com/stat-teaching/psychometrics4neuroscience. Trovate i vari link anche su Moodle ma Github è molto più comodo per tenere e organizzare tutto (lo vedremo nel dettaglio).\nLa repository contiene il codice, le slide (sia in formato .qmd che compilate), i dataset e tutto il resto del materiale."
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#esami",
+    "href": "slides/00-course-intro/00-course-intro.html#esami",
+    "title": "Introduzione al corso",
+    "section": "Esami",
+    "text": "Esami\nFate sempre riferimento alla pagina ufficiale https://www.stat.unipd.it/studenti-iscritti/calendario-appelli-desame.\n\n16/06/2025 aula SC60 10:30-12:30\n07/07/2025 aula SC60 10:30-12:30\n01/09/2025 aula SC60 14:30-16:30"
+  },
+  {
+    "objectID": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
+    "href": "slides/00-course-intro/00-course-intro.html#lavori-di-gruppo",
+    "title": "Introduzione al corso",
+    "section": "Lavori di gruppo",
+    "text": "Lavori di gruppo\nParleremo dei lavori di gruppo assieme al Prof. Maffei il 28/04/2025 (salvo modifiche) dove vi presenteremo i lavori nel dettaglio.\nIn breve, vi sarà richiesto partendo da un dataset e/o un problema di ricerca, analizzare e/o simulare dei dati, produrre un report in Quarto e fare una presentazione del lavoro fatto."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "There are few tools that we need to install and configure for the course."
+  },
+  {
+    "objectID": "index.html#quarto",
+    "href": "index.html#quarto",
+    "title": "Getting started",
+    "section": "Quarto",
+    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
+  },
+  {
+    "objectID": "index.html#gitgithub",
+    "href": "index.html#gitgithub",
+    "title": "Getting started",
+    "section": "Git/Github",
+    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
+  },
+  {
+    "objectID": "index.html#cloning-the-repository",
+    "href": "index.html#cloning-the-repository",
+    "title": "Getting started",
+    "section": "Cloning the repository",
+    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
+  },
+  {
+    "objectID": "index.html#creating-your-repository",
+    "href": "index.html#creating-your-repository",
+    "title": "Getting started",
+    "section": "Creating your repository",
+    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "slides.html",
+    "href": "slides.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nIntroduzione al corso\n\n\n \n\n\n\n\nExperimental Psychology and Neuroscience\n\n\n \n\n\n\n\nModern R\n\n\n \n\n\n\n\nLiterate programming with Quarto\n\n\n \n\n\n\n\nGit and Github\n\n\n \n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
+    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Paradigmi sperimentali",
+    "text": "Paradigmi sperimentali\nCon il prof. Maffei avete affrontato come rilevare attività celebrale ad esempio con fMRI o EEG/ERP.\nSolitamente (ma non sempre) queste rilevazioni sono eseguite mentre il soggetto sperimentale esegue un compito.\nOltre al dato neurofisiologico abbiamo quindi anche sempre un dato comportamentale che viene analizzato separatamente o in relazione a quello cerebrale.\nCi sono anche casi dove ai fini della ricerca è rilevante solo il dato comportamentale."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#paradigmi-sperimentali-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Paradigmi sperimentali",
+    "text": "Paradigmi sperimentali\nQuando si parla di paradigma sperimentale, si intende un insieme di stimoli (visivi, uditivi, tattili, etc.) che vengono presentati ai soggetti.\nSolitamente i paradigmi vengono studiati e programmati nel dettaglio controllando il numero dei trials, le proprieta fisiche (durata, dimensione, etc.) degli stimoli, l’organizzazione temporale (durata esperimento, pause, ordine degli stimoli)."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
+    "href": "slides/01-psychological-research/01-psychological-research.html#change-detection-task",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Change-detection Task",
+    "text": "Change-detection Task\nQuesto compito è utilizzato per stimare la capacità della memoria visiva a breve termine. Possiamo vedere un esempio pratico a questo link https://run.pavlovia.org/demos/change_detection/.\nCon questo tipo di esperimenti è possibile stimare la quantità di informazione che riusciamo a memorizzare.\n\nRouder et al. (2011)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
+    "href": "slides/01-psychological-research/01-psychological-research.html#facial-expressions",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Facial expressions",
+    "text": "Facial expressions\nAltri ricercatori sono più interessati ad utilizzare stimoli con una valenza sociale ed evoluzionistica come i volti. C’è moltissima ricerca riguardo il modo in cui elaboriamo volti ed espressioni facciali. Un altro esempio qui http://run.pavlovia.org/demos/emotion_rating/.\n\nMünkler et al. (2015)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
+    "href": "slides/01-psychological-research/01-psychological-research.html#unconscious-processing",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Unconscious processing",
+    "text": "Unconscious processing\nAltri (tipo me) si sono interessati a come elaboriamo informazioni (ad esempio visive) in modo non consapevole o subliminale. Trovate un esempio con volti qui https://www.youtube.com/watch?v=ln-uXcC2Y_8&t=6s."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
+    "href": "slides/01-psychological-research/01-psychological-research.html#altri-paradigmi-da-provare",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Altri paradigmi da provare",
+    "text": "Altri paradigmi da provare\nSe volete provare altri esperimenti potete andare su https://pavlovia.org/explore?sort=DEFAULT&search=demos. Alcuni interessanti sono:\n\nStroop https://run.pavlovia.org/demos/stroop/\nDigit Span https://run.pavlovia.org/demos/digit_span/\nSemantic Priming https://run.pavlovia.org/demos/semantic_priming/"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
+    "href": "slides/01-psychological-research/01-psychological-research.html#quali-misure",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Quali misure?",
+    "text": "Quali misure?\nSolitamente a livello comportamentale siamo interessati a:\n\ntempi di reazione/risposta: i vari software permettono di rilevare con estrema precisione la velocità di risposta\naccuratezza nelle varie condizioni sperimentali\nstile di risposta\n…"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
+    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Tempi di reazione",
+    "text": "Tempi di reazione\nAd esempio possiamo ipotizzare che una condizione sperimentale più difficile richieda maggiore tempo di risposta. Spesso si parla di qualche decina di millisecondi."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#tempi-di-reazione-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Tempi di reazione",
+    "text": "Tempi di reazione\nE possiamo anche essere interessati a stimare le differenze individuali che in Psicologia sono consistenti."
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nSpesso siamo interessati non tanto ad effetti principali ma a interazioni tra condizioni sperimentali. Ad esempio, se vogliamo studiare come elaboriamo le espressioni facciali possiamo indagare:\n\nsiamo più veloci e/o accurati ad elaborare volti rispetto ad altri stimoli (effetto principale della categoria)\nsiamo più veloci e/o accurati ad elaborare alcune espressioni facciali rispetto ad altre? (effetto principale dell’espressione facciale)\nsiamo più veloci e/o accurati ad elaborare espressioni facciali di diversa intensità (effetto principale dell’espressione facciale)?"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nMentre alcuni effetti sono noti in letteratura (alcune emozioni sono più facili da riconoscere) possiamo essere interessati a vedere se la relazione tra intensità ed accuratezza cambia in funzione dell’emozione (interazione):\n\nShimizu et al. (2024)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
+    "href": "slides/01-psychological-research/01-psychological-research.html#esperimenti-complessi-2",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Esperimenti complessi",
+    "text": "Esperimenti complessi\nIn questo tipo di esperimenti ci sono diverse cose da considerare:\n\nquanti trial per ogni condizione?\nquanti soggetti mi servono?\nesperimenti più lunghi portano a maggiore precisione di stima ma anche maggiore stanchezza\nquali stimoli utilizzo? il tipo di stimolo può avere un effetto?\n…"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
+    "href": "slides/01-psychological-research/01-psychological-research.html#altre-misure-in-psicologia",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Altre misure in Psicologia",
+    "text": "Altre misure in Psicologia"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#references",
+    "href": "slides/01-psychological-research/01-psychological-research.html#references",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "References",
+    "text": "References\n\n\n\n\nMünkler, Paula, Marcus Rothkirch, Yasmin Dalati, Katharina Schmack, and Philipp Sterzer. 2015. “Biased Recognition of Facial Affect in Patients with Major Depressive Disorder Reflects Clinical State.” PloS One 10 (June): e0129863. https://doi.org/10.1371/journal.pone.0129863.\n\n\nRouder, Jeffrey N, Richard D Morey, Candice C Morey, and Nelson Cowan. 2011. “How to Measure Working Memory Capacity in the Change Detection Paradigm.” Psychonomic Bulletin & Review 18 (April): 324–30. https://doi.org/10.3758/s13423-011-0055-3.\n\n\nShimizu, Yunoshin, Kazumi Ogawa, Masanori Kimura, Ken Fujiwara, and Nobuyuki Watanabe. 2024. “The Influence of Emotional Facial Expression Intensity on Decoding Accuracy: High Intensity Does Not Yield High Accuracy.” The Japanese Psychological Research 66 (October): 521–40. https://doi.org/10.1111/jpr.12529."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-1",
+    "href": "slides/04-quarto/04-quarto.html#literate-programming-1",
+    "title": "Literate programming with Quarto",
+    "section": "Literate Programming1",
+    "text": "Literate Programming1\n\nDonald Knuth first defined literate programming as a script, notebook, or computational document that contains an explanation of the program logic in a natural language, interspersed with snippets of macros and source code, which can be compiled and rerun\n\nFor example jupyter notebooks, R Markdown and now Quarto are literate programming frameworks to integrate code and text.\n\n\n\n\n\nhttps://en.wikipedia.org/wiki/Literate_programming"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
+    "href": "slides/04-quarto/04-quarto.html#literate-programming-the-markup-language",
+    "title": "Literate programming with Quarto",
+    "section": "Literate Programming, the markup language",
+    "text": "Literate Programming, the markup language\nBeyond the coding part, the markup language is the core element of a literate programming framework. The idea of a markup language is separating the result from what you actually write. Some examples are:\n\nLaTeX\nHTML\nMarkdown\nXML\n…"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#latex",
+    "href": "slides/04-quarto/04-quarto.html#latex",
+    "title": "Literate programming with Quarto",
+    "section": "LaTeX 1",
+    "text": "LaTeX 1\n\nhttps://latexbase.com/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#html",
+    "href": "slides/04-quarto/04-quarto.html#html",
+    "title": "Literate programming with Quarto",
+    "section": "HTML",
+    "text": "HTML\n&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;body&gt;\n\n&lt;h1&gt;My First Heading&lt;/h1&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;h2&gt;My Second Heading&lt;/h2&gt;\n\nLorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. \n\nLorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo \n\ntipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. \n\nÈ sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. \n\nFu reso popolare, negli anni ’60, con la diffusione dei \n\nfogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum\n\npiù recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.\n\n&lt;/body&gt;\n&lt;/html&gt;"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown",
+    "href": "slides/04-quarto/04-quarto.html#markdown",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown1",
+    "text": "Markdown1\n\n\nhttps://markdownlivepreview.com/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown-1",
+    "href": "slides/04-quarto/04-quarto.html#markdown-1",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown",
+    "text": "Markdown\nMarkdown is one of the most popular markup languages for several reasons:\n\neasy to write and read compared to Latex and HTML\neasy to convert from Markdown to basically every other format using pandoc\neasy to implement new features"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#markdown-source-code",
+    "href": "slides/04-quarto/04-quarto.html#markdown-source-code",
+    "title": "Literate programming with Quarto",
+    "section": "Markdown (source code)",
+    "text": "Markdown (source code)\n## Markdown\n\nMarkdown is one of the most popular markup languages for several reasons:\n\n- easy to write and read compared to Latex and HTML\n- easy to convert from Markdown to basically every other format using `pandoc`\n- easy to implement new features\n\nAlso the source code can be used, compared to Latex or HTML, to take notes and read. Latex and HTML need to be compiled otherwise they are very hard to read."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
+    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word",
+    "title": "Literate programming with Quarto",
+    "section": "What’s wrong about Microsoft Word?",
+    "text": "What’s wrong about Microsoft Word?\nMS Word is a WYSIWYG (what you see is what you get editor) that force users to think about formatting, numbering, etc. Markup languages receive the content (plain text) and the rules and creates the final document."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
+    "href": "slides/04-quarto/04-quarto.html#whats-wrong-about-microsoft-word-1",
+    "title": "Literate programming with Quarto",
+    "section": "What’s wrong about Microsoft Word?",
+    "text": "What’s wrong about Microsoft Word?\nBeyond the pure writing process, there are other aspects related to research data.\n\n\nwriting math formulas\nreporting statistics in the text\nproducing tables\nproducing plots\n\n\nIn MS Word (or similar) we need to produce everything outside and then manually put figures and tables."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#the-solution-quarto",
+    "href": "slides/04-quarto/04-quarto.html#the-solution-quarto",
+    "title": "Literate programming with Quarto",
+    "section": "The solution… Quarto",
+    "text": "The solution… Quarto\nQuarto (https://quarto.org/) is the evolution of R Markdown that integrate a programming language with the Markdown markup language. It is very simple but quite powerful."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#basic-markdown",
+    "href": "slides/04-quarto/04-quarto.html#basic-markdown",
+    "title": "Literate programming with Quarto",
+    "section": "Basic Markdown",
+    "text": "Basic Markdown\nMarkdown can be learned in minutes. You can go to the following link https://quarto.org/docs/authoring/markdown-basics.html and try to understand the syntax."
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
+    "href": "slides/04-quarto/04-quarto.html#more-about-quarto-and-r-markdown",
+    "title": "Literate programming with Quarto",
+    "section": "More about Quarto and R Markdown",
+    "text": "More about Quarto and R Markdown\nThe topic is extremely vast. You can do everything in Quarto, a website, thesis, your CV, etc.\n\nYihui Xie - R Markdown Cookbook https://bookdown.org/yihui/rmarkdown-cookbook/\nYihui Xie - R Markdown: The Definitive Guide https://bookdown.org/yihui/rmarkdown/\nQuarto documentation https://quarto.org/docs/guide/"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
+    "href": "slides/04-quarto/04-quarto.html#writing-papers-papaja",
+    "title": "Literate programming with Quarto",
+    "section": "Writing papers, papaja",
+    "text": "Writing papers, papaja\n\nhttps://github.com/crsh/papaja"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
+    "href": "slides/04-quarto/04-quarto.html#writing-papers-apaquarto",
+    "title": "Literate programming with Quarto",
+    "section": "Writing papers, apaquarto",
+    "text": "Writing papers, apaquarto\n\nhttps://github.com/wjschne/apaquarto"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
+    "href": "slides/04-quarto/04-quarto.html#collaborating-tbh-not-so-easy",
+    "title": "Literate programming with Quarto",
+    "section": "Collaborating! (TBH not so easy)",
+    "text": "Collaborating! (TBH not so easy)\nThe trackdown package can be used to collaborate on Rmd or qmd documents using Google Docs.\n\nhttps://github.com/ClaudioZandonella/trackdown"
+  },
+  {
+    "objectID": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
+    "href": "slides/04-quarto/04-quarto.html#collaborating-overleaf",
+    "title": "Literate programming with Quarto",
+    "section": "Collaborating! Overleaf",
+    "text": "Collaborating! Overleaf\nWith Overleaf you can collaborate on .tex documents but also .Rnw documents. No Rmd or qmd unfortunately. See an example document."
   }
 ]

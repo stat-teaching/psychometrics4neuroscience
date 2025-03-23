@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.6.40">
 
   <meta name="author" content="Filippo Gambarota, PhD">
-  <title>Psychometrics4Neuroscience – Literate programming with Quarto</title>
+  <title>Psychometrics4Neuroscience – Git and Github</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -192,174 +192,111 @@
     <div class="slides">
 
 <section id="title-slide" class="center">
-    <h1 class="title">Literate programming with Quarto</h1>
+    <h1 class="title">Git and Github</h1>
       <p class="subtitle">Psicometria per le Neuroscienze Cognitive</p>
         <p class="author">Filippo Gambarota, PhD</p>
         </section>
 <section>
-<section id="literate-programming" class="title-slide slide level1 section center">
-<h1>Literate Programming</h1>
+<section id="git-and-github" class="title-slide slide level1 section center">
+<h1>Git and Github</h1>
 
 </section>
-<section id="literate-programming-1" class="slide level2">
-<h2>Literate Programming<sup>1</sup></h2>
-<blockquote>
-<p>Donald Knuth first defined literate programming as a script, notebook, or computational document that contains an explanation of the program logic in a natural language, interspersed with snippets of macros and source code, which can be compiled and rerun</p>
-</blockquote>
-<p>For example <strong>jupyter notebooks</strong>, <strong>R Markdown</strong> and now <strong>Quarto</strong> are literate programming frameworks to integrate code and text.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="img/lp.svg" class="quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
-<aside><ol class="aside-footnotes"><li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Literate_programming">https://en.wikipedia.org/wiki/Literate_programming</a></p></li></ol></aside></section>
-<section id="literate-programming-the-markup-language" class="slide level2">
-<h2>Literate Programming, the markup language</h2>
-<p>Beyond the coding part, the markup language is the core element of a literate programming framework. The idea of a markup language is separating the result from what you actually write. Some examples are:</p>
+<section id="git-and-github-1" class="slide level2">
+<h2>Git and Github</h2>
 <ul>
-<li>LaTeX</li>
-<li>HTML</li>
-<li>Markdown</li>
-<li>XML</li>
-<li>…</li>
+<li>The basic idea is to track changes within a folder, assign a <code>message</code> and eventually a <code>tag</code> to a specific version obtaining a version hystory. The version history is completely navigable, you can go back to a previous version of the code.</li>
+<li>The are advanced features like <code>branches</code> for creating an independent version of the project to test new features and then <code>merge</code> into the main streamline.</li>
+<li>The entire (local) Git project can be hosted on Github to improve collaboration. Other people or collaborators can <code>clone</code> the repository and <code>push</code> their changes to the project.</li>
 </ul>
-</section>
-<section id="latex" class="slide level2">
-<h2>LaTeX <sup>1</sup></h2>
-<p><img data-src="img/latex-example.png"></p>
-<aside><ol class="aside-footnotes"><li id="fn2"><p><a href="https://www.overleaf.com/project/6658541939d95ad2ae3d8c99">https://latexbase.com/</a></p></li></ol></aside></section>
-<section id="html" class="slide level2">
-<h2>HTML</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
-<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="dt">&gt;</span></span>
-<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
-<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>My First Heading<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
-<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.</span>
-<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>My Second Heading<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
-<span id="cb1-10"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a aria-hidden="true" tabindex="-1"></a>Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. </span>
-<span id="cb1-12"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a aria-hidden="true" tabindex="-1"></a>Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo </span>
-<span id="cb1-14"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a aria-hidden="true" tabindex="-1"></a>tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. </span>
-<span id="cb1-16"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a aria-hidden="true" tabindex="-1"></a>È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. </span>
-<span id="cb1-18"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a aria-hidden="true" tabindex="-1"></a>Fu reso popolare, negli anni ’60, con la diffusione dei </span>
-<span id="cb1-20"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a aria-hidden="true" tabindex="-1"></a>fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum</span>
-<span id="cb1-22"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a aria-hidden="true" tabindex="-1"></a>più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.</span>
-<span id="cb1-24"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
-<span id="cb1-26"><a aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="markdown" class="slide level2">
-<h2>Markdown<sup>1</sup></h2>
-<iframe src="https://markdownlivepreview.com/" height="500" width="1000" style="border: 1px solid #464646;display:block;" allowfullscreen="" allow="autoplay">
-</iframe>
-<aside><ol class="aside-footnotes"><li id="fn3"><p><a href="https://markdownlivepreview.com/">https://markdownlivepreview.com/</a></p></li></ol></aside></section>
-<section id="markdown-1" class="slide level2">
-<h2>Markdown</h2>
-<p>Markdown is one of the most popular markup languages for several reasons:</p>
-<ul>
-<li>easy to write and read compared to Latex and HTML</li>
-<li>easy to convert from Markdown to basically every other format using <code>pandoc</code></li>
-<li>easy to implement new features</li>
-</ul>
-</section>
-<section id="markdown-source-code" class="slide level2">
-<h2>Markdown (source code)</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">## Markdown</span></span>
-<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a>Markdown is one of the most popular markup languages for several reasons:</span>
-<span id="cb2-4"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>easy to write and read compared to Latex and HTML</span>
-<span id="cb2-6"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>easy to convert from Markdown to basically every other format using <span class="in">`pandoc`</span></span>
-<span id="cb2-7"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>easy to implement new features</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="fragment">
-<p>Also the source code can be used, compared to Latex or HTML, to take notes and read. Latex and HTML need to be compiled otherwise they are very hard to read.</p>
-</div>
-</section>
-<section id="whats-wrong-about-microsoft-word" class="slide level2">
-<h2>What’s wrong about Microsoft Word?</h2>
-<p>MS Word is a WYSIWYG (<em>what you see is what you get editor</em>) that force users to think about formatting, numbering, etc. Markup languages receive the content (plain text) and the rules and creates the final document.</p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><img data-src="img/wordmeme1.jpg"></p>
-</div><div class="column" style="width:50%;">
-<p><img data-src="img/wordmeme2.jpg"></p>
-</div></div>
-</section>
-<section id="whats-wrong-about-microsoft-word-1" class="slide level2">
-<h2>What’s wrong about Microsoft Word?</h2>
-<p>Beyond the pure writing process, there are other aspects related to research data.</p>
-<div>
-<ul>
-<li>writing math formulas</li>
-<li>reporting statistics in the text</li>
-<li>producing tables</li>
-<li>producing plots</li>
-</ul>
-</div>
-<p>In MS Word (or similar) we need to produce everything outside and then manually put figures and tables.</p>
-</section>
-<section id="the-solution-quarto" class="slide level2">
-<h2>The solution… Quarto</h2>
-<p>Quarto (<a href="https://quarto.org/">https://quarto.org/</a>) is the evolution of R Markdown that integrate a programming language with the Markdown markup language. It is very simple but quite powerful.</p>
-<center>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><img data-src="https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/rmarkdown.svg" width="300"></p>
-</div><div class="column" style="width:50%;">
-<p><img data-src="https://raw.githubusercontent.com/rstudio/hex-stickers/main/SVG/quarto.svg" width="300"></p>
-</div></div>
-</center>
-</section>
-<section id="basic-markdown" class="slide level2">
-<h2>Basic Markdown</h2>
-<p>Markdown can be learned in minutes. You can go to the following link <a href="https://quarto.org/docs/authoring/markdown-basics.html">https://quarto.org/docs/authoring/markdown-basics.html</a> and try to understand the syntax.</p>
-<iframe src="https://quarto.org/docs/authoring/markdown-basics.html" style="width:1000px; height:500px;">
-</iframe>
 </section></section>
 <section>
-<section id="lets-see-a-practical-example" class="title-slide slide level1 section center">
-<h1>Let’s see a practical example!</h1>
+<section id="veeeery-basic-git-workflow" class="title-slide slide level1 section center">
+<h1>Veeeery basic Git workflow</h1>
 
 </section>
-<section id="more-about-quarto-and-r-markdown" class="slide level2">
-<h2>More about Quarto and R Markdown</h2>
-<p>The topic is extremely vast. You can do everything in Quarto, a website, thesis, your CV, etc.</p>
+<section id="veeeery-basic-git-workflow-1" class="slide level2">
+<h2>Veeeery basic Git workflow</h2>
+<p>After installing Git, you can start a new repository opening a terminal on a folder and typing <code>git init</code>. The folder is now a git project you can notice by the hidden <code>.git</code> folder.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/some/folder</span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then you can <code>add</code> files to the staging area. Basically these files are ready to be <code>committed</code> i.e.&nbsp;“written” in the Git history.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add file1.txt</span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># git add . # add everyting</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Finally you can commit the modified version of the file using <code>git commit -m message</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"my first amazing commit"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>you can see the Git hystory with all your commits:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="github" class="slide level2">
+<h2>Github</h2>
+<p>Imagine to put everyting into a server with nice viewing options and advanced features. Github is just an hosting service for your <code>git</code> folder.</p>
+<p>You can create an empty repository on Github named <code>git-test</code>. Now my repo has the path <code>git@github.com:filippogambarota/git-test.git</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin git@github.com:filippogambarota/git-test.git</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now our local repository is linked with the remote repository. Every time we do <code>git push</code> our local commits will be uploaded.</p>
+<p>If you worked on the repository from another machine or a colleague add some changes, you can do <code>git pull</code> and your local machine will be updated.</p>
+<p><br></p>
+<p>The repository <code>git-test</code> is online and can be seen here <a href="https://github.com/filippogambarota/git-test">filippogambarota/git-test</a>.</p>
+</section>
+<section id="github-1" class="slide level2">
+<h2>Github</h2>
+<p>An now let’s see on Github the result:</p>
+
+<img data-src="img/git-test.png" class="quarto-figure quarto-figure-center r-stretch" width="604"></section>
+<section id="more-about-git-and-github" class="slide level2">
+<h2>More about Git and Github</h2>
+<p>There are a lot of resources online:</p>
 <ul>
-<li>Yihui Xie - R Markdown Cookbook <a href="https://bookdown.org/yihui/rmarkdown-cookbook/">https://bookdown.org/yihui/rmarkdown-cookbook/</a></li>
-<li>Yihui Xie - R Markdown: The Definitive Guide <a href="https://bookdown.org/yihui/rmarkdown/">https://bookdown.org/yihui/rmarkdown/</a></li>
-<li>Quarto documentation <a href="https://quarto.org/docs/guide/">https://quarto.org/docs/guide/</a></li>
+<li>The Open Science Manual - Zandonella and Massidda - <a href="https://arca-dpss.github.io/manual-open-science/git-chapter.html">Git</a> and <a href="https://arca-dpss.github.io/manual-open-science/github-chapter.html">Github</a> chapters.</li>
+<li><a href="https://agripongit.vincenttunru.com/">https://agripongit.vincenttunru.com/</a></li>
+<li><a href="https://agripongit.vincenttunru.com/">https://git-scm.com/docs/gittutorial</a></li>
+</ul>
+</section></section>
+<section>
+<section id="open-science-framework" class="title-slide slide level1 section center">
+<h1>Open Science Framework</h1>
+
+</section>
+<section id="open-science-framework-1" class="slide level2">
+<h2>Open Science Framework</h2>
+<blockquote>
+<p>OSF is a free, open platform to support your research and enable collaboration.</p>
+</blockquote>
+<p>Is a great tool to upload and share materials with others and collaborate on a project. Similarly to Github you can track the changes made to a project.</p>
+<p>The great addition is having a DOI thus the project is persistently online and can be cited.</p>
+<p>It is now common practice to create a OSF project supporting a research paper and put the link within the paper containing supplementary materials, raw data, scripts etc.</p>
+
+<img data-src="img/osf.jpeg" class="r-stretch"></section>
+<section id="open-science-framework-2" class="slide level2">
+<h2>Open Science Framework</h2>
+<p>It’s very easy to create a new project, then you simply need to add files and share it.</p>
+
+<img data-src="img/osf-test.png" class="r-stretch"><p>The project can be accessed here (depending on the visibility) <a href="https://osf.io/yf9tg/">https://osf.io/yf9tg/</a>.</p>
+</section>
+<section id="open-science-framework-3" class="slide level2">
+<h2>Open Science Framework</h2>
+<h3 id="osf-and-github">OSF and Github</h3>
+<p>An interesting feature is linking a Github repository to OSF. Now all changes made on Github (easier to manage) are mirrored into OSF. You can easily work in Github for the coding part and use OSF to upload other data or information and to assign a DOI to the project.</p>
+<h3 id="preprints">Preprints</h3>
+<p>OSF is also linked to a popular service for preprints called PsyArXiv <a href="https://psyarxiv.com/">https://psyarxiv.com/</a> thus you can link a preprint to an OSF project.</p>
+</section>
+<section id="more-on-osf" class="slide level2">
+<h2>More on OSF</h2>
+<ul>
+<li>https://help.osf.io/article/342-getting-started-on-the-osf</li>
+<li>https://arca-dpss.github.io/manual-open-science/osf-chapter.html</li>
 </ul>
 </section>
-<section id="writing-papers-papaja" class="slide level2">
-<h2>Writing papers, <code>papaja</code></h2>
-
-<img data-src="img/papaja.png" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://github.com/crsh/papaja">https://github.com/crsh/papaja</a></p></section>
-<section id="writing-papers-apaquarto" class="slide level2">
-<h2>Writing papers, <code>apaquarto</code></h2>
-
-<img data-src="img/apaquarto.png" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://github.com/wjschne/apaquarto">https://github.com/wjschne/apaquarto</a></p></section>
-<section id="collaborating-tbh-not-so-easy" class="slide level2">
-<h2>Collaborating! (TBH not so easy)</h2>
-<p>The <code>trackdown</code> package can be used to collaborate on <code>Rmd</code> or <code>qmd</code> documents using Google Docs.</p>
-
-<img data-src="img/trackdown.png" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://github.com/ClaudioZandonella/trackdown">https://github.com/ClaudioZandonella/trackdown</a></p></section>
-<section id="collaborating-overleaf" class="slide level2">
-<h2>Collaborating! Overleaf</h2>
-<p>With Overleaf you can collaborate on <code>.tex</code> documents but also <code>.Rnw</code> documents. No <code>Rmd</code> or <code>qmd</code> unfortunately. See an <a href="https://www.overleaf.com/project/6759ac59ce1401a5fd86791b">example document</a>.</p>
+<section id="more-on-reproducibility" class="slide level2">
+<h2>More on reproducibility</h2>
+<p>In general, I highly suggest the online book <strong>The Open Science Manual</strong> <a href="https://arca-dpss.github.io/manual-open-science/">https://arca-dpss.github.io/manual-open-science/</a> written by my friend <strong>Claudio Zandonella</strong> and <strong>Davide Massidda</strong> where these and other topics are explained in details:</p>
+<center>
+<iframe src="https://arca-dpss.github.io/manual-open-science/" style="width:1000px; height:500px;">
+</iframe>
+</center>
 
 
-
-<img data-src="img/overleaf.png" class="r-stretch"></section></section>
-
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -575,6 +512,44 @@
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {

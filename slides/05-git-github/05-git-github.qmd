@@ -1,0 +1,125 @@
+---
+title: Git and Github
+---
+
+# Git and Github {.section}
+
+## Git and Github
+
+- The basic idea is to track changes within a folder, assign a `message` and eventually a `tag` to a specific version obtaining a version hystory. The version history is completely navigable, you can go back to a previous version of the code.
+- The are advanced features like `branches` for creating an independent version of the project to test new features and then `merge` into the main streamline.
+- The entire (local) Git project can be hosted on Github to improve collaboration. Other people or collaborators can `clone` the repository and `push` their changes to the project.
+
+# Veeeery basic Git workflow {.section}
+
+## Veeeery basic Git workflow
+
+After installing Git, you can start a new repository opening a terminal on a folder and typing `git init`. The folder is now a git project you can notice by the hidden `.git` folder.
+
+```bash
+cd ~/some/folder
+git init
+```
+
+Then you can `add` files to the staging area. Basically these files are ready to be `committed` i.e. "written" in the Git history.
+
+```bash
+git add file1.txt
+# git add . # add everyting
+```
+
+Finally you can commit the modified version of the file using `git commit -m message`
+
+```bash
+git commit -m "my first amazing commit"
+```
+
+you can see the Git hystory with all your commits:
+
+```bash
+git log
+```
+
+## Github
+
+Imagine to put everyting into a server with nice viewing options and advanced features. Github is just an hosting service for your `git` folder.
+
+You can create an empty repository on Github named `git-test`. Now my repo has the path `git@github.com:filippogambarota/git-test.git`.
+
+```bash
+git remote add origin git@github.com:filippogambarota/git-test.git
+git push
+```
+
+Now our local repository is linked with the remote repository. Every time we do `git push` our local commits will be uploaded.
+
+If you worked on the repository from another machine or a colleague add some changes, you can do `git pull` and your local machine will be updated.
+
+</br>
+
+The repository `git-test` is online and can be seen here [filippogambarota/git-test](https://github.com/filippogambarota/git-test).
+
+## Github
+
+An now let's see on Github the result:
+
+```{r}
+#| fig-align: center
+#| echo: false
+knitr::include_graphics("img/git-test.png")
+```
+
+## More about Git and Github
+
+There are a lot of resources online:
+
+- The Open Science Manual - Zandonella and Massidda - [Git](https://arca-dpss.github.io/manual-open-science/git-chapter.html) and [Github](https://arca-dpss.github.io/manual-open-science/github-chapter.html) chapters.
+- [https://agripongit.vincenttunru.com/](https://agripongit.vincenttunru.com/)
+- [https://git-scm.com/docs/gittutorial](https://agripongit.vincenttunru.com/)
+
+# Open Science Framework {.section}
+
+## Open Science Framework
+
+> OSF is a free, open platform to support your research and enable collaboration.
+
+Is a great tool to upload and share materials with others and collaborate on a project. Similarly to Github you can track the changes made to a project.
+
+The great addition is having a DOI thus the project is persistently online and can be cited.
+
+It is now common practice to create a OSF project supporting a research paper and put the link within the paper containing supplementary materials, raw data, scripts etc.
+
+![](img/osf.jpeg)
+
+## Open Science Framework
+
+It's very easy to create a new project, then you simply need to add files and share it.
+
+![](img/osf-test.png)
+
+The project can be accessed here (depending on the visibility) [https://osf.io/yf9tg/](https://osf.io/yf9tg/).
+
+## Open Science Framework
+
+### OSF and Github
+
+An interesting feature is linking a Github repository to OSF. Now all changes made on Github (easier to manage) are mirrored into OSF. You can easily work in Github for the coding part and use OSF to upload other data or information and to assign a DOI to the project.
+
+### Preprints
+
+OSF is also linked to a popular service for preprints called PsyArXiv [https://psyarxiv.com/](https://psyarxiv.com/) thus you can link a preprint to an OSF project.
+
+## More on OSF
+
+- https://help.osf.io/article/342-getting-started-on-the-osf
+- https://arca-dpss.github.io/manual-open-science/osf-chapter.html
+
+## More on reproducibility
+
+In general, I highly suggest the online book **The Open Science Manual** [https://arca-dpss.github.io/manual-open-science/](https://arca-dpss.github.io/manual-open-science/) written by my friend **Claudio Zandonella** and **Davide Massidda** where these and other topics are explained in details:
+
+<center>
+
+<iframe src='https://arca-dpss.github.io/manual-open-science/' style='width:1000px; height:500px;'></iframe>
+
+</center>

@@ -24,5 +24,8 @@
   },
   "slides/04-quarto/04-quarto.qmd": {
     "04-quarto.html": "cad75f2d"
+  },
+  "slides/05-git-github/05-git-github.qmd": {
+    "05-git-github.html": "b0c6f5d9"
   }
 }
