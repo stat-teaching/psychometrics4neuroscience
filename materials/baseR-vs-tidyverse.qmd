@@ -1,0 +1,126 @@
+---
+title: "Base R vs Tidyverse"
+format: html
+execute: 
+  echo: true
+---
+
+# Problem Description
+
+In this exercise, we will use two datasets: 
+
+1. The `iris` dataset for complex operations on grouped data.
+2. The `mtcars` dataset for reshaping between long and wide formats.
+
+This will allow us to compare different data manipulation tasks using base R and the tidyverse.
+
+# Task 1: Complex Operations on Grouped Data
+
+We will calculate the mean and standard deviation for each measurement (`Sepal.Length`, `Sepal.Width`, `Petal.Length`, `Petal.Width`) by species.
+
+## Base R Solution
+
+```{r}
+# Load the iris dataset
+data(iris)
+
+# Base R approach using tapply and aggregate
+mean_sd_base <- aggregate(cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) ~ Species, data = iris, 
+                          FUN = function(x) c(mean = mean(x), sd = sd(x)))
+
+# Flatten the results
+mean_sd_base <- do.call(data.frame, mean_sd_base)
+
+# Display the result
+mean_sd_base
+```
+
+## Tidyverse Solution
+
+```{r}
+# Load the tidyverse package
+library(tidyverse)
+
+# Tidyverse approach using dplyr
+mean_sd_tidy <- iris %>%
+  group_by(Species) %>%
+  summarize(across(starts_with("Sepal") | starts_with("Petal"), 
+                   list(mean = ~mean(.), sd = ~sd(.)), 
+                   .names = "{col}_{fn}"))
+
+# Display the result
+mean_sd_tidy
+```
+
+# Task 2: Reshaping Data (Long to Wide and Back)
+
+We will reshape the `mtcars` dataset by converting it into a long format where each measurement is recorded separately for each car model, and then back into a wide format.
+
+## Base R Solution
+
+```{r}
+# Load the mtcars dataset
+data(mtcars)
+
+# Add car names as a column instead of row names
+mtcars$car <- rownames(mtcars)
+
+# Base R approach to long format
+mtcars_long_base <- reshape(mtcars, idvar = "car", varying = names(mtcars)[1:11], 
+                            v.names = "value", timevar = "variable", 
+                            times = names(mtcars)[1:11], direction = "long")
+
+# Back to wide format
+mtcars_wide_base <- reshape(mtcars_long_base, idvar = "car", timevar = "variable", 
+                            direction = "wide")
+
+# Display results
+head(mtcars_long_base)
+head(mtcars_wide_base)
+```
+
+## Tidyverse Solution
+
+```{r}
+# Tidyverse approach to long format
+mtcars_long_tidy <- mtcars %>% 
+  pivot_longer(cols = -car, names_to = "variable", values_to = "value")
+
+# Back to wide format
+mtcars_wide_tidy <- mtcars_long_tidy %>% 
+  pivot_wider(names_from = variable, values_from = value)
+
+# Display results
+head(mtcars_long_tidy)
+head(mtcars_wide_tidy)
+```
+
+# Comparison of Base R and Tidyverse
+
+## Pros and Cons of Base R
+
+### Pros:
+- **Flexibility**: Base R allows detailed control over transformations.
+- **No external dependencies**: No need to install additional packages.
+- **Suitable for simple tasks**: If transformations are minimal, base R can be effective.
+
+### Cons:
+- **Verbose**: Base R code for reshaping data is long and requires multiple parameters.
+- **Less intuitive**: The syntax for `reshape()` can be confusing.
+- **More manual work**: Intermediate steps often need to be managed explicitly.
+
+## Pros and Cons of Tidyverse
+
+### Pros:
+- **Concise and readable**: Functions like `pivot_longer()` and `pivot_wider()` are intuitive.
+- **Streamlined workflow**: Tidyverse simplifies common operations like grouping and reshaping.
+- **Better suited for modern data analysis**: Works well with pipes and declarative transformations.
+
+### Cons:
+- **Requires package installation**: Tidyverse needs additional dependencies.
+- **Learning curve**: Users new to functional programming might need time to adapt.
+- **May not cover every niche use case**: Highly specific transformations might need workarounds.
+
+# Summary
+
+We compared base R and tidyverse methods for complex grouped operations and reshaping data between long and wide formats. The tidyverse offers a more readable and efficient approach, particularly for grouped data and reshaping tasks. Base R remains useful for cases where fine control over transformations is needed, but it can be more verbose and complex for users unfamiliar with its syntax.

@@ -1,0 +1,7 @@
+---
+listing:
+  contents: materials
+  type: table
+  sort: filename
+  fields: [title, script]
+---

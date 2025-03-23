@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/materials.html",
+    "items": [
+      "/materials/baseR-vs-tidyverse.html"
+    ]
+  },
+  {
     "listing": "/slides.html",
     "items": [
       "/slides/00-course-intro/00-course-intro.html",

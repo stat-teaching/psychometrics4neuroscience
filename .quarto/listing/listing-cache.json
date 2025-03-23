@@ -1,5 +1,8 @@
 {
   "listingMap": {
+    "materials.qmd": [
+      "materials"
+    ],
     "slides.qmd": [
       "slides"
     ]

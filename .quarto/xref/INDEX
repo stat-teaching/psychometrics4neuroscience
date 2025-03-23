@@ -27,5 +27,11 @@
   },
   "slides/05-git-github/05-git-github.qmd": {
     "05-git-github.html": "b0c6f5d9"
+  },
+  "materials/baseR-vs-tidyverse.qmd": {
+    "baseR-vs-tidyverse.html": "65ced958"
+  },
+  "materials.qmd": {
+    "materials.html": "293904ce"
   }
 }
