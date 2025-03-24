@@ -1,5 +1,7 @@
 ---
 title: "Getting started"
+execute: 
+  freeze: false
 ---
 
 There are few tools that we need to install and configure for the course.
@@ -78,3 +80,19 @@ Check these other resources to learn Git:
 
 - [https://rogerdudler.github.io/git-guide/](https://rogerdudler.github.io/git-guide/)
 - [https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/](https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/)
+
+## `renv`
+
+`renv` is the equivalent of `venv` in Python. Basically allows to create a by-project library of R packages with a specific version. Sometimes packages change defaults, functions, etc. thus fixing them improve the reproducibility and remove unexpected results.
+
+For a detailed guide about `renv` you can read the official documentation [https://rstudio.github.io/renv/articles/renv.html](https://rstudio.github.io/renv/articles/renv.html).
+
+When opening the R project of the repository, `renv` should prompt you to install `renv` itself (if missing) and then to install the packages included into the `renv.lock` file.
+
+To create new project with `renv` you can type:
+
+```r
+renv::init()
+```
+
+and following the instructions. `renv` will create all the required files and folders and switch to the local library.

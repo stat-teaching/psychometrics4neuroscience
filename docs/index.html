@@ -156,6 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#gitgithub" id="toc-gitgithub" class="nav-link" data-scroll-target="#gitgithub">Git/Github</a></li>
   <li><a href="#cloning-the-repository" id="toc-cloning-the-repository" class="nav-link" data-scroll-target="#cloning-the-repository">Cloning the repository</a></li>
   <li><a href="#creating-your-repository" id="toc-creating-your-repository" class="nav-link" data-scroll-target="#creating-your-repository">Creating your repository</a></li>
+  <li><a href="#renv" id="toc-renv" class="nav-link" data-scroll-target="#renv"><code>renv</code></a></li>
   </ul>
 </nav>
     </div>
@@ -240,6 +241,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://rogerdudler.github.io/git-guide/">https://rogerdudler.github.io/git-guide/</a></li>
 <li><a href="https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/">https://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/</a></li>
 </ul>
+</section>
+<section id="renv" class="level2">
+<h2 class="anchored" data-anchor-id="renv"><code>renv</code></h2>
+<p><code>renv</code> is the equivalent of <code>venv</code> in Python. Basically allows to create a by-project library of R packages with a specific version. Sometimes packages change defaults, functions, etc. thus fixing them improve the reproducibility and remove unexpected results.</p>
+<p>For a detailed guide about <code>renv</code> you can read the official documentation <a href="https://rstudio.github.io/renv/articles/renv.html">https://rstudio.github.io/renv/articles/renv.html</a>.</p>
+<p>When opening the R project of the repository, <code>renv</code> should prompt you to install <code>renv</code> itself (if missing) and then to install the packages included into the <code>renv.lock</code> file.</p>
+<p>To create new project with <code>renv</code> you can type:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and following the instructions. <code>renv</code> will create all the required files and folders and switch to the local library.</p>
 
 
 </section>
