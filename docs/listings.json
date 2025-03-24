@@ -2,7 +2,8 @@
   {
     "listing": "/materials.html",
     "items": [
-      "/materials/baseR-vs-tidyverse.html"
+      "/materials/baseR-vs-tidyverse.html",
+      "/materials/functional-programming-examples.html"
     ]
   },
   {

@@ -1,0 +1,103 @@
+---
+title: Functional programming examples
+format: html
+execute: 
+  echo: true
+---
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(purrr)
+
+dat <- iris
+
+# functions
+
+remove_rownames <- function(x){
+    rownames(x) <- NULL
+    x
+}
+
+sum_lm <- function(x, conf.level = 0.95){
+    xs <- data.frame(summary(x)$coefficients)
+    xs$param <- rownames(xs)
+    rownames(xs) <- NULL
+    names(xs) <- c("b", "se", "t", "pval", "param")
+    cc <- data.frame(confint(x, level = conf.level))
+    names(cc) <- c("ci.lb", "ci.ub")
+    rownames(cc) <- NULL
+    cbind(
+        xs[, c("param", "b", "se", "t", "pval")],
+        cc
+    )
+}
+
+# fit a linear model for each Species
+
+datl <- split(dat, dat$Species)
+fitl <- lapply(datl, function(d) lm(Sepal.Length ~ Petal.Width + Petal.Length, data = d))
+resl <- lapply(fitl, sum_lm)
+
+res_by_species <- do.call(rbind, resl)
+res_by_species <- remove_rownames(res_by_species)
+res_by_species$species <- rep(names(resl), sapply(resl, nrow))
+
+ggplot(res_by_species, aes(x = param, 
+                           y = b, 
+                           ymin = ci.lb, 
+                           ymax = ci.ub,
+                           color = species)) +
+    geom_pointrange(position = position_dodge(width = 0.5))
+    
+
+# alternative version using other packages
+
+resl <- lapply(fitl, broom::tidy, conf.int = TRUE)
+res_by_species <- dplyr::bind_rows(resl, .id = "species")
+
+res_by_species
+
+# bootstrapping
+
+boot <- function(data, B = 100){
+    res <- vector(mode = "list", length = B)
+    n <- nrow(data)
+    for(i in 1:B){
+        idx <- sample(x = 1:n, size = n, replace = TRUE)
+        dataB <- data[idx, ]
+        rownames(dataB) <- NULL
+        res[[i]] <- dataB
+    }
+    return(res)
+}
+
+fit_lm <- function(data){
+    lm(Sepal.Length ~ Petal.Width + Petal.Length, data = data)
+}
+
+bootl <- lapply(datl, boot, B = 100)
+fit_bootl <- lapply(bootl, function(x) lapply(x, fit_lm))
+res_bootl <- lapply(fit_bootl, function(x) lapply(x, sum_lm))
+res_bootl <- lapply(res_bootl, function(x) do.call(rbind, x))
+res_boot_by_species <- do.call(rbind, res_bootl)
+res_boot_by_species <- remove_rownames(res_boot_by_species)
+res_boot_by_species$species <- rep(names(res_bootl), sapply(res_bootl, nrow))
+
+ggplot(res_boot_by_species, aes(x = param, y = b, fill = species)) +
+    geom_boxplot()
+
+# using nested tibbles
+
+dat |> 
+    group_by(Species) |> 
+    nest() |> 
+    mutate(boot = map(data, boot)) |> 
+    select(-data) |> 
+    unnest(boot) |> 
+    mutate(fit = map(boot, fit_lm)) |> 
+    mutate(res = map(fit, sum_lm)) |> 
+    select(-boot, -fit) |> 
+    unnest(res)
+```

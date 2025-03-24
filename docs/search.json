@@ -186,7 +186,21 @@
     "href": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad",
     "title": "Modern R",
     "section": "for loops are bad?",
-    "text": "for loops are bad?\nfor loops are the core of each operation in R (and in every programming language). For complex operation thery are more readable and effective compared to *apply. In R we need extra care for writing efficent for loops.\nExtremely slow, no preallocation:\n\nres &lt;- c()\nfor(i in 1:1000){\n  # do something\n  res[i] &lt;- x\n}\n\nVery fast, no difference compared to *apply"
+    "text": "for loops are bad?\nfor loops are the core of each operation in R (and in every programming language). For complex operation thery are more readable and effective compared to *apply. In R we need extra care for writing efficent for loops.\nExtremely slow, no preallocation:\n\nres &lt;- c()\nfor(i in 1:1000){\n  # do something\n  res[i] &lt;- x\n}\n\nVery fast, no difference compared to *apply\n\nres &lt;- rep(0, 1000)\nfor(i in 1:length(res)){\n  # do something\n  res[i] &lt;- x\n}"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad-1",
+    "href": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad-1",
+    "title": "Modern R",
+    "section": "for loops are bad?",
+    "text": "for loops are bad?\nWe can formally compare the for loop approaches using the microbenchmark package:\n\nno_prealloc &lt;- function(n = 100){\n    res &lt;- c()\n    for(i in 1:n) res[i] &lt;- rnorm(1)\n}\n\nprealloc &lt;- function(n = 100){\n    res &lt;- vector(mode = \"numeric\", length = n)\n    for(i in 1:n) res[i] &lt;- rnorm(1)\n}\n\nmicrobenchmark::microbenchmark(\n    no_prealloc = no_prealloc(1000),\n    prealloc = prealloc(1000)\n)\n\n#&gt; Unit: microseconds\n#&gt;         expr     min       lq      mean   median       uq      max neval cld\n#&gt;  no_prealloc 848.225 872.0795 1010.1748 884.2175 918.5970 4462.520   100  a \n#&gt;     prealloc 648.589 663.1315  711.0051 668.4970 681.6215 2821.114   100   b"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad-2",
+    "href": "slides/03-modern-r/03-modern-r.html#for-loops-are-bad-2",
+    "title": "Modern R",
+    "section": "for loops are bad?",
+    "text": "for loops are bad?\nIn fact, when the for loop is written appropriately, the performance are the same (or even better) compared to *apply:\n\nlibrary(purrr) # for map\niter &lt;- 500\n\nmicrobenchmark::microbenchmark(\n    for_no_prealloc = no_prealloc(iter),\n    for_prealloc = prealloc(iter),\n    sapply = sapply(1:iter, function(x) rnorm(1)),\n    map_dbl = map_dbl(1:iter, function(x) rnorm(1)),\n    vapply = vapply(1:iter, function(x) rnorm(1), FUN.VALUE = double(1)),\n    times = 500\n) |&gt; summary()\n\n#&gt;              expr     min       lq     mean   median       uq      max neval\n#&gt; 1 for_no_prealloc 427.404 444.7960 479.5039 452.2905 463.0960 4068.079   500\n#&gt; 2    for_prealloc 321.355 330.5470 347.4882 334.3735 339.7890 4380.626   500\n#&gt; 3          sapply 588.496 607.2065 652.3096 618.3775 633.7065 5153.349   500\n#&gt; 4         map_dbl 610.588 630.8610 697.8509 645.0725 679.1320 4740.082   500\n#&gt; 5          vapply 579.730 591.2970 635.9248 598.4200 607.1715 4754.439   500\n#&gt;    cld\n#&gt; 1 a   \n#&gt; 2  b  \n#&gt; 3   cd\n#&gt; 4   c \n#&gt; 5    d"
   },
   {
     "objectID": "slides/03-modern-r/03-modern-r.html#with-apply-you-can-do-crazy-stuff",
@@ -208,6 +222,13 @@
     "title": "Modern R",
     "section": "More about functional programming in R",
     "text": "More about functional programming in R\n\nAdvanced R by Hadley Wickham, section on Functional Programming (https://adv-r.hadley.nz/fp.html)\nHands-On Programming with R by Garrett Grolemund https://rstudio-education.github.io/hopr/\nHadley Wickham: The Joy of Functional Programming (for Data Science)\nBruno Rodrigues Youtube Channel"
+  },
+  {
+    "objectID": "slides/03-modern-r/03-modern-r.html#a-small-example-1",
+    "href": "slides/03-modern-r/03-modern-r.html#a-small-example-1",
+    "title": "Modern R",
+    "section": "A small example",
+    "text": "A small example\nTake the dataset iris and do the following operations in the most readable and efficient way that you can.\n\nfit a linear model (choose the y and x that you want) for each Species on the full dataset\nfit a linear model (choose the y and x that you want) for each Species but resampling with replacement (bootstrapping, choose the number of iterations that you want) the rows within each group\n(choose the y and x that you want) for each Species doing a leave-one-out analysis within each group\norganize the three steps into separated datasets in a nice and readable format (nice column names, not strange characters, spaces, etc.)\nshow the results with a plot of your choice"
   },
   {
     "objectID": "slides/03-modern-r/03-modern-r.html#a-more-advanced-approach-r-packages",
@@ -413,6 +434,62 @@
     "text": "Lavori di gruppo\nParleremo dei lavori di gruppo assieme al Prof. Maffei il 28/04/2025 (salvo modifiche) dove vi presenteremo i lavori nel dettaglio.\nIn breve, vi sarà richiesto partendo da un dataset e/o un problema di ricerca, analizzare e/o simulare dei dati, produrre un report in Quarto e fare una presentazione del lavoro fatto."
   },
   {
+    "objectID": "materials/functional-programming-examples.html",
+    "href": "materials/functional-programming-examples.html",
+    "title": "Functional programming examples",
+    "section": "",
+    "text": "library(ggplot2)\nlibrary(tidyr)\nlibrary(dplyr)\nlibrary(purrr)\n\ndat &lt;- iris\n\n# functions\n\nremove_rownames &lt;- function(x){\n    rownames(x) &lt;- NULL\n    x\n}\n\nsum_lm &lt;- function(x, conf.level = 0.95){\n    xs &lt;- data.frame(summary(x)$coefficients)\n    xs$param &lt;- rownames(xs)\n    rownames(xs) &lt;- NULL\n    names(xs) &lt;- c(\"b\", \"se\", \"t\", \"pval\", \"param\")\n    cc &lt;- data.frame(confint(x, level = conf.level))\n    names(cc) &lt;- c(\"ci.lb\", \"ci.ub\")\n    rownames(cc) &lt;- NULL\n    cbind(\n        xs[, c(\"param\", \"b\", \"se\", \"t\", \"pval\")],\n        cc\n    )\n}\n\n# fit a linear model for each Species\n\ndatl &lt;- split(dat, dat$Species)\nfitl &lt;- lapply(datl, function(d) lm(Sepal.Length ~ Petal.Width + Petal.Length, data = d))\nresl &lt;- lapply(fitl, sum_lm)\n\nres_by_species &lt;- do.call(rbind, resl)\nres_by_species &lt;- remove_rownames(res_by_species)\nres_by_species$species &lt;- rep(names(resl), sapply(resl, nrow))\n\nggplot(res_by_species, aes(x = param, \n                           y = b, \n                           ymin = ci.lb, \n                           ymax = ci.ub,\n                           color = species)) +\n    geom_pointrange(position = position_dodge(width = 0.5))\n\n\n\n\n\n\n\n# alternative version using other packages\n\nresl &lt;- lapply(fitl, broom::tidy, conf.int = TRUE)\nres_by_species &lt;- dplyr::bind_rows(resl, .id = \"species\")\n\nres_by_species\n\n# A tibble: 9 × 8\n  species    term       estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 setosa     (Intercep…  4.25       0.411    10.3    1.13e-13   3.42       5.08 \n2 setosa     Petal.Wid…  0.712      0.487     1.46   1.51e- 1  -0.268      1.69 \n3 setosa     Petal.Len…  0.399      0.296     1.35   1.84e- 1  -0.196      0.994\n4 versicolor (Intercep…  2.38       0.449     5.30   3.04e- 6   1.48       3.28 \n5 versicolor Petal.Wid… -0.320      0.402    -0.795  4.30e- 1  -1.13       0.489\n6 versicolor Petal.Len…  0.934      0.169     5.52   1.44e- 6   0.594      1.27 \n7 virginica  (Intercep…  1.05       0.514     2.05   4.63e- 2   0.0179     2.09 \n8 virginica  Petal.Wid…  0.00706    0.179     0.0394 9.69e- 1  -0.354      0.368\n9 virginica  Petal.Len…  0.995      0.0893   11.1    8.87e-15   0.815      1.17 \n\n# bootstrapping\n\nboot &lt;- function(data, B = 100){\n    res &lt;- vector(mode = \"list\", length = B)\n    n &lt;- nrow(data)\n    for(i in 1:B){\n        idx &lt;- sample(x = 1:n, size = n, replace = TRUE)\n        dataB &lt;- data[idx, ]\n        rownames(dataB) &lt;- NULL\n        res[[i]] &lt;- dataB\n    }\n    return(res)\n}\n\nfit_lm &lt;- function(data){\n    lm(Sepal.Length ~ Petal.Width + Petal.Length, data = data)\n}\n\nbootl &lt;- lapply(datl, boot, B = 100)\nfit_bootl &lt;- lapply(bootl, function(x) lapply(x, fit_lm))\nres_bootl &lt;- lapply(fit_bootl, function(x) lapply(x, sum_lm))\nres_bootl &lt;- lapply(res_bootl, function(x) do.call(rbind, x))\nres_boot_by_species &lt;- do.call(rbind, res_bootl)\nres_boot_by_species &lt;- remove_rownames(res_boot_by_species)\nres_boot_by_species$species &lt;- rep(names(res_bootl), sapply(res_bootl, nrow))\n\nggplot(res_boot_by_species, aes(x = param, y = b, fill = species)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n# using nested tibbles\n\ndat |&gt; \n    group_by(Species) |&gt; \n    nest() |&gt; \n    mutate(boot = map(data, boot)) |&gt; \n    select(-data) |&gt; \n    unnest(boot) |&gt; \n    mutate(fit = map(boot, fit_lm)) |&gt; \n    mutate(res = map(fit, sum_lm)) |&gt; \n    select(-boot, -fit) |&gt; \n    unnest(res)\n\n# A tibble: 900 × 8\n# Groups:   Species [3]\n   Species param            b    se      t     pval  ci.lb ci.ub\n   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;\n 1 setosa  (Intercept)  4.27  0.369 11.6   2.20e-15  3.53  5.01 \n 2 setosa  Petal.Width  1.57  0.596  2.64  1.12e- 2  0.376 2.77 \n 3 setosa  Petal.Length 0.280 0.265  1.06  2.96e- 1 -0.253 0.813\n 4 setosa  (Intercept)  3.62  0.460  7.87  4.02e-10  2.70  4.55 \n 5 setosa  Petal.Width  0.457 0.575  0.796 4.30e- 1 -0.699 1.61 \n 6 setosa  Petal.Length 0.847 0.353  2.40  2.05e- 2  0.136 1.56 \n 7 setosa  (Intercept)  4.17  0.473  8.81  1.62e-11  3.22  5.12 \n 8 setosa  Petal.Width  0.297 0.469  0.632 5.30e- 1 -0.648 1.24 \n 9 setosa  Petal.Length 0.591 0.348  1.70  9.63e- 2 -0.110 1.29 \n10 setosa  (Intercept)  4.22  0.431  9.78  6.55e-13  3.35  5.08 \n# ℹ 890 more rows"
+  },
+  {
+    "objectID": "materials.html",
+    "href": "materials.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nBase R vs Tidyverse\n\n\n \n\n\n\n\nFunctional programming examples\n\n\n \n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "There are few tools that we need to install and configure for the course."
+  },
+  {
+    "objectID": "index.html#quarto",
+    "href": "index.html#quarto",
+    "title": "Getting started",
+    "section": "Quarto",
+    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
+  },
+  {
+    "objectID": "index.html#gitgithub",
+    "href": "index.html#gitgithub",
+    "title": "Getting started",
+    "section": "Git/Github",
+    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
+  },
+  {
+    "objectID": "index.html#cloning-the-repository",
+    "href": "index.html#cloning-the-repository",
+    "title": "Getting started",
+    "section": "Cloning the repository",
+    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
+  },
+  {
+    "objectID": "index.html#creating-your-repository",
+    "href": "index.html#creating-your-repository",
+    "title": "Getting started",
+    "section": "Creating your repository",
+    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
+  },
+  {
     "objectID": "materials/baseR-vs-tidyverse.html",
     "href": "materials/baseR-vs-tidyverse.html",
     "title": "Base R vs Tidyverse",
@@ -460,55 +537,6 @@
     "title": "Base R vs Tidyverse",
     "section": "Pros and Cons of Tidyverse",
     "text": "Pros and Cons of Tidyverse\n\nPros:\n\nConcise and readable: Functions like pivot_longer() and pivot_wider() are intuitive.\nStreamlined workflow: Tidyverse simplifies common operations like grouping and reshaping.\nBetter suited for modern data analysis: Works well with pipes and declarative transformations.\n\n\n\nCons:\n\nRequires package installation: Tidyverse needs additional dependencies.\nLearning curve: Users new to functional programming might need time to adapt.\nMay not cover every niche use case: Highly specific transformations might need workarounds."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "There are few tools that we need to install and configure for the course."
-  },
-  {
-    "objectID": "index.html#quarto",
-    "href": "index.html#quarto",
-    "title": "Getting started",
-    "section": "Quarto",
-    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
-  },
-  {
-    "objectID": "index.html#gitgithub",
-    "href": "index.html#gitgithub",
-    "title": "Getting started",
-    "section": "Git/Github",
-    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
-  },
-  {
-    "objectID": "index.html#cloning-the-repository",
-    "href": "index.html#cloning-the-repository",
-    "title": "Getting started",
-    "section": "Cloning the repository",
-    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
-  },
-  {
-    "objectID": "index.html#creating-your-repository",
-    "href": "index.html#creating-your-repository",
-    "title": "Getting started",
-    "section": "Creating your repository",
-    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "materials.html",
-    "href": "materials.html",
-    "title": "Psychometrics4Neuroscience",
-    "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nBase R vs Tidyverse\n\n\n \n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "slides.html",

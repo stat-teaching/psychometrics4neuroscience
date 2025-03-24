@@ -245,11 +245,55 @@ Very fast, no difference compared to `*apply`
 
 ```{r}
 #| eval: false
+#| echo: true
 res <- rep(0, 1000)
 for(i in 1:length(res)){
   # do something
   res[i] <- x
 }
+```
+
+## `for` loops are bad?
+
+We can formally compare the `for` loop approaches using the `microbenchmark` package:
+
+
+```{r}
+#| echo: true
+no_prealloc <- function(n = 100){
+    res <- c()
+    for(i in 1:n) res[i] <- rnorm(1)
+}
+
+prealloc <- function(n = 100){
+    res <- vector(mode = "numeric", length = n)
+    for(i in 1:n) res[i] <- rnorm(1)
+}
+
+microbenchmark::microbenchmark(
+    no_prealloc = no_prealloc(1000),
+    prealloc = prealloc(1000)
+)
+```
+
+## `for` loops are bad?
+
+In fact, when the `for` loop is written appropriately, the performance are the same (or even better) compared to `*apply`:
+
+```{r}
+#| echo: true
+
+library(purrr) # for map
+iter <- 500
+
+microbenchmark::microbenchmark(
+    for_no_prealloc = no_prealloc(iter),
+    for_prealloc = prealloc(iter),
+    sapply = sapply(1:iter, function(x) rnorm(1)),
+    map_dbl = map_dbl(1:iter, function(x) rnorm(1)),
+    vapply = vapply(1:iter, function(x) rnorm(1), FUN.VALUE = double(1)),
+    times = 500
+) |> summary()
 ```
 
 ## With `*apply` you can do crazy stuff!
@@ -284,6 +328,18 @@ sapply(funs, function(f) lapply(mtcars, function(x) f(x)))
 :::
 
 </center>
+
+# A small example
+
+## A small example
+
+Take the dataset `iris` and do the following operations in the most readable and efficient way that you can.
+
+- fit a linear model (choose the `y` and `x` that you want) for each `Species` on the full dataset
+- fit a linear model (choose the `y` and `x` that you want) for each `Species` but resampling with replacement (bootstrapping, choose the number of iterations that you want) the rows within each group
+- (choose the `y` and `x` that you want) for each `Species` doing a leave-one-out analysis within each group
+- organize the three steps into separated datasets in a nice and readable format (nice column names, not strange characters, spaces, etc.)
+- show the results with a plot of your choice
 
 ## A more advanced approach, R packages
 

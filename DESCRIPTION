@@ -1,0 +1,12 @@
+Package: psychometrics4neuroscience
+Title: Collection of functions and data for the psychometrics4neuroscience course
+Version: 0.0.0.9000
+Authors@R: 
+    person("Filippo", "Gambarota", , "filippo.gambarota@unipd.it", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-6666-1747"))
+Description: Collection of functions and data for the psychometrics4neuroscience course
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

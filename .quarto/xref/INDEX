@@ -33,5 +33,12 @@
   },
   "materials.qmd": {
     "materials.html": "293904ce"
+  },
+  "materials/functional-programming-examples.qmd": {
+    "functional-programming-examples.html": "706089d6"
+  },
+  "slides/glmer/glmer.qmd": {
+    "glmer.tex": "8d5069ae",
+    "glmer.html": "31399bbe"
   }
 }

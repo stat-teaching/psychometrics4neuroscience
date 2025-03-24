@@ -478,12 +478,76 @@
 <span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Very fast, no difference compared to <code>*apply</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">1000</span>)</span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(res)){</span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># do something</span></span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a>  res[i] <span class="ot">&lt;-</span> x</span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="for-loops-are-bad-1" class="slide level2">
+<h2><code>for</code> loops are bad?</h2>
+<p>We can formally compare the <code>for</code> loop approaches using the <code>microbenchmark</code> package:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>no_prealloc <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">100</span>){</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) res[i] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
+<span id="cb15-4"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a aria-hidden="true" tabindex="-1"></a>prealloc <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">100</span>){</span>
+<span id="cb15-7"><a aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"numeric"</span>, <span class="at">length =</span> n)</span>
+<span id="cb15-8"><a aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) res[i] <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>)</span>
+<span id="cb15-9"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-10"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a aria-hidden="true" tabindex="-1"></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
+<span id="cb15-12"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">no_prealloc =</span> <span class="fu">no_prealloc</span>(<span class="dv">1000</span>),</span>
+<span id="cb15-13"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">prealloc =</span> <span class="fu">prealloc</span>(<span class="dv">1000</span>)</span>
+<span id="cb15-14"><a aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Unit: microseconds
+#&gt;         expr     min       lq      mean   median       uq      max neval cld
+#&gt;  no_prealloc 848.225 872.0795 1010.1748 884.2175 918.5970 4462.520   100  a 
+#&gt;     prealloc 648.589 663.1315  711.0051 668.4970 681.6215 2821.114   100   b</code></pre>
+</div>
+</div>
+</section>
+<section id="for-loops-are-bad-2" class="slide level2">
+<h2><code>for</code> loops are bad?</h2>
+<p>In fact, when the <code>for</code> loop is written appropriately, the performance are the same (or even better) compared to <code>*apply</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr) <span class="co"># for map</span></span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">for_no_prealloc =</span> <span class="fu">no_prealloc</span>(iter),</span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">for_prealloc =</span> <span class="fu">prealloc</span>(iter),</span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">sapply =</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>iter, <span class="cf">function</span>(x) <span class="fu">rnorm</span>(<span class="dv">1</span>)),</span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">map_dbl =</span> <span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span>iter, <span class="cf">function</span>(x) <span class="fu">rnorm</span>(<span class="dv">1</span>)),</span>
+<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">vapply =</span> <span class="fu">vapply</span>(<span class="dv">1</span><span class="sc">:</span>iter, <span class="cf">function</span>(x) <span class="fu">rnorm</span>(<span class="dv">1</span>), <span class="at">FUN.VALUE =</span> <span class="fu">double</span>(<span class="dv">1</span>)),</span>
+<span id="cb17-10"><a aria-hidden="true" tabindex="-1"></a>    <span class="at">times =</span> <span class="dv">500</span></span>
+<span id="cb17-11"><a aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;              expr     min       lq     mean   median       uq      max neval
+#&gt; 1 for_no_prealloc 427.404 444.7960 479.5039 452.2905 463.0960 4068.079   500
+#&gt; 2    for_prealloc 321.355 330.5470 347.4882 334.3735 339.7890 4380.626   500
+#&gt; 3          sapply 588.496 607.2065 652.3096 618.3775 633.7065 5153.349   500
+#&gt; 4         map_dbl 610.588 630.8610 697.8509 645.0725 679.1320 4740.082   500
+#&gt; 5          vapply 579.730 591.2970 635.9248 598.4200 607.1715 4754.439   500
+#&gt;    cld
+#&gt; 1 a   
+#&gt; 2  b  
+#&gt; 3   cd
+#&gt; 4   c 
+#&gt; 5    d</code></pre>
+</div>
+</div>
 </section>
 <section id="with-apply-you-can-do-crazy-stuff" class="slide level2">
 <h2>With <code>*apply</code> you can do crazy stuff!</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>funs <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">sd =</span> sd, <span class="at">min =</span> min, <span class="at">max =</span> max, <span class="at">median =</span> median)</span>
-<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(funs, <span class="cf">function</span>(f) <span class="fu">lapply</span>(mtcars, <span class="cf">function</span>(x) <span class="fu">f</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>funs <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">sd =</span> sd, <span class="at">min =</span> min, <span class="at">max =</span> max, <span class="at">median =</span> median)</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(funs, <span class="cf">function</span>(f) <span class="fu">lapply</span>(mtcars, <span class="cf">function</span>(x) <span class="fu">f</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;      mean     sd        min   max   median
 #&gt; mpg  20.09062 6.026948  10.4  33.9  19.2  
@@ -530,6 +594,22 @@
 </div>
 </center>
 </div>
+</section></section>
+<section>
+<section id="a-small-example" class="title-slide slide level1 center">
+<h1>A small example</h1>
+
+</section>
+<section id="a-small-example-1" class="slide level2">
+<h2>A small example</h2>
+<p>Take the dataset <code>iris</code> and do the following operations in the most readable and efficient way that you can.</p>
+<ul>
+<li class="fragment">fit a linear model (choose the <code>y</code> and <code>x</code> that you want) for each <code>Species</code> on the full dataset</li>
+<li class="fragment">fit a linear model (choose the <code>y</code> and <code>x</code> that you want) for each <code>Species</code> but resampling with replacement (bootstrapping, choose the number of iterations that you want) the rows within each group</li>
+<li class="fragment">(choose the <code>y</code> and <code>x</code> that you want) for each <code>Species</code> doing a leave-one-out analysis within each group</li>
+<li class="fragment">organize the three steps into separated datasets in a nice and readable format (nice column names, not strange characters, spaces, etc.)</li>
+<li class="fragment">show the results with a plot of your choice</li>
+</ul>
 </section>
 <section id="a-more-advanced-approach-r-packages" class="slide level2">
 <h2>A more advanced approach, R packages</h2>
@@ -545,13 +625,13 @@
 ├─ analysis.R</code></pre>
 <p>And inside <code>utils.R</code> you have some functions:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>myfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># something</span></span>
-<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>myfun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># something</span></span>
+<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then you can load the function using <code>source("R/utils.R)</code> at the beginning of <code>analysis.R</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/utils.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/utils.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="analysis-project-as-r-package" class="slide level2">
@@ -594,10 +674,10 @@
 </div>
 <div class="fragment">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">round</span>(x, <span class="dv">3</span>)</span>
-<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">abs</span>(x)</span>
-<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">round</span>(x, <span class="dv">3</span>)</span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">abs</span>(x)</span>
+<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -605,11 +685,11 @@
 <h2>The Tidy approach - Pipes</h2>
 <p>When using the pipe, we remove the redundand assignment <code>&lt;-</code> pattern:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="sc">|&gt;</span></span>
-<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.character</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb25-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.character</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The pipe can be read as <em>“from <strong>x</strong> apply <code>round</code>, then <code>abs</code>, etc.”.</em> The first argument of the piped function is assumed to be the result of the previus call.</p>
 </section>
@@ -622,43 +702,43 @@
 <h2>ggplot2</h2>
 <p>Only an quick mention to <code>ggplot2</code> <a href="https://ggplot2-book.org/">https://ggplot2-book.org/</a> (part of the <code>tidyverse</code>) that is an amazing package for data visualization following the <em>piping</em> and <em>tidy</em> approach. Is the implementation of the <strong>grammar of graphics</strong> idea.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb21-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">wi =</span> <span class="fu">runif</span>(<span class="fu">n</span>())) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Petal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
-<span id="cb21-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wi)) <span class="sc">+</span></span>
-<span id="cb21-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb21-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb21-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">wi =</span> <span class="fu">runif</span>(<span class="fu">n</span>())) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Petal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb26-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wi)) <span class="sc">+</span></span>
+<span id="cb26-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">size =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb26-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="ggplot2-1" class="slide level2">
 <h2>ggplot2</h2>
 
-<img data-src="03-modern-r_files/figure-revealjs/unnamed-chunk-20-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
+<img data-src="03-modern-r_files/figure-html/unnamed-chunk-22-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
 <section id="base-r-version" class="slide level2">
 <h2>Base R version</h2>
 <p>More verbose, more hard coding, more steps and intermediate objects.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>iris_l <span class="ot">&lt;-</span> <span class="fu">split</span>(iris, iris<span class="sc">$</span>Species)</span>
-<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>lms <span class="ot">&lt;-</span> <span class="fu">lapply</span>(iris_l, <span class="cf">function</span>(x) <span class="fu">lm</span>(Petal.Width <span class="sc">~</span> Sepal.Length, <span class="at">data =</span> x))</span>
-<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, </span>
-<span id="cb22-5"><a aria-hidden="true" tabindex="-1"></a>     iris<span class="sc">$</span>Petal.Width, </span>
-<span id="cb22-6"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(iris<span class="sc">$</span>Species), <span class="at">pch =</span> <span class="dv">19</span>)</span>
-<span id="cb22-7"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">1</span>]], <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb22-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">2</span>]], <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb22-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">3</span>]], <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb22-11"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species), <span class="at">fill =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a>iris_l <span class="ot">&lt;-</span> <span class="fu">split</span>(iris, iris<span class="sc">$</span>Species)</span>
+<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a>lms <span class="ot">&lt;-</span> <span class="fu">lapply</span>(iris_l, <span class="cf">function</span>(x) <span class="fu">lm</span>(Petal.Width <span class="sc">~</span> Sepal.Length, <span class="at">data =</span> x))</span>
+<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, </span>
+<span id="cb27-5"><a aria-hidden="true" tabindex="-1"></a>     iris<span class="sc">$</span>Petal.Width, </span>
+<span id="cb27-6"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(iris<span class="sc">$</span>Species), <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb27-7"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">1</span>]], <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb27-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">2</span>]], <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb27-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lms[[<span class="dv">3</span>]], <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb27-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(iris<span class="sc">$</span>Species), <span class="at">fill =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="base-r-version-1" class="slide level2">
 <h2>Base R version</h2>
 
-<img data-src="03-modern-r_files/figure-revealjs/unnamed-chunk-22-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
+<img data-src="03-modern-r_files/figure-html/unnamed-chunk-24-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
 <section id="more-on-ggplot2" class="slide level2">
 <h2>More on ggplot2</h2>
 <p>The <code>ggplot2</code> book <a href="https://ggplot2-book.org/">https://ggplot2-book.org/</a> is a great resource to produce high-quality, publication ready plots. Clearly, the advantage of producing the figures entirely writing code are immense in terms of reusability and reproducibility.</p>
@@ -694,25 +774,25 @@
 <h2>Something crazy in the <code>tidyverse</code></h2>
 <p>Let’s define some functions:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a>leave1out <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
-<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
-<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a>  ll <span class="ot">&lt;-</span> <span class="fu">lapply</span>(idx, <span class="cf">function</span>(i) data[<span class="sc">-</span>i, ])</span>
-<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(ll) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"no"</span>, idx)</span>
-<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">no0 =</span> <span class="fu">list</span>(data), ll)</span>
-<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
-<span id="cb23-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Width, <span class="at">data =</span> data)</span>
-<span id="cb23-10"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>leave1out <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
+<span id="cb28-3"><a aria-hidden="true" tabindex="-1"></a>  ll <span class="ot">&lt;-</span> <span class="fu">lapply</span>(idx, <span class="cf">function</span>(i) data[<span class="sc">-</span>i, ])</span>
+<span id="cb28-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(ll) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"no"</span>, idx)</span>
+<span id="cb28-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">no0 =</span> <span class="fu">list</span>(data), ll)</span>
+<span id="cb28-6"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-7"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb28-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Width, <span class="at">data =</span> data)</span>
+<span id="cb28-10"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="something-crazy-in-the-tidyverse-2" class="slide level2">
 <h2>Something crazy in the <code>tidyverse</code></h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">data =</span> <span class="fu">leave1out</span>(iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, ]))</span>
-<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
-<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">removed =</span> <span class="fu">names</span>(data)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">data =</span> <span class="fu">leave1out</span>(iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, ]))</span>
+<span id="cb29-2"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">removed =</span> <span class="fu">names</span>(data)) <span class="sc">|&gt;</span> </span>
+<span id="cb29-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; # A tibble: 6 × 2
 #&gt;   data          removed
@@ -745,42 +825,42 @@
 <section id="something-crazy-in-the-tidyverse-4" class="slide level2">
 <h2>Something crazy in the <code>tidyverse</code></h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
-<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">removed =</span> <span class="fu">names</span>(data)) <span class="sc">|&gt;</span> </span>
-<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit =</span> <span class="fu">map</span>(data, fit_model),</span>
-<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a>         <span class="at">results =</span> <span class="fu">map</span>(fit, broom<span class="sc">::</span>tidy)) <span class="sc">|&gt;</span> </span>
-<span id="cb27-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(results) <span class="sc">|&gt;</span> </span>
-<span id="cb27-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> removed, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
-<span id="cb27-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb27-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb27-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>term, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">removed =</span> <span class="fu">names</span>(data)) <span class="sc">|&gt;</span> </span>
+<span id="cb32-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit =</span> <span class="fu">map</span>(data, fit_model),</span>
+<span id="cb32-4"><a aria-hidden="true" tabindex="-1"></a>         <span class="at">results =</span> <span class="fu">map</span>(fit, broom<span class="sc">::</span>tidy)) <span class="sc">|&gt;</span> </span>
+<span id="cb32-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(results) <span class="sc">|&gt;</span> </span>
+<span id="cb32-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> removed, <span class="at">y =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb32-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb32-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb32-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>term, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="something-crazy-in-the-tidyverse-5" class="slide level2">
 <h2>Something crazy in the <code>tidyverse</code></h2>
 
-<img data-src="03-modern-r_files/figure-revealjs/unnamed-chunk-27-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
+<img data-src="03-modern-r_files/figure-html/unnamed-chunk-29-1.svg" class="quarto-figure quarto-figure-center r-stretch" width="672"></section>
 <section id="quick-tables" class="slide level2">
 <h2>Quick tables</h2>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="oofwdgromh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#oofwdgromh table {
+<div id="mvkfaekrqz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mvkfaekrqz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#oofwdgromh thead, #oofwdgromh tbody, #oofwdgromh tfoot, #oofwdgromh tr, #oofwdgromh td, #oofwdgromh th {
+#mvkfaekrqz thead, #mvkfaekrqz tbody, #mvkfaekrqz tfoot, #mvkfaekrqz tr, #mvkfaekrqz td, #mvkfaekrqz th {
   border-style: none;
 }
 
-#oofwdgromh p {
+#mvkfaekrqz p {
   margin: 0;
   padding: 0;
 }
 
-#oofwdgromh .gt_table {
+#mvkfaekrqz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -806,12 +886,12 @@
   border-left-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_caption {
+#mvkfaekrqz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#oofwdgromh .gt_title {
+#mvkfaekrqz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -823,7 +903,7 @@
   border-bottom-width: 0;
 }
 
-#oofwdgromh .gt_subtitle {
+#mvkfaekrqz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -835,7 +915,7 @@
   border-top-width: 0;
 }
 
-#oofwdgromh .gt_heading {
+#mvkfaekrqz .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -847,13 +927,13 @@
   border-right-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_bottom_border {
+#mvkfaekrqz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_col_headings {
+#mvkfaekrqz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -868,7 +948,7 @@
   border-right-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_col_heading {
+#mvkfaekrqz .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -888,7 +968,7 @@
   overflow-x: hidden;
 }
 
-#oofwdgromh .gt_column_spanner_outer {
+#mvkfaekrqz .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -900,15 +980,15 @@
   padding-right: 4px;
 }
 
-#oofwdgromh .gt_column_spanner_outer:first-child {
+#mvkfaekrqz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#oofwdgromh .gt_column_spanner_outer:last-child {
+#mvkfaekrqz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#oofwdgromh .gt_column_spanner {
+#mvkfaekrqz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -920,11 +1000,11 @@
   width: 100%;
 }
 
-#oofwdgromh .gt_spanner_row {
+#mvkfaekrqz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#oofwdgromh .gt_group_heading {
+#mvkfaekrqz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -950,7 +1030,7 @@
   text-align: left;
 }
 
-#oofwdgromh .gt_empty_group_heading {
+#mvkfaekrqz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -965,15 +1045,15 @@
   vertical-align: middle;
 }
 
-#oofwdgromh .gt_from_md > :first-child {
+#mvkfaekrqz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#oofwdgromh .gt_from_md > :last-child {
+#mvkfaekrqz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#oofwdgromh .gt_row {
+#mvkfaekrqz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -992,7 +1072,7 @@
   overflow-x: hidden;
 }
 
-#oofwdgromh .gt_stub {
+#mvkfaekrqz .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1005,7 +1085,7 @@
   padding-right: 5px;
 }
 
-#oofwdgromh .gt_stub_row_group {
+#mvkfaekrqz .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1019,15 +1099,15 @@
   vertical-align: top;
 }
 
-#oofwdgromh .gt_row_group_first td {
+#mvkfaekrqz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#oofwdgromh .gt_row_group_first th {
+#mvkfaekrqz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#oofwdgromh .gt_summary_row {
+#mvkfaekrqz .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1037,16 +1117,16 @@
   padding-right: 5px;
 }
 
-#oofwdgromh .gt_first_summary_row {
+#mvkfaekrqz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_first_summary_row.thick {
+#mvkfaekrqz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#oofwdgromh .gt_last_summary_row {
+#mvkfaekrqz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1056,7 +1136,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_grand_summary_row {
+#mvkfaekrqz .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1066,7 +1146,7 @@
   padding-right: 5px;
 }
 
-#oofwdgromh .gt_first_grand_summary_row {
+#mvkfaekrqz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1076,7 +1156,7 @@
   border-top-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_last_grand_summary_row_top {
+#mvkfaekrqz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1086,11 +1166,11 @@
   border-bottom-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_striped {
+#mvkfaekrqz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#oofwdgromh .gt_table_body {
+#mvkfaekrqz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1099,7 +1179,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_footnotes {
+#mvkfaekrqz .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1113,7 +1193,7 @@
   border-right-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_footnote {
+#mvkfaekrqz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1122,7 +1202,7 @@
   padding-right: 5px;
 }
 
-#oofwdgromh .gt_sourcenotes {
+#mvkfaekrqz .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1136,7 +1216,7 @@
   border-right-color: #D3D3D3;
 }
 
-#oofwdgromh .gt_sourcenote {
+#mvkfaekrqz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1144,63 +1224,63 @@
   padding-right: 5px;
 }
 
-#oofwdgromh .gt_left {
+#mvkfaekrqz .gt_left {
   text-align: left;
 }
 
-#oofwdgromh .gt_center {
+#mvkfaekrqz .gt_center {
   text-align: center;
 }
 
-#oofwdgromh .gt_right {
+#mvkfaekrqz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#oofwdgromh .gt_font_normal {
+#mvkfaekrqz .gt_font_normal {
   font-weight: normal;
 }
 
-#oofwdgromh .gt_font_bold {
+#mvkfaekrqz .gt_font_bold {
   font-weight: bold;
 }
 
-#oofwdgromh .gt_font_italic {
+#mvkfaekrqz .gt_font_italic {
   font-style: italic;
 }
 
-#oofwdgromh .gt_super {
+#mvkfaekrqz .gt_super {
   font-size: 65%;
 }
 
-#oofwdgromh .gt_footnote_marks {
+#mvkfaekrqz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#oofwdgromh .gt_asterisk {
+#mvkfaekrqz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#oofwdgromh .gt_indent_1 {
+#mvkfaekrqz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#oofwdgromh .gt_indent_2 {
+#mvkfaekrqz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#oofwdgromh .gt_indent_3 {
+#mvkfaekrqz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#oofwdgromh .gt_indent_4 {
+#mvkfaekrqz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#oofwdgromh .gt_indent_5 {
+#mvkfaekrqz .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1265,8 +1345,8 @@
 <section id="quick-tables-from-models" class="slide level2">
 <h2>Quick tables from models</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Width, <span class="at">data =</span> iris)</span>
-<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a>sjPlot<span class="sc">::</span><span class="fu">tab_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Width, <span class="at">data =</span> iris)</span>
+<span id="cb33-2"><a aria-hidden="true" tabindex="-1"></a>sjPlot<span class="sc">::</span><span class="fu">tab_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top" data-quarto-postprocess="true" style="border-collapse:collapse; border:none;">
 <tbody>
@@ -1310,25 +1390,25 @@
 <section id="quick-tables-from-models-1" class="slide level2">
 <h2>Quick tables from models</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-hidden="true" tabindex="-1"></a>gtsummary<span class="sc">::</span><span class="fu">tbl_regression</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a aria-hidden="true" tabindex="-1"></a>gtsummary<span class="sc">::</span><span class="fu">tbl_regression</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="tddsvxscxv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tddsvxscxv table {
+<div id="mryvnkgcav" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mryvnkgcav table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tddsvxscxv thead, #tddsvxscxv tbody, #tddsvxscxv tfoot, #tddsvxscxv tr, #tddsvxscxv td, #tddsvxscxv th {
+#mryvnkgcav thead, #mryvnkgcav tbody, #mryvnkgcav tfoot, #mryvnkgcav tr, #mryvnkgcav td, #mryvnkgcav th {
   border-style: none;
 }
 
-#tddsvxscxv p {
+#mryvnkgcav p {
   margin: 0;
   padding: 0;
 }
 
-#tddsvxscxv .gt_table {
+#mryvnkgcav .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1354,12 +1434,12 @@
   border-left-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_caption {
+#mryvnkgcav .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tddsvxscxv .gt_title {
+#mryvnkgcav .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1371,7 +1451,7 @@
   border-bottom-width: 0;
 }
 
-#tddsvxscxv .gt_subtitle {
+#mryvnkgcav .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1383,7 +1463,7 @@
   border-top-width: 0;
 }
 
-#tddsvxscxv .gt_heading {
+#mryvnkgcav .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1395,13 +1475,13 @@
   border-right-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_bottom_border {
+#mryvnkgcav .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_col_headings {
+#mryvnkgcav .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1416,7 +1496,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_col_heading {
+#mryvnkgcav .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1436,7 +1516,7 @@
   overflow-x: hidden;
 }
 
-#tddsvxscxv .gt_column_spanner_outer {
+#mryvnkgcav .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1448,15 +1528,15 @@
   padding-right: 4px;
 }
 
-#tddsvxscxv .gt_column_spanner_outer:first-child {
+#mryvnkgcav .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tddsvxscxv .gt_column_spanner_outer:last-child {
+#mryvnkgcav .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tddsvxscxv .gt_column_spanner {
+#mryvnkgcav .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1468,11 +1548,11 @@
   width: 100%;
 }
 
-#tddsvxscxv .gt_spanner_row {
+#mryvnkgcav .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tddsvxscxv .gt_group_heading {
+#mryvnkgcav .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1498,7 +1578,7 @@
   text-align: left;
 }
 
-#tddsvxscxv .gt_empty_group_heading {
+#mryvnkgcav .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1513,15 +1593,15 @@
   vertical-align: middle;
 }
 
-#tddsvxscxv .gt_from_md > :first-child {
+#mryvnkgcav .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tddsvxscxv .gt_from_md > :last-child {
+#mryvnkgcav .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tddsvxscxv .gt_row {
+#mryvnkgcav .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1540,7 +1620,7 @@
   overflow-x: hidden;
 }
 
-#tddsvxscxv .gt_stub {
+#mryvnkgcav .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1553,7 +1633,7 @@
   padding-right: 5px;
 }
 
-#tddsvxscxv .gt_stub_row_group {
+#mryvnkgcav .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1567,15 +1647,15 @@
   vertical-align: top;
 }
 
-#tddsvxscxv .gt_row_group_first td {
+#mryvnkgcav .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tddsvxscxv .gt_row_group_first th {
+#mryvnkgcav .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tddsvxscxv .gt_summary_row {
+#mryvnkgcav .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1585,16 +1665,16 @@
   padding-right: 5px;
 }
 
-#tddsvxscxv .gt_first_summary_row {
+#mryvnkgcav .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_first_summary_row.thick {
+#mryvnkgcav .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tddsvxscxv .gt_last_summary_row {
+#mryvnkgcav .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1604,7 +1684,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_grand_summary_row {
+#mryvnkgcav .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1614,7 +1694,7 @@
   padding-right: 5px;
 }
 
-#tddsvxscxv .gt_first_grand_summary_row {
+#mryvnkgcav .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1624,7 +1704,7 @@
   border-top-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_last_grand_summary_row_top {
+#mryvnkgcav .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1634,11 +1714,11 @@
   border-bottom-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_striped {
+#mryvnkgcav .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tddsvxscxv .gt_table_body {
+#mryvnkgcav .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1647,7 +1727,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_footnotes {
+#mryvnkgcav .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1661,7 +1741,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_footnote {
+#mryvnkgcav .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1670,7 +1750,7 @@
   padding-right: 5px;
 }
 
-#tddsvxscxv .gt_sourcenotes {
+#mryvnkgcav .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1684,7 +1764,7 @@
   border-right-color: #D3D3D3;
 }
 
-#tddsvxscxv .gt_sourcenote {
+#mryvnkgcav .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1692,63 +1772,63 @@
   padding-right: 5px;
 }
 
-#tddsvxscxv .gt_left {
+#mryvnkgcav .gt_left {
   text-align: left;
 }
 
-#tddsvxscxv .gt_center {
+#mryvnkgcav .gt_center {
   text-align: center;
 }
 
-#tddsvxscxv .gt_right {
+#mryvnkgcav .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tddsvxscxv .gt_font_normal {
+#mryvnkgcav .gt_font_normal {
   font-weight: normal;
 }
 
-#tddsvxscxv .gt_font_bold {
+#mryvnkgcav .gt_font_bold {
   font-weight: bold;
 }
 
-#tddsvxscxv .gt_font_italic {
+#mryvnkgcav .gt_font_italic {
   font-style: italic;
 }
 
-#tddsvxscxv .gt_super {
+#mryvnkgcav .gt_super {
   font-size: 65%;
 }
 
-#tddsvxscxv .gt_footnote_marks {
+#mryvnkgcav .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tddsvxscxv .gt_asterisk {
+#mryvnkgcav .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tddsvxscxv .gt_indent_1 {
+#mryvnkgcav .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tddsvxscxv .gt_indent_2 {
+#mryvnkgcav .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tddsvxscxv .gt_indent_3 {
+#mryvnkgcav .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tddsvxscxv .gt_indent_4 {
+#mryvnkgcav .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tddsvxscxv .gt_indent_5 {
+#mryvnkgcav .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2009,44 +2089,6 @@ Vuorre, Matti, and Matthew J C Crump. 2021. <span>“Sharing and Organizing Rese
         ]
       });
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        // dispatch for htmlwidgets
-        function fireSlideEnter() {
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-        }
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-          fireSlideEnter();
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
