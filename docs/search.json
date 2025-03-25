@@ -459,7 +459,7 @@
     "href": "index.html",
     "title": "Getting started",
     "section": "",
-    "text": "There are few tools that we need to install and configure for the course."
+    "text": "Shared Notepad: online notepad to share the R code during the class.\nShared Drive: folder to share files and script if necessary\n\n\nQRcode always redirecting here:"
   },
   {
     "objectID": "index.html#quarto",

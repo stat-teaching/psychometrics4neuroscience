@@ -4,6 +4,18 @@ execute:
   freeze: false
 ---
 
+# Useful links
+
+- [Shared Notepad](https://etherpad.wikimedia.org/p/psychometrics4neuroscience): online notepad to share the R code during the class.
+- [Shared Drive](https://drive.google.com/drive/folders/178vPlwIuw0LZMFvNGBGSFeOiPHfPieyf?usp=drive_link): folder to share files and script if necessary
+
+<center>
+**QRcode always redirecting here:**
+{{< qrcode https://stat-teaching.github.io/psychometrics4neuroscience/ >}}
+</center>
+
+# Setup
+
 There are few tools that we need to install and configure for the course.
 
 - **R/Rstudio (or another IDE)**

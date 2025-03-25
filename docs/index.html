@@ -74,6 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/qrcodejs-v1.0.0/qrcode.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -152,11 +153,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#quarto" id="toc-quarto" class="nav-link active" data-scroll-target="#quarto">Quarto</a></li>
+  <li><a href="#useful-links" id="toc-useful-links" class="nav-link active" data-scroll-target="#useful-links">Useful links</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
   <li><a href="#gitgithub" id="toc-gitgithub" class="nav-link" data-scroll-target="#gitgithub">Git/Github</a></li>
   <li><a href="#cloning-the-repository" id="toc-cloning-the-repository" class="nav-link" data-scroll-target="#cloning-the-repository">Cloning the repository</a></li>
   <li><a href="#creating-your-repository" id="toc-creating-your-repository" class="nav-link" data-scroll-target="#creating-your-repository">Creating your repository</a></li>
   <li><a href="#renv" id="toc-renv" class="nav-link" data-scroll-target="#renv"><code>renv</code></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -188,6 +193,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="useful-links" class="level1">
+<h1>Useful links</h1>
+<ul>
+<li><a href="https://etherpad.wikimedia.org/p/psychometrics4neuroscience">Shared Notepad</a>: online notepad to share the R code during the class.</li>
+<li><a href="https://drive.google.com/drive/folders/178vPlwIuw0LZMFvNGBGSFeOiPHfPieyf?usp=drive_link">Shared Drive</a>: folder to share files and script if necessary</li>
+</ul>
+<center>
+<p><strong>QRcode always redirecting here:</strong></p>
+<div id="" class="qrcode"></div>
+<script type="text/javascript">
+(function() {
+  var script = document.currentScript;
+  var qrcode = script.previousElementSibling;
+  qrcode.qrcode = new QRCode(qrcode, {"colorDark":"#000000","colorLight":"#ffffff","height":128,"text":"https://stat-teaching.github.io/psychometrics4neuroscience/","width":128});
+  script.remove();
+})();
+</script>
+    
+</center>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
 <p>There are few tools that we need to install and configure for the course.</p>
 <ul>
 <li><strong>R/Rstudio (or another IDE)</strong></li>
@@ -252,6 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>and following the instructions. <code>renv</code> will create all the required files and folders and switch to the local library.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
