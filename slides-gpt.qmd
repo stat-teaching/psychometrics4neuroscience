@@ -1,0 +1,13 @@
+---
+listing:
+  contents: slides-gpt
+  type: table
+  sort: [book, filename]
+  fields: [title, book, link]
+---
+
+Here I included some slides and materials taken from textbooks. They are mainly summaries made with GPT and a little bit of manual cleaning, there is little or no effort from my side. They are only useful to extract the code examples summarizing the crucial parts of the chapters.
+
+## [R4DS](https://r4ds.hadley.nz/)
+
+This is an amazing book about the `tidyverse` in applied data manipulation and processing with a lot of examples and an overview of the most important R packages.

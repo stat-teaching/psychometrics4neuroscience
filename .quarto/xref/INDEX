@@ -40,5 +40,17 @@
   "slides/glmer/glmer.qmd": {
     "glmer.tex": "8d5069ae",
     "glmer.html": "31399bbe"
+  },
+  "slides-gpt.qmd": {
+    "slides-gpt.html": "33d5c5f5"
+  },
+  "slides-gpt/03-data-transformation.qmd": {
+    "03-data-transformation.html": "6d9da05b"
+  },
+  "slides-gpt/05-tidy-data.qmd": {
+    "05-tidy-data.html": "c5fdacf9"
+  },
+  "slides-gpt/06-regular-expressions.qmd": {
+    "06-regular-expressions.html": "3fdfc5b1"
   }
 }

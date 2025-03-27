@@ -3,6 +3,9 @@
     "materials.qmd": [
       "materials"
     ],
+    "slides-gpt.qmd": [
+      "slides-gpt"
+    ],
     "slides.qmd": [
       "slides"
     ]

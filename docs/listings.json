@@ -7,6 +7,14 @@
     ]
   },
   {
+    "listing": "/slides-gpt.html",
+    "items": [
+      "/slides-gpt/03-data-transformation.html",
+      "/slides-gpt/05-tidy-data.html",
+      "/slides-gpt/06-regular-expressions.html"
+    ]
+  },
+  {
     "listing": "/slides.html",
     "items": [
       "/slides/00-course-intro/00-course-intro.html",

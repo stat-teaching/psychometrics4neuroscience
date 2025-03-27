@@ -7,16 +7,20 @@ library(tidyverse)
 library(patchwork)
 ```
 
+```{r}
+mtheme <- function(){
+  theme_bw(20)
+}
+theme_set(mtheme())
+```
+
 
 ## Paradigmi sperimentali
 
-Con il prof. Maffei avete affrontato come rilevare attività celebrale ad esempio con fMRI o EEG/ERP.
-
-Solitamente (ma non sempre) queste rilevazioni sono eseguite mentre il soggetto sperimentale esegue un compito.
-
-Oltre al dato neurofisiologico abbiamo quindi anche sempre un dato comportamentale che viene analizzato separatamente o in relazione a quello cerebrale.
-
-Ci sono anche casi dove ai fini della ricerca è rilevante solo il dato comportamentale.
+- Con il prof. Maffei avete affrontato come rilevare attività celebrale ad esempio con fMRI o EEG/ERP.
+- Solitamente (ma non sempre) queste rilevazioni sono eseguite mentre il soggetto sperimentale esegue un compito.
+- Oltre al dato neurofisiologico abbiamo quindi anche sempre un dato comportamentale che viene analizzato separatamente o in relazione a quello cerebrale.
+- Ci sono anche casi dove ai fini della ricerca è rilevante solo il dato comportamentale.
 
 ## Paradigmi sperimentali
 
@@ -127,5 +131,41 @@ binomial <- data.frame(
 
 likert + binomial
 ```
+
+## Altre misure in Psicologia
+
+```{r}
+gamma <- data.frame(x = rgamma(1e4, shape = 10, rate = 10/100))
+gamma <- gamma |> 
+  ggplot(aes(x = x)) +
+  geom_histogram(bins = 50) +
+  ggtitle("Gamma data")
+  
+x <- runif(1e3, 18, 60)
+poisson <- data.frame(
+  x = x,
+  y = rpois(1e3, exp(log(10) + log(1.04) * (x - min(x))))
+)
+
+poisson <- poisson |> 
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  ggtitle("Poisson data")
+
+poisson + gamma
+```
+
+## Ma anche variabili più complesse...
+
+Dati circolari (e.g., distribuzione Von Mises) per stimare la precisione di un processo cognitivo/percettivo. @Cremers2018-in hanno pubblicato un tutorial per dati circolari in psicologia.
+
+![@Zhang2008-vs](img/luck2008.png)
+
+## Procedure adattive
+
+In alcune discipline (e.g., psicofisica) si utilizzano delle procedure che cercano di stimare durante l'esperimento
+
+![@Leek2001-vf](img/leek2001.png)
+
 
 ## References {.refs}
