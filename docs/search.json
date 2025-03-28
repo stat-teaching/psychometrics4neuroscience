@@ -662,7 +662,7 @@
     "href": "index.html",
     "title": "Getting started",
     "section": "",
-    "text": "Shared Notepad: online notepad to share the R code during the class.\nShared Drive: folder to share files and script if necessary\n\n\nQRcode always redirecting here:"
+    "text": "ciao\n\nShared Notepad: online notepad to share the R code during the class.\nShared Drive: folder to share files and script if necessary\n\n\nQRcode always redirecting here:"
   },
   {
     "objectID": "index.html#quarto",
@@ -956,7 +956,21 @@
     "href": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive",
     "title": "Experimental Psychology and Neuroscience",
     "section": "Procedure adattive",
-    "text": "Procedure adattive\nIn alcune discipline (e.g., psicofisica) si utilizzano delle procedure che cercano di stimare durante l’esperimento\n\nLeek (2001)"
+    "text": "Procedure adattive\nIn alcune discipline (e.g., psicofisica) si utilizzano delle procedure che adattano gli stimoli presentati in base alle risposte. Questo permette di stimare in modo efficiente dei parametri di interesse.\n\nLeek (2001)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive-1",
+    "href": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive-1",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Procedure adattive",
+    "text": "Procedure adattive\nLa procedura, detta staircase adatta la difficoltà dell’esperimento per tenere l’accuratezza al 50% (o altri valori)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive-2",
+    "href": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive-2",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Procedure adattive",
+    "text": "Procedure adattive\nDove questa è la relazione vera da stimare:"
   },
   {
     "objectID": "slides/01-psychological-research/01-psychological-research.html#references",

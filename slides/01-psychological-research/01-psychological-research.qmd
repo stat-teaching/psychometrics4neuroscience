@@ -1,5 +1,7 @@
 ---
 title: "Experimental Psychology and Neuroscience"
+execute: 
+  echo: false
 ---
 
 ```{r}
@@ -163,9 +165,57 @@ Dati circolari (e.g., distribuzione Von Mises) per stimare la precisione di un p
 
 ## Procedure adattive
 
-In alcune discipline (e.g., psicofisica) si utilizzano delle procedure che cercano di stimare durante l'esperimento
+In alcune discipline (e.g., psicofisica) si utilizzano delle procedure che adattano gli stimoli presentati in base alle risposte. Questo permette di stimare in modo efficiente dei parametri di interesse.
 
 ![@Leek2001-vf](img/leek2001.png)
 
+## Procedure adattive
+
+La procedura, detta *staircase* adatta la difficoltà dell'esperimento per tenere l'accuratezza al 50% (o altri valori)
+
+```{r}
+devtools::load_all()
+psy <- psy_fun("logit", 0.5, 10, 0, 0)
+
+ss <- staircase(psy, 50, 1, 1, 0, 0, 1, 0.1)
+
+ss <- ss |> 
+    ggplot(aes(x = trial, y = x)) +
+    geom_line() +
+    geom_point(aes(color = factor(resp)), size = 4) +
+    xlab("Trial") +
+    ylab("Stimulus") +
+    scale_color_manual(values = c("black", "salmon")) +
+    labs(
+        color = "Response"
+    ) +
+    geom_hline(yintercept = mean(ss$x[ss$is_rev]),
+               lty = "dashed")
+
+x <- seq(0, 1, length.out = 1e3)
+
+true_ss <- data.frame(
+    x = x,
+    y = psy(x)
+)
+
+true_ss <- true_ss |> 
+    ggplot(aes(x = x, y = y)) +
+    geom_line() +
+    ylim(c(0,1)) +
+    geom_point(x = 0.5, y = 0.5,
+               size = 3,
+               col = "firebrick")
+
+ss
+```
+
+## Procedure adattive
+
+Dove questa è la relazione vera da stimare:
+
+```{r}
+true_ss
+```
 
 ## References {.refs}

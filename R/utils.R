@@ -190,3 +190,65 @@ get_all_funs <- function(dir = "R"){
   funs <- lapply(Rs, filor::get_funs)
   unlist(funs, recursive = FALSE)
 }
+
+psy_fun <- function(dist,
+                    threshold, 
+                    slope, 
+                    guess, 
+                    lapse){
+    fun <- switch (dist,
+                   "logit" = function(x) plogis(x, threshold, 1/slope),
+                   "probit" = function(x) pnorm(x, threshold, 1/slope)
+    )
+    function(x) guess + (1 - guess - lapse) * fun(x)
+}
+
+
+staircase <- function(psy, 
+                      n, 
+                      n_up = 1,
+                      n_down = 1,
+                      start = 0,
+                      min = 0,
+                      max = 1,
+                      step = NULL) {
+    
+    if(is.null(step)) step <- (max - min) / 100
+    
+    xi <- start
+    n1 <- 0
+    n0 <- 0
+    
+    x <- rep(NA, n)
+    y <- rep(NA, n)
+    
+    for(i in 1:n){
+        x[i] <- xi
+        pi <- psy(xi)
+        ri <- rbinom(1, 1, pi)
+        y[i] <- ri
+        if(ri == 1){
+            n1 <- n1 + 1
+            if(n1 == n_down){
+                xi <- xi - step
+                n1 <- 0
+            }
+        } else{
+            n0 <- n0 + 1
+            if(n0 == n_up){
+                xi <- xi + step
+                n0 <- 0
+            }
+        }
+        
+    }
+    
+    data.frame(
+        trial = 1:n,
+        x = x,
+        resp = y,
+        is_rev = c(FALSE, diff(y) != 0)
+    )
+    
+}
+
