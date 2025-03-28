@@ -52,5 +52,8 @@
   },
   "slides-gpt/06-regular-expressions.qmd": {
     "06-regular-expressions.html": "3fdfc5b1"
+  },
+  "examples.qmd": {
+    "examples.html": "dd004831"
   }
 }

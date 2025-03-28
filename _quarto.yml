@@ -18,6 +18,8 @@ website:
         text: slides-gpt
       - href: materials.qmd
         text: materials
+      - href: examples.qmd
+        text: examples
     tools:
       - icon: github
         href: https://github.com/stat-teaching/psychometrics4neuroscience

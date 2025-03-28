@@ -651,6 +651,20 @@
     "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nBase R vs Tidyverse\n\n\n \n\n\n\n\nFunctional programming examples\n\n\n \n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "examples.html",
+    "href": "examples.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Shimizu et al. (2024) analyzed the impact of the type and intensity of the facial expression on the detection accuracy.\n\nThis study examined the relationship between the intensity of emotional expressions in facial stimuli and receivers’ decoding accuracy for six basic emotions: anger, disgust, fear, happiness, sadness, and surprise. A laboratory experiment was conducted using the forced‐choice method, in which the intensity of each stimulus was manipulated at every 10% interval using the morphing technique. To explore whether a linear relationship would be observed when the intensity was finely manipulated at 10% intervals, a hierarchical multiple regression analysis was performed. The mean percentage of correct responses for each stimulus was the dependent variable, and the linear, quadratic, and cubic terms of the stimulus intensity were the independent variables. The results showed that the linear model was not adopted as the final model for all facial expressions; that is, the effect of the squared term of intensity was significant for anger, disgust, fear, and sadness, while the effect of the cubic term of intensity was significant for happiness and surprise. Our findings indicate that a higher intensity of emotional expression does not yield higher decoding accuracy.\n\nData are available on OSF"
+  },
+  {
+    "objectID": "examples.html#face-processing",
+    "href": "examples.html#face-processing",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Shimizu et al. (2024) analyzed the impact of the type and intensity of the facial expression on the detection accuracy.\n\nThis study examined the relationship between the intensity of emotional expressions in facial stimuli and receivers’ decoding accuracy for six basic emotions: anger, disgust, fear, happiness, sadness, and surprise. A laboratory experiment was conducted using the forced‐choice method, in which the intensity of each stimulus was manipulated at every 10% interval using the morphing technique. To explore whether a linear relationship would be observed when the intensity was finely manipulated at 10% intervals, a hierarchical multiple regression analysis was performed. The mean percentage of correct responses for each stimulus was the dependent variable, and the linear, quadratic, and cubic terms of the stimulus intensity were the independent variables. The results showed that the linear model was not adopted as the final model for all facial expressions; that is, the effect of the squared term of intensity was significant for anger, disgust, fear, and sadness, while the effect of the cubic term of intensity was significant for happiness and surprise. Our findings indicate that a higher intensity of emotional expression does not yield higher decoding accuracy.\n\nData are available on OSF"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
@@ -950,6 +964,13 @@
     "title": "Experimental Psychology and Neuroscience",
     "section": "Ma anche variabili più complesse…",
     "text": "Ma anche variabili più complesse…\nDati circolari (e.g., distribuzione Von Mises) per stimare la precisione di un processo cognitivo/percettivo. Cremers and Klugkist (2018) hanno pubblicato un tutorial per dati circolari in psicologia.\n\nZhang and Luck (2008)"
+  },
+  {
+    "objectID": "slides/01-psychological-research/01-psychological-research.html#mixture-models",
+    "href": "slides/01-psychological-research/01-psychological-research.html#mixture-models",
+    "title": "Experimental Psychology and Neuroscience",
+    "section": "Mixture-models",
+    "text": "Mixture-models\nLa situazione precedente, può essere modellata come una mistura di due processi cognitivamente diversi, una stima ed una risposta casuale."
   },
   {
     "objectID": "slides/01-psychological-research/01-psychological-research.html#procedure-adattive",

@@ -163,6 +163,40 @@ Dati circolari (e.g., distribuzione Von Mises) per stimare la precisione di un p
 
 ![@Zhang2008-vs](img/luck2008.png)
 
+## Mixture-models
+
+La situazione precedente, può essere modellata come una mistura di due processi cognitivamente diversi, una stima ed una risposta casuale.
+
+```{r}
+library(brms)
+library(ggplot2)
+
+n <- 1e3
+p <- 0.2
+
+dd <- data.frame(
+    trial = 1:n,
+    type = sample(c("guess", "memory"), n, replace = TRUE, prob = c(p, 1 - p))
+)
+
+dd$y <- ifelse(dd$type == "memory", rvon_mises(n, 0, 5), runif(n, -pi, pi))
+
+rad2deg <- function(deg) deg * 180/pi
+
+dd$y <- rad2deg(dd$y)
+
+ggplot(dd, aes(x = y, group = type)) +
+    geom_histogram(aes(y = after_stat(density)),
+                   fill = NA,
+                   color = scales::alpha("black", 0.7),
+                   bins = 50) +
+    geom_density(aes(color = type),
+                 lwd = 1) +
+    xlab("Angle") +
+    ylab("Density") +
+    theme(legend.title = element_blank())
+```
+
 ## Procedure adattive
 
 In alcune discipline (e.g., psicofisica) si utilizzano delle procedure che adattano gli stimoli presentati in base alle risposte. Questo permette di stimare in modo efficiente dei parametri di interesse.
