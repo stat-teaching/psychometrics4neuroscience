@@ -68,4 +68,6 @@ dat_clean$emotion_lbl <- emotion_code[dat_clean$emotion]
 dat_clean$acc <- as.integer(dat_clean$response_lbl == dat_clean$emotion_lbl)
 
 head(dat_clean)
+
+saveRDS(dat_clean, here("data/emoint.rds"))
 ```

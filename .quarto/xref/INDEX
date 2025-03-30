@@ -61,5 +61,11 @@
   },
   "scripts-lectures/2025-03-28.qmd": {
     "2025-03-28.html": "7c820470"
+  },
+  "scripts-lectures/zzz.qmd": {
+    "zzz.html": "41bfcf10"
+  },
+  "temporary/2025-03-31.qmd": {
+    "2025-03-31.html": "82edcdb2"
   }
 }

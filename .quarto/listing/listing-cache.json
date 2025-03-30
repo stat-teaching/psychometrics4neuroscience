@@ -3,14 +3,14 @@
     "materials.qmd": [
       "materials"
     ],
+    "scripts-lectures.qmd": [
+      "scripts-lectures"
+    ],
     "slides-gpt.qmd": [
       "slides-gpt"
     ],
     "slides.qmd": [
       "slides"
-    ],
-    "scripts-lectures.qmd": [
-      "scripts-lectures"
     ]
   }
 }
