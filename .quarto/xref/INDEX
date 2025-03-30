@@ -55,5 +55,11 @@
   },
   "examples.qmd": {
     "examples.html": "dd004831"
+  },
+  "scripts-lectures.qmd": {
+    "scripts-lectures.html": "d598965a"
+  },
+  "scripts-lectures/2025-03-28.qmd": {
+    "2025-03-28.html": "7c820470"
   }
 }

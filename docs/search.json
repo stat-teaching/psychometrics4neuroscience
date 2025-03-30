@@ -1111,5 +1111,19 @@
     "title": "Literate programming with Quarto",
     "section": "Collaborating! Overleaf",
     "text": "Collaborating! Overleaf\nWith Overleaf you can collaborate on .tex documents but also .Rnw documents. No Rmd or qmd unfortunately. See an example document."
+  },
+  {
+    "objectID": "scripts-lectures/2025-03-28.html",
+    "href": "scripts-lectures/2025-03-28.html",
+    "title": "2025-03-28",
+    "section": "",
+    "text": "Preprocessing of the facial expression dataset (https://osf.io/download/tph5f/z).\n\nlibrary(tidyverse)\nlibrary(lme4)\nlibrary(here)\n\n# https://osf.io/zhtbj/?view_only=\n# download.file(\"https://osf.io/download/tph5f/\", \"data-raw/emoint.csv\")\n\ndat &lt;- read.csv(here(\"data-raw/emoint.csv\"))\n\n# conversion for responses\n# 1 = neutral\n# 2 = anger\n# 3 = disgust\n# 4 = fear\n# 5 = happiness\n# 6 = sadness\n# 7 = surprise\n\nresp_code &lt;- c(\n  \"1\" = \"neutral\",\n  \"2\" = \"anger\",\n  \"3\" = \"disgust\",\n  \"4\" = \"fear\",\n  \"5\" = \"happiness\",\n  \"6\" = \"sadness\",\n  \"7\" = \"suprise\"\n)\n\nemotion_code &lt;- c(\n  \"fear\" = \"fear\",\n  \"disop\" = \"disgust\",\n  \"discl\" = \"disgust\",\n  \"hap\" = \"happiness\",\n  \"sad\" = \"sadness\",\n  \"sur\" = \"suprise\",\n  \"angcl\" = \"anger\",\n  \"neutral\" = \"neutral\"\n)\n\ndat_clean &lt;- dat |&gt; \n  pivot_longer(4:ncol(dat), values_to = \"response\") |&gt; \n  separate(name, into = c(\"face\", \"emotion\", \"intensity\"), sep = \"_\")  |&gt;\n  # intensity as number\n  mutate(intensity = as.numeric(intensity)) |&gt; \n  # neutral as maximal intensity, avoid NA\n  mutate(intensity = ifelse(emotion == \"neutral\", 100, intensity))\n\nnames(dat_clean)[1:3] &lt;- c(\"id\", \"gender\", \"age\")\n\n# recoding response with labels\n# see https://adv-r.hadley.nz/subsetting.html?q=look#lookup-tables\n\ndat_clean$response_lbl &lt;- resp_code[dat_clean$response]\n\n# recoding the displayed emotion as the response\n\ndat_clean$emotion_lbl &lt;- emotion_code[dat_clean$emotion]\n\n# binary accuracy if emotion_lbl == response_lbl\n\ndat_clean$acc &lt;- as.integer(dat_clean$response_lbl == dat_clean$emotion_lbl)\n\nhead(dat_clean)\n\n# A tibble: 6 × 10\n     id gender age   face  emotion intensity response response_lbl emotion_lbl\n  &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;      \n1     1 f      32    f1    fear           60        4 fear         fear       \n2     1 f      32    m3    disop          60        3 disgust      disgust    \n3     1 f      32    m3    hap            70        5 happiness    happiness  \n4     1 f      32    m1    hap           100        5 happiness    happiness  \n5     1 f      32    m4    disop          60        6 sadness      disgust    \n6     1 f      32    m1    fear           20        1 neutral      fear       \n# ℹ 1 more variable: acc &lt;int&gt;"
+  },
+  {
+    "objectID": "scripts-lectures.html",
+    "href": "scripts-lectures.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\n\n\n\n\n2025-03-28\n\n\n\n\n\nNo matching items"
   }
 ]

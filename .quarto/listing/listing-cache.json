@@ -8,6 +8,9 @@
     ],
     "slides.qmd": [
       "slides"
+    ],
+    "scripts-lectures.qmd": [
+      "scripts-lectures"
     ]
   }
 }

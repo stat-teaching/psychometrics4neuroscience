@@ -23,5 +23,11 @@
       "/slides/04-quarto/04-quarto.html",
       "/slides/05-git-github/05-git-github.html"
     ]
+  },
+  {
+    "listing": "/scripts-lectures.html",
+    "items": [
+      "/scripts-lectures/2025-03-28.html"
+    ]
   }
 ]
