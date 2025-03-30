@@ -6,8 +6,6 @@ execute:
 
 # Useful links
 
-ciao
-
 - [Shared Notepad](https://etherpad.wikimedia.org/p/psychometrics4neuroscience): online notepad to share the R code during the class.
 - [Shared Drive](https://drive.google.com/drive/folders/178vPlwIuw0LZMFvNGBGSFeOiPHfPieyf?usp=drive_link): folder to share files and script if necessary
 
