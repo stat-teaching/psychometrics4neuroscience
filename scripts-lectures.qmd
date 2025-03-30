@@ -1,0 +1,7 @@
+---
+listing:
+  contents: scripts-lectures
+  type: table
+  sort: filename
+  fields: [title]
+---

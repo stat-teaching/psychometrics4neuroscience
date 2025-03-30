@@ -1,0 +1,71 @@
+---
+title: 2025-03-28
+---
+
+Preprocessing of the facial expression dataset ([https://osf.io/download/tph5f/z](https://osf.io/download/tph5f/)).
+
+```{r}
+library(tidyverse)
+library(lme4)
+library(here)
+
+# https://osf.io/zhtbj/?view_only=
+# download.file("https://osf.io/download/tph5f/", "data-raw/emoint.csv")
+
+dat <- read.csv(here("data-raw/emoint.csv"))
+
+# conversion for responses
+# 1 = neutral
+# 2 = anger
+# 3 = disgust
+# 4 = fear
+# 5 = happiness
+# 6 = sadness
+# 7 = surprise
+
+resp_code <- c(
+  "1" = "neutral",
+  "2" = "anger",
+  "3" = "disgust",
+  "4" = "fear",
+  "5" = "happiness",
+  "6" = "sadness",
+  "7" = "suprise"
+)
+
+emotion_code <- c(
+  "fear" = "fear",
+  "disop" = "disgust",
+  "discl" = "disgust",
+  "hap" = "happiness",
+  "sad" = "sadness",
+  "sur" = "suprise",
+  "angcl" = "anger",
+  "neutral" = "neutral"
+)
+
+dat_clean <- dat |> 
+  pivot_longer(4:ncol(dat), values_to = "response") |> 
+  separate(name, into = c("face", "emotion", "intensity"), sep = "_")  |>
+  # intensity as number
+  mutate(intensity = as.numeric(intensity)) |> 
+  # neutral as maximal intensity, avoid NA
+  mutate(intensity = ifelse(emotion == "neutral", 100, intensity))
+
+names(dat_clean)[1:3] <- c("id", "gender", "age")
+
+# recoding response with labels
+# see https://adv-r.hadley.nz/subsetting.html?q=look#lookup-tables
+
+dat_clean$response_lbl <- resp_code[dat_clean$response]
+
+# recoding the displayed emotion as the response
+
+dat_clean$emotion_lbl <- emotion_code[dat_clean$emotion]
+
+# binary accuracy if emotion_lbl == response_lbl
+
+dat_clean$acc <- as.integer(dat_clean$response_lbl == dat_clean$emotion_lbl)
+
+head(dat_clean)
+```

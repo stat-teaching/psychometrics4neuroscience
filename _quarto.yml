@@ -18,6 +18,8 @@ website:
         text: slides-gpt
       - href: materials.qmd
         text: materials
+      - href: scripts-lectures.qmd
+        text: scripts-lectures
       - href: examples.qmd
         text: examples
     tools:
