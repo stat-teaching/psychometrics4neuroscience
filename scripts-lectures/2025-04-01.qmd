@@ -1,0 +1,116 @@
+---
+title: 2025-04-01
+---
+
+```{r}
+library(here)
+library(lme4)
+library(tidyverse)
+library(effects)
+library(ggeffects)
+library(sjPlot)
+library(lattice)
+```
+
+```{r}
+# loading data
+dat <- readRDS(here("data/emoint.rds"))
+dat <- filter(dat, emotion_lbl != "neutral")
+```
+
+Single-subject model:
+
+```{r}
+fit <- glm(acc ~ intensity * emotion_lbl, 
+           data = dat, 
+           subset = id == 1,
+           family = binomial(link = "logit"))
+
+# model without the interaction
+fit0 <- glm(acc ~ intensity + emotion_lbl, 
+           data = dat, 
+           subset = id == 1,
+           family = binomial(link = "logit"))
+
+summary(fit)
+summary(fit0)
+
+# evaluating the single effects
+car::Anova(fit)
+anova(fit, fit0) # same as car::Anova()
+
+# plotting the effects
+plot(allEffects(fit))
+plot(ggeffect(fit, terms = c("intensity", "emotion_lbl")))
+
+# manually
+eff <- ggeffect(fit, terms = c("intensity", "emotion_lbl"))
+data.frame(eff)
+
+dd <- expand.grid(
+    emotion_lbl = unique(dat$emotion_lbl),
+    intensity = unique(dat$intensity)
+)
+
+#predict(fit, newdata = dd, type = "response", se.fit = TRUE)
+
+# creating table
+tab_model(fit)
+```
+
+Fit a model for each subject and plot the coefficients.
+
+```{r}
+fit_res <- function(fit){
+    cc <- summary(fit)$coefficients
+    cc <- data.frame(cc)
+    ci <- data.frame(confint(fit))
+    names(ci) <- c("lower", "upper")
+    names(cc) <- c("b", "se", "z", "p")
+    out <- cbind(cc, ci)
+    out$param <- rownames(out)
+    rownames(out) <- NULL
+    return(out)
+}
+
+fit_fun <- function(data){
+    glm(acc ~ intensity, family = binomial(link = "logit"), data = data)
+}
+
+fit_glm_res <- function(data){
+    fit <- fit_fun(data)
+    fit_res(fit)
+}
+
+dat |> 
+    group_by(id) |> 
+    nest() |> 
+    mutate(res = lapply(data, fit_glm_res)) |> 
+    unnest(res) |> 
+    ggplot(aes(x = id, y = b, ymin = lower, ymax = upper)) +
+    geom_pointrange() +
+    facet_wrap(~param, scales = "free")
+```
+
+```{r}
+# centering on the minimum and rescaling to 0-10
+dat$intensity0 <- (dat$intensity/10) - 1
+
+fit0 <- glmer(acc ~ intensity0 + (1|id), data = dat, family = binomial(link = "logit"))
+fit <- glmer(acc ~ intensity0 + (intensity0|id), data = dat, family = binomial(link = "logit"))
+
+car::compareCoefs(fit0, fit, zvals = TRUE)
+
+dotplot(ranef(fit))
+
+# histograms of acc when intensity is 0
+hist(plogis(fixef(fit)[1] + ranef(fit)$id[[1]]))
+
+summary(fit)
+
+# independent slopes and intercepts
+fit2 <- glmer(acc ~ intensity0 + (intensity0|id), data = dat, family = binomial(link = "logit"))
+
+summary(fit2)
+```
+
