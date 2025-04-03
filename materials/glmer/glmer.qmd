@@ -1,0 +1,864 @@
+---
+title: "Generalized Linear Mixed-Effects Models"
+bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
+toc-depth: 1
+---
+
+```{r}
+#| label: setup
+#| include: false
+#| echo: true
+
+devtools::load_all()
+library(tidyverse)
+library(lme4)
+library(here)
+
+theme_set(mtheme())
+
+# chunk font size
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+# default parameters
+knitr::opts_chunk$set(echo = TRUE,
+                      comment = "#>",
+                      fig.align = "center")
+
+funs <- filor::get_funs(here("R", "utils.R"))
+```
+
+
+## Notation
+
+$$
+\mathbf{y}_{N \times 1} = \mathbf{X}_{N \times p} \boldsymbol{\beta}_{p \times 1} + \sum_{i=1}^{m} \mathbf{Z}_i^{(N \times q_i)} \mathbf{b}_i^{(q_i \times 1)} + \boldsymbol{\varepsilon}_{N \times 1}
+$$
+
+Where $N$ is the number of observations, $p$ is the number of predictors, $q$ is the number of clusters (e.g., participants) and $m$ is the number of random effects (e.g., nested or crossed).
+
+## Visualizing the $\mathbf{Z}$ matrix
+
+```{r}
+dat <- sleepstudy
+Z <- get_Z_matrix(~ Days + (1|Subject), dat)
+rownames(Z) <- NULL
+colnames(Z) <- NULL
+
+reshape2::melt(Z) |>
+  ggplot(aes(x = Var1, y = Var2, fill = factor(value), color = factor(value))) +
+  geom_tile(show.legend = FALSE) +
+  scale_fill_manual(values = c("transparent", scales::alpha("black", 0.5))) +
+  scale_color_manual(values = c("transparent", "black")) +
+  theme_bw(20) +
+  theme(panel.grid = element_blank(),
+        aspect.ratio = 1) +
+  ylab(latex2exp::TeX("$Cluster_q$")) +
+  xlab(latex2exp::TeX("$Observation_i$"))
+```
+
+## Why clustered data in Psychology?
+
+In Psychology and Neuroscience we (almost) always have clustered data. For example:
+
+- Childrens nested within classrooms (maybe nested within schools)
+- Trials of a cognitive experiments nested within participants
+- ...
+
+The main point is that, clustered observations are not independent and we want to take into account the correlation.
+
+## Example with `lme4::sleepstudy`
+
+A very simple example is the `lme4::sleepstudy` where participants reaction times where evaluated under sleep deprivation.
+
+```{r}
+#| echo: true
+dat <- lme4::sleepstudy
+head(dat)
+```
+
+## Overall model
+
+```{r}
+dat |> 
+  ggplot(aes(x = Days, y = Reaction)) +
+  geom_point(position = position_jitter(width = 0.1)) +
+  scale_x_continuous(breaks = unique(dat$Days)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Linear Model (ignore dependency)")
+```
+
+## By-participant model
+
+```{r}
+dat |> 
+  ggplot(aes(x = Days, y = Reaction)) +
+  geom_point(position = position_jitter(width = 0.1)) +
+  facet_wrap(~Subject) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+## By-participant model
+
+From the by-participant models, we see a clear dependency. Observations within the same participant are more similar compared to observations across participant.
+
+In addition, at Day 0, some participants have higher/lower reaction times compared to the overall trend. Similarly, some participants have higher/lower slopes.
+
+**Individual differences are the core of Psychology** and we want to explictly model them!
+
+## Individual differences
+
+```{r}
+dat |> 
+  ggplot(aes(x = Days, y = Reaction, group = Subject)) +
+  geom_point(position = position_jitter(width = 0.1)) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Are the observations clustered?
+
+We can start assessing the clustering structure by fitting a mixed-model with only the random-intercepts and calculating the intraclass-correlation.
+
+$$
+y_{ij} = \beta_0 + \beta_{0_i} + \epsilon_{ij}
+$$
+
+## Are the observations clustered?
+
+The model can be fitted with the `lme4::lmer()` function:
+
+```{r}
+#| echo: true
+fit0 <- lmer(Reaction ~ 1 + (1|Subject), data = dat)
+summary(fit0)
+```
+
+## Are the observations clustered?
+
+```{r}
+# using the insight::get_variance() function
+vv <- insight::get_variance(fit0)
+vv$var.intercept / (vv$var.intercept + vv$var.residual)
+
+# or directly with performance::icc()
+performance::icc(fit0)
+```
+
+Thus roughly `r round(performance::icc(fit0)[[1]] * 100)`% of the variance is explained by the clustering structure.
+
+## Are the observations clustered?
+
+```{r}
+dat |> 
+  ggplot(aes(x = Subject, y = Reaction)) +
+  #geom_point(position = position_jitter(width = 0.1))
+  geom_boxplot(fill = "dodgerblue") +
+  ggtitle("ICC = 39%")
+```
+
+## Are the observations clustered
+
+We can remove the subject-specific effect.
+
+```{r}
+dat |> 
+  mutate(Reaction_cmc = cmc(Reaction, Subject)) |> 
+  ggplot(aes(x = Subject, y = Reaction_cmc)) +
+  #geom_point(position = position_jitter(width = 0.1))
+  geom_boxplot(fill = "dodgerblue") +
+  ylab("Reaction (cluster-mean centered)")
+
+```
+
+## How different ICCs appear...
+
+We can simulate some datasets with different ICC:
+
+```{r}
+#| echo: true
+icc <- c(0, 0.3, 0.8)
+sb0 <- sqrt(icc)
+
+b0 <- 0
+
+ns <- 10
+nt <- 10
+
+id <- rep(1:ns, each = nt)
+
+y <- vector(mode = "list", length = length(icc))
+
+for(i in 1:length(icc)){
+  b0i <- rnorm(ns, 0, sb0[i])
+  y[[i]] <- b0 + b0i[id] + rnorm(ns * nt, 0, 1 - sb0[i])
+}
+
+dd <- data.frame(
+  id = rep(id, length(sb0)),
+  sb0 = rep(sb0, each = ns * nt),
+  icc = rep(icc, each = ns * nt),
+  y = unlist(y)
+)
+
+dd |> 
+  mutate(icc = sprintf("ICC = %s", icc),
+         icc = factor(icc, levels = c("ICC = 0", "ICC = 0.3","ICC = 0.8"))) |> 
+  ggplot(aes(x = factor(id), y = y)) +
+  geom_boxplot() +
+  facet_wrap(~icc) +
+  xlab("Cluster")
+```
+
+## Psychological interpretation of random intercepts
+
+The random-intercepts are intepreted as baseline variation in the experiment. For example:
+
+- variability at time 0
+- variability pre treatment
+- variability for the reference condition
+- ...
+
+Furthemore, the ICC (that is related to the random-intercepts variance) affects the statistical power of the model.
+
+## Statistical power and ICC
+
+We will see how to simulate data in a meaningful way, but here just an example on the impact of ICC on the statistical power.
+
+I estimate the statistical power (for an intercept-only model) using the analytical method by @Hedges2001-ra.
+
+```{r}
+powerICC <- function(nc, ns, d, icc, alpha = 0.05){
+  tau2 <- icc
+  vi <- 1/ns + 1/ns
+  v <- (vi + tau2)/nc
+  z <- d / sqrt(v)
+  zc <- abs(qnorm(alpha/2))
+  1 - pnorm(zc - z) + pnorm(-zc - z)
+}
+```
+
+## Statistical power and ICC
+
+```{r}
+#| echo: true
+sim <- expand.grid(
+  nc = c(1, seq(5, 50, 10)),
+  ns = 20,
+  d = 0.3,
+  icc = c(0, 0.3, 0.5, 0.8)
+) 
+
+sim$power <- with(sim, powerICC(nc, ns, d, icc))
+
+sim |> 
+  ggplot(aes(x = icc, y = power, color = factor(nc))) +
+  geom_line() +
+  labs(color = "Clusters") +
+  xlab("ICC") +
+  ylab("Power") +
+  ggtitle("N = 20 (per cluster), d = 0.3")
+```
+
+## ICC in Psychology^[This is just an approximation to estimate the impact of the ICC]
+
+In Psychology it is common to collect clustered data and the data collection is usually time expensive. In addition, sample sizes are usually lower than the optimal level according to power calculation. @Rao1992-nl defined the concept of *effective sample size* for the reduction in the sample size (and thus power) according to the ICC in clustered data.
+
+$$
+N_{\text{eff}} = \frac{N}{1 + (\bar k - 1) \rho}
+$$
+Where $\bar k$ is the average number of observations per cluster.
+
+```{r}
+neff <- function(N, khat, icc){
+  N / (1 + (khat - 1) * icc)
+}
+```
+
+## ICC in Psychology
+
+```{r}
+#| echo: true
+N <- 100
+khat <- 10
+icc <- seq(0, 1, 0.01)
+
+qplot(icc, neff(N, khat, icc), type = "l", lwd = 1)
+```
+
+## Adding the fixed effect
+
+Then we can add the fixed effect of `Days`. The variable is numeric starting with 0 up to 5 days. We can just add the variable as it is.
+
+```{r}
+#| size: small
+fit1 <- lmer(Reaction ~ Days + (1|Subject), data = dat)
+# equivalent to
+# fit1 <- update(fit0, . ~ . + Days)
+
+summary(fit1)
+```
+
+## Adding the fixed effect
+
+This means that for each day we have an expected increase in reaction times of `r round(fixef(fit1)[2], 2)` milliseconds (or `r round(fixef(fit1)[2]/1000, 2)` seconds).
+
+We have only the random intercept for subjects, thus we are assuming that each subject has the same sleep deprivation effect but can have different baseline reaction times.
+
+```{r}
+head(coef(fit1)$Subject)
+# equivalent to fixef(fit1)["(Intercept)"] + ranef(fit1)$Subject for the random intercept
+```
+
+## Adding the fixed effect
+
+```{r}
+#| eval: false
+coef(fit1)$Subject |> 
+  mutate(Subject = 1:n()) |> 
+  mutate(b0 = fixef(fit1)[1],
+         b1 = fixef(fit1)[2]) |> 
+  rename("b0i" = `(Intercept)`,
+         "b1i" = `Days`) |> 
+  expand_grid(Days = unique(dat$Days)) |> 
+  mutate(pi = b0i + b1i * Days,
+         p = b0 + b1 * Days) |> 
+  ggplot(aes(x = Days, y = pi)) +
+  geom_line(aes(group = Subject),
+            alpha = 0.5) +
+  geom_line(aes(x = Days, y = p),
+            lwd = 1.5,
+            col = "firebrick") +
+  ylab("Reaction")
+```
+
+## Adding the fixed effect
+
+```{r}
+#| eval: true
+#| echo: true
+coef(fit1)$Subject |> 
+  mutate(Subject = 1:n()) |> 
+  mutate(b0 = fixef(fit1)[1],
+         b1 = fixef(fit1)[2]) |> 
+  rename("b0i" = `(Intercept)`,
+         "b1i" = `Days`) |> 
+  expand_grid(Days = unique(dat$Days)) |> 
+  mutate(pi = b0i + b1i * Days,
+         p = b0 + b1 * Days) |> 
+  ggplot(aes(x = Days, y = pi)) +
+  geom_line(aes(group = Subject),
+            alpha = 0.5) +
+  geom_line(aes(x = Days, y = p),
+            lwd = 1.5,
+            col = "firebrick") +
+  ylab("Reaction")
+```
+
+## Adding the fixed effect
+
+The same can be achieved using:
+
+```{r}
+DD <- expand_grid(
+  Subject = unique(dat$Subject),
+  Days = unique(dat$Days)
+)
+
+DD$pi <- predict(fit1, newdata = DD)
+
+head(DD)
+```
+
+## Is the fixed effect enough?
+
+A big problem with mixed models is that effects can be included both as fixed and random and the choice is not always easy. From the plots at the beginning there is a clear variability in slopes that the model is ignoring.
+
+```{r}
+fit2 <- lmer(Reaction ~ Days + (Days|Subject), data = dat)
+summary(fit2)
+```
+
+## Is the fixed effect enough?
+
+The first important part is the estimation of the random part. Clearly the random slopes variance is not zero.
+
+```{r}
+#| echo: true
+filter_output(summary(fit2), c("^Random effects|^Number of obs"))
+```
+
+## Is the fixed effect enough?
+
+One of the most important part is that the standard error of the fixed coefficients is affected by the inclusion of the random slopes. Omitting the slopes was underestimating the standard error.
+
+qualcosa su barr, keep it maximal, etc.
+
+```{r}
+car::compareCoefs(fit1, fit2)
+```
+
+## Is the fixed effect enough?
+
+We can formally compare the models using a Likelihood Ratio Test (LRT)^[Note that the `anova()` function is refitting models using Maximum Likelihood (and not REML). This is required to compare models using LRT]:
+
+```{r}
+anova(fit1, fit2)
+
+# or ranova(refitML(fit2))
+```
+
+<!-- TODO vedi se ranova richiede di fare refit ml -->
+
+## Plotting the random slopes
+
+```{r}
+DD <- expand_grid(
+  Subject = unique(dat$Subject),
+  Days = unique(dat$Days)
+)
+
+DD$pi <- predict(fit2, newdata = DD)
+
+DD |> 
+  ggplot(aes(x = Days, y = pi, group = Subject)) +
+  geom_line() +
+  xlab("Days") +
+  ylab("Reaction")
+```
+
+## Shrinkage!
+
+We can compare the fit of the multilevel model with linear models for each cluster. We can use the `fit_by_cluster()` function tha takes a formula, a grouping factor and fit a model for each cluster.
+
+```{r}
+fitl <- fit_by_cluster(Reaction ~ Days | Subject,
+                       dat,
+                       model = lm)
+```
+
+## Shrinkage!
+
+```{r}
+#| echo: true
+fitl <- fit_by_cluster(Reaction ~ Days | Subject,
+                       dat,
+                       model = lm)
+
+DD <- expand_grid(
+  Subject = unique(dat$Subject),
+  Days = unique(dat$Days)
+)
+
+DD$lmer <- predict(fit2, DD)
+DD$Subject <- as.numeric(as.character(DD$Subject))
+
+subjs <- unique(DD$Subject)
+DD$lm <- NA
+
+for(i in 1:length(fitl)){
+  pp <- predict(fitl[[i]], DD[DD$Subject == subjs[i], ])
+  DD$lm[DD$Subject == subjs[i]] <- pp
+}
+
+DD |> 
+  pivot_longer(c(lmer, lm)) |> 
+  ggplot(aes(x = Days, y = value, color = name)) +
+  geom_line(lwd = 1) +
+  facet_wrap(~Subject) +
+  ylab("Reaction") +
+  labs(color = "Method")
+```
+
+# Let's simulate a multilevel model!
+
+## Let's try to simulate the previous model
+
+```{r}
+#| size: scriptsize
+#| collapse: true
+N <- 10
+DAYS <- 10 # max number of days
+b00 <- 300 # grand-mean of reaction times at time 0
+b1 <- 20  # increase in reaction time for each day
+sb0 <- 30 # standard deviation intercepts
+sb1 <- 10 # standard deviaton slopes
+s <- 100 # residual standard deviation
+
+# we are simulating an ICC of
+sb0^2 / (sb0^2 + s^2)
+
+sim <- expand_grid(
+  id = 1:N,
+  days = 0:(DAYS - 1)
+)
+
+# random intercepts and slopes, rho = 0
+
+R <- 0 + diag(1 - 0, 2)
+VCOV <- diag(c(sb0, sb1)) %*% R %*% diag(c(sb0, sb1))
+
+RE <- MASS::mvrnorm(N, c(0, 0), VCOV)
+
+b0i <- RE[, 1]
+b1i <- RE[, 2]
+
+# linear predictor
+sim$lp <- with(sim, b00 + b0i[id] + (b1 + b1i[id]) * days)
+sim$rt <- rnorm(nrow(sim), sim$lp, s)
+```
+
+## Let's try to simulate the previous model
+
+```{r}
+#| echo: true
+sim |> 
+  ggplot(aes(x = rt)) +
+  geom_histogram(color = "black",
+                 fill = "dodgerblue") +
+  xlab("Reaction Times")
+```
+
+## Let's try to simulate the previous model
+
+```{r}
+#| echo: true
+sim |> 
+  ggplot(aes(x = days, y = rt)) +
+  geom_point() +
+  scale_x_continuous(breaks = 0:DAYS) +
+  xlab("Days") +
+  ylab("Reaction Times") +
+  geom_smooth(method = "lm",
+              se = FALSE,
+              aes(group = id))
+```
+
+## Let's try to simulate the previous model
+
+```{r}
+#| echo: true
+sim |> 
+  ggplot(aes(x = days, y = rt)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = 0:DAYS) +
+  xlab("Days") +
+  ylab("Reaction Times") +
+  facet_wrap(~id, ncol = 4) +
+  geom_smooth(method = "lm",
+              se = FALSE)
+```
+
+## Let's try to simulate the previous model
+
+A more realistic scenario could be to have an heterogeneous number of observations for each cluster.
+
+```{r}
+#| size: scriptsize
+#| collapse: true
+# minimum 3 observations
+ndays_per_subject <- sample(3:(DAYS - 1), size = N, replace = TRUE)
+siml <- split(sim, sim$id)
+
+for(i in 1:length(siml)){
+  siml[[i]] <- siml[[i]][1:ndays_per_subject[i], ]
+}
+
+sim_missing <- do.call(rbind, siml)
+
+# number of observations
+tapply(sim_missing$rt, sim_missing$id, length)
+```
+
+## Let's try to simulate the previous model
+
+```{r}
+#| echo: true
+sim_missing |> 
+  ggplot(aes(x = days, y = rt)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = 0:DAYS) +
+  xlab("Days") +
+  ylab("Reaction Times") +
+  facet_wrap(~id, ncol = 4) +
+  geom_smooth(method = "lm",
+              se = FALSE)
+```
+
+## Let's fit the model
+
+Here the random-intercepts and slopes model:
+
+```{r}
+#| size: scriptsize
+
+fit <- lmer(rt ~ days + (days|id), data = sim_missing)
+summary(fit)
+```
+
+# Can the multilevel model be misleading?
+
+## What do you see in this plot?
+
+```{r}
+#| echo: true
+k <- 10 # number of clusters/units
+n <- 100 # number of participants within each unit
+N <- n * k # total sample size
+unit <- rep(1:k, each = n)
+
+age <- rnorm(N, 60 - 3 * (unit - 1), 5) # age equation
+y <- 0 + rnorm(k, 0, 0.1)[unit] + 0.01 * age + 0.1 * (unit-1) + rnorm(N, 0, 0.1) # response equation
+dat <- data.frame(unit, age, y)
+```
+
+```{r}
+#| echo: true
+dat |> 
+  ggplot(aes(x = age, y = y)) +
+  geom_point()
+```
+
+. . .
+
+There is a clear negative relationship between `age` and the response variable `y`!
+
+## What do you see in this plot?
+
+Let's add the cluster information. What about now?
+
+```{r}
+#| echo: true
+dat |> 
+  ggplot(aes(x = age, y = y)) +
+  geom_point(aes(color = factor(unit))) +
+  labs(color = "Cluster")
+```
+
+## Simpson's paradox
+
+- We have clustered data, and the relationship `y ~ age` seems to be different within and between clusters.
+- This phenomenon is called **Simpson's paradox** and can be a serious problem in multilevel models.
+- Clearly this is a problem only for variables at the observation level (not at the cluster level).
+- For example, if clusters are schools and the observations are children. `age` is a variable at the children level (or aggregated at the school level). On the other side, the prestige of the school is a variable at the school level (the same for each child)
+
+## Simpson's paradox
+
+```{r}
+#| echo: true
+dat |> 
+  ggplot(aes(x = age, y = y)) +
+  geom_point(aes(color = factor(unit))) +
+  labs(color = "Cluster") + 
+  geom_smooth(method = "lm",
+              se = FALSE,
+              col = "black") +
+  geom_smooth(method = "lm",
+              aes(group = unit,
+                  color = factor(unit)),
+              se = FALSE)
+```
+
+## Simpson's paradox, what to do?
+
+The main strategy to deal with the Simpson's paradox is centering the variables. @Enders2007-dk provide a clear overview of the strategy.
+
+## Simpson's paradox, what to do?
+
+We can define some centering functions and see how we can model the multilevel structure.
+
+```{r}
+#| echo: true
+#| output: asis
+filor::print_fun(c(funs$cm, funs$cmc, funs$gmc))
+```
+
+## Simpson's paradox, between-clusters effect
+
+Firsly we can calculate the clusters mean. This remove the within-effect and a linear model will capture only the between-effect.
+
+```{r}
+#| echo: true
+dat |> 
+  mutate(age_cm = cm(age, unit),
+         y_cm = cm(y, unit)) |> 
+  ggplot(aes(x = age, y = y)) +
+  geom_point(alpha = 0.2,
+             aes(color = factor(unit))) +
+  geom_point(aes(x = age_cm, y = y_cm,
+                 color = factor(unit)),
+             alpha = 1,
+             size = 4) +
+  labs(color = "Unit")
+```
+
+## Simpson's paradox, between-clusters effect
+
+We have a negative `age` effect between clusters, as expected.
+
+```{r}
+dat_cm <- dat |> 
+  group_by(unit) |> 
+  summarise(y_cm = mean(y),
+            age_cm = mean(age))
+
+lm(y_cm ~ age_cm, data = dat_cm)
+```
+
+## Simpson's paradox, within-clusters effect
+
+We can substract (i.e., centering) from each observation, the cluster mean.
+
+```{r}
+#| echo: true
+dat |> 
+  mutate(age_cm = cm(age, unit),
+         age_cmc = cmc(age, unit),
+         y_cm = cm(y, unit)) |> 
+  ggplot(aes(x = age_cmc, y = y)) +
+  geom_point(alpha = 0.2,
+             aes(color = factor(unit))) +
+  xlab(latex2exp::TeX("$age - \\; \\bar{age_k}$")) +
+  geom_point(aes(x = 0, y = y_cm,
+                 color = factor(unit))) +
+  geom_smooth(method = "lm",
+              aes(group = unit,
+                  color = factor(unit)),
+              se = FALSE) +
+  labs(color = "Unit")
+```
+
+## Simpson's paradox, within-clusters effect
+
+```{r}
+dat$age_cmc <- cmc(dat$age, dat$unit)
+
+fitl_cmc <- fit_by_cluster(
+  y ~ age_cmc | unit,
+  data = dat,
+  model = lm
+)
+```
+
+## Simpson's paradox, within-clusters effect
+
+All slopes are similar but positive (compared to the between-effect). Thus estimating only the between (or within) effect is completely misleading.
+
+```{r}
+#| echo: true
+fitl_cmc |> 
+  lapply(broom::tidy, conf.int = TRUE) |> 
+  bind_rows(.id = "unit") |> 
+  mutate(unit = as.numeric(unit)) |> 
+  filter(term == "age_cmc") |> 
+  ggplot(aes(x = estimate, y = unit)) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high)) +
+  geom_vline(xintercept = 0,
+             lty = "dashed",
+             col = "firebrick") +
+  xlab(latex2exp::TeX("$\\beta_{age}$"))
+
+```
+
+## What about the multilevel model?
+
+We can fit a multilevel model on the full dataset. What is the `age` slope? within or between?
+
+```{r}
+#| size: scriptsize
+fit <- lmer(y ~ age + (1|unit), data = dat)
+summary(fit)
+```
+
+## What about the multilevel model?
+
+The estimated effect is a sort of weighted average of the within and between effect. This is usually not interesting, especially when the two effects are different. We want to isolate the between and within effects.
+
+We need to include two version of the `age` variable, one centered on the clusters and the other representing the clusters means.
+
+```{r}
+dat$age_cmc <- cmc(dat$age, dat$unit)
+dat$age_cm <- cm(dat$age, dat$unit)
+
+fit_bw <- lmer(y ~ age_cmc + age_cm + (1|unit), data = dat)
+```
+
+## What about the multilevel model?
+
+```{r}
+summary(fit_bw)
+```
+
+## What about the multilevel model?
+
+The within-clusters effect can be also included as random slope^[Of course, including the clusters means as random-slopes is not possible. Note that data are simulated without random slopes, thus the model estimate parameters at the boundaries]. Basically we allows not only the within effect to be different compared to the between effect but also that each cluster has a different sloope.
+
+```{r}
+fit_bw2 <- lmer(y ~ age_cmc + age_cm + (age_cmc|unit), data = dat)
+summary(fit_bw2)
+```
+
+## More on the Simpson's Paradox
+
+@Kievit2013-mt describe the SP problem in Psychology with methods to detect it.
+
+![](img/kievit2013.png)
+
+What do you think?
+
+## Practical session
+
+- simulate clustered data with some predictors
+- simulate the same dataset but with a some between-within differences
+
+# Diagnostics
+
+## The `performance` package
+
+The `performance` package has a series of nice functions to visualize and assess the models fit.
+
+Let's go back to our reaction times:
+
+```{r}
+#| label: performance-plot
+#| eval: false
+fit <- lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+
+performance::check_model(fit)
+```
+
+## The `performance` package
+
+```{r}
+#| label: performance-plot
+#| echo: true
+```
+
+## Influence measures
+
+@Nieuwenhuis2012-uv describe the `Influence.ME` package that computes the standard influence measures (Cook's distance, DFbeta, etc.) for `lme4` models.
+
+Also the `lme4:::influence.merMod()` compute all the measures. You can provide the `groups = ` argument to specify at which level performing the leave-one-out procedure.
+
+## Influence measures, small exercise
+
+Both `lme4:::influence.merMod()` and `Influence.ME` do not provide (good enough) plotting tools. Write a set of functions that takes a `lme4` model in input, calculate the influence measures, organize everything in a data.frame and plot the influence measures results with `ggplot2`.
+
+# Effect sizes
+
+## $R^2$ for multilevel models
+
+The $R^2$ for multilevel models is not computed as for standard regression models. @Nakagawa2017-hb describe how to calculate the $R^2$. They described the *marginal* (only fixed-effects) and the *conditional* (fixed and random-effects).
+
+```{r}
+# or performance::r2()
+performance::r2_nakagawa(fit)
+```
+
+Clearly the *conditional* is always greater or equal to the *marginal* one.
+
+# References

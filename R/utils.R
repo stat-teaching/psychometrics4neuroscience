@@ -12,7 +12,6 @@ fit_by_cluster <- function(formula, data, model = NULL, args = NULL){
   lapply(datal, function(x){
     do.call(model, args = c(args, list(data = x)))
   })
-  
 }
 
 get_Z_matrix <- function(formula, data){
@@ -27,8 +26,9 @@ cmc <- function(x, cluster){
 }
 
 cm <- function(x, cluster){
-  cm <- tapply(x, cluster, mean)
-  cm[cluster]
+    cmm <- tapply(x, cluster, mean)
+    cmn <- tapply(x, cluster, length) 
+    cmm[as.character(cluster)]
 }
 
 gmc <- function(x){

@@ -1,0 +1,223 @@
+---
+title: 2025-04-04
+execute:
+    echo: false
+---
+
+```{r}
+library(tidyverse)
+library(here)
+
+devtools::load_all()
+funs <- filor::get_funs(here("R", "utils.R"))
+```
+
+In psicologia e neuroscienze alcuni esperimenti includono delle variabili che possono variare tra soggetti, nonostante siano manipolate sperimentalmente.
+
+Ad esempio, in psicofisica gli stimoli vengono spesso *adattati* ai soggetti e quindi non tutti i soggetti sono sottoposti allo stesso tipo di stimolazione.
+
+Ipotizziamo che siamo interessati a capire la sensibilità al contrasto (visibilità rispetto allo sfondo) di un gruppo di soggetti. A livello individuale possiamo ipotizzare che la relazione vera di due soggetti sia ad esempio:
+
+```{r}
+alpha <- 0.5
+beta <- 10
+
+stair1 <- staircase(psy = psy_fun("logit", alpha, beta, 0, 0), n = 100, start = 0.5, step = 0.1)
+stair2 <- staircase(psy = psy_fun("logit", alpha + 0.2, beta - 3, 0, 0), n = 100, start = 0.5, step = 0.1)
+
+stair1$stair <- 1
+stair2$stair <- 2
+stair1$alpha <- alpha
+stair2$alpha <- alpha + 0.2
+stair1$beta <- beta
+stair2$beta <- beta - 3
+
+stair <- rbind(stair1, stair2)
+
+ggplot() +
+    xlim(c(0, 1)) +
+    stat_function(fun = psy_fun("logit", alpha, beta, 0, 0), col = "black", lwd = 1) +
+    stat_function(fun = psy_fun("logit", alpha + 0.2, beta-3, 0, 0), col = "firebrick", lwd = 1) +
+    theme(legend.position = "none") +
+    xlab("Contrasto") +
+    ylab("Visibilità") +
+    geom_point(x = c(alpha, alpha + 0.3),
+               y = c(psy_fun("logit", alpha, beta, 0, 0)(0.5),
+                     psy_fun("logit", alpha + 0.2, beta - 3, 0, 0)(0.8)))
+```
+
+Solitamente siamo interessati a stimare la *soglia* percettiva ed eventualmente la *slope*. La soglia percettiva è il livello di $x$ (contrasto) necessario a ad avere una certa percentuale di visibilità (e.g., 50%).
+
+Gli esperimenti possono essere tarati per adattare lo stimolo (contrasto) alle risposte permettendo di focalizzare i trial sulla parte della curva di interesse. Se proviamo a simulare due ipotetici esperimenti:
+
+```{r}
+ggplot() +
+    xlim(c(0, 1)) +
+    stat_function(fun = psy_fun("logit", alpha, beta, 0, 0), col = "black", lwd = 1) +
+    stat_function(fun = psy_fun("logit", alpha + 0.2, beta-3, 0, 0), col = "firebrick", lwd = 1) +
+    theme(legend.position = "none") +
+    xlab("Contrasto") +
+    ylab("Visibilità") +
+    geom_point(data = stair, aes(x = x, y = 1, color = factor(stair)),
+                position = position_jitter(height = 0.05),
+                alpha = 0.8) +
+    scale_color_manual(values = c("black", "firebrick"))
+```
+
+Ora carichiamo un dataset con un esperimento di questo tipo.
+
+```{r}
+set.seed(8331)
+
+scale01 <- function(x){
+    (x - min(x)) / (max(x) - min(x))
+}
+
+N <- 100
+NT <- 100
+id <- 1:N
+
+dat <- expand.grid(
+    id = 1:N,
+    trial = 1:NT
+)
+
+dat$x <- 500 + rnorm(N, 0, 250)[dat$id] + rnorm(nrow(dat), 0, 50)
+
+# ggplot(dat, aes(x = x, y = id)) +
+#     geom_point()
+
+dat$x01 <- scale01(dat$x)
+dat$x_cm <- cm(dat$x01, dat$id)
+dat$x_cmc <- cmc(dat$x01, dat$id)
+dat$x_gmc <- gmc(dat$x01)
+
+b0 <- qlogis(0.1)
+b1 <- log(1)
+b2 <- 20
+b0i <- rnorm(N, 0, 0.5)
+b2i <- rnorm(N, 0, 1)
+
+dat$lp <- with(dat, b0 + b0i[id] + b1 * x_cm + (b2 + b2i[id]) * x_cmc)
+dat$p <- plogis(dat$lp)
+dat$visibility <- rbinom(nrow(dat), 1, dat$p)
+
+dat_ex <- dat[, c("id", "trial", "x01", "visibility")]
+head(dat_ex)
+```
+
+Possiamo anche vedere i pattern individuali:
+
+```{r}
+ggplot(dat_ex, aes(x = x01, y = visibility)) +
+    geom_point(position = position_jitter(height = 0.02), alpha = 0.5) +
+    stat_smooth(aes(group = id),
+                method = "glm",
+                method.args = list(family = binomial),
+                se = FALSE)
+```
+```{r}
+dat_ex |> 
+    filter(id %in% sample(unique(id), 20)) |> 
+    ggplot(aes(x = x01, y = visibility)) +
+    geom_point(position = position_jitter(height = 0.02), alpha = 0.5) +
+    stat_smooth(method = "glm",
+                method.args = list(family = binomial)) +
+    facet_wrap(~id)
+```
+
+Fittiamo i nostri modelli per soggetto e vediamo il pattern di parametri:
+
+```{r}
+fit_by_cluster(visibility ~ x01 | id,
+               data = dat_ex,
+               model = glm,
+               args = list(family = binomial(link = "logit"))) |> 
+    lapply(broom::tidy, conf.int = TRUE) |> 
+    bind_rows(.id = "id") |> 
+    mutate(id = as.numeric(id)) |> 
+    ggplot(aes(x = estimate, y = id)) +
+    geom_pointrange(aes(x = estimate, xmin = conf.low, xmax = conf.high)) +
+    facet_wrap(~term, scales = "free_x")
+```
+
+Perfetto, ora fittiamo il nostro modello:
+
+```{r}
+#| echo: true
+
+library(lme4)
+library(lmerTest)
+
+fit <- glmer(visibility ~ x01 + (x01||id), data = dat, family = binomial(link = "logit"))
+summary(fit)
+```
+```{r}
+#| echo: true
+library(ggeffects)
+plot(ggeffect(fit))
+```
+
+L'effetto fisso stimato dal modello è `r round(fixef(fit)[2], 2)`. Al netto dello *shrinkage*, questo è decisamente inferiore rispetto alla media delle slope stimate sui singoli soggetti. Quale potrebbe essere il motivo?
+
+Il problema principale è che abbiamo un effetto del cluster (soggetti) sulla nostra variabile $x$ (vi dice qualcosa il Simpson's paradox?). Ogni soggetto ha il suo esperimento con un incremento chiaro (e consistente) della visibilità in funzione del contrasto MA i livelli di contrasto di ogni soggetto sono diversi uno dall'altro.
+
+```{r}
+dat_ex |> 
+    filter(id %in% sample(unique(id), 30)) |> 
+    mutate(x01_cm = cm(x01, id)) |> 
+    ggplot() +
+    geom_point(aes(x = x01, y = factor(id), color = factor(visibility)),
+               position = position_jitter(height = 0.1)) +
+    xlab("Contrasto") +
+    ylab("Soggetti") +
+    labs(color = "Visibilità") +
+    theme(legend.position = "bottom") +
+    scale_color_manual(values = c("black", "dodgerblue"))
+```
+
+Quindi in realtà non stiamo stimando esattamente quello che vorremmo, ovvero l'effetto medio (e la sua variabilità) del contrasto in ogni soggetto. Idealmente dovremmo calcolarlo su ogni soggetto e poi fare la media.
+
+Per fare questo è necessario trasformare la $x$, centrando i valori di contrasto sulla media di ogni soggetto.
+
+```{r}
+#| results: asis
+filor::print_fun(c(funs$cmc, funs$cm))
+```
+
+```{r}
+dat_ex |> 
+    filter(id %in% sample(id, 30)) |> 
+    mutate(x01_cmc = cmc(x01, id)) |> 
+    ggplot(aes(x = x01_cmc, y = id)) +
+    geom_point(aes(color = factor(visibility)),
+               position = position_jitter(height = 0.1)) +
+    scale_y_continuous(n.breaks = N) +
+    xlab("Contrasto") +
+    ylab("Soggetti") +
+    labs(color = "Visibilità") +
+    theme(legend.position = "bottom") +
+    scale_color_manual(values = c("black", "dodgerblue"))
+```
+
+```{r}
+#| echo: true
+dat_ex$x01_cmc <- cmc(dat_ex$x01, dat_ex$id)
+fit_cmc <- glmer(visibility ~ x01_cmc + (x01_cmc||id), data = dat_ex, family = binomial(link = "logit"))
+summary(fit_cmc)
+```
+Se erroneamente (qualche volta viene fatto), decidiamo di aggregare i dati a livello del soggetto. Possiamo nel migliore dei casi attenuare o distorcere la stima oppure stimare un pattern anche opposto.
+
+```{r}
+#| echo: true
+dat_agg <- dat_ex |> 
+    group_by(id) |> 
+    summarise(p = mean(visibility),
+              n = n(),
+              x01 = mean(x01))
+head(dat_agg)
+
+fit_agg <- glmer(p ~ x01 + (1|id), data = dat_agg, weights = n, family = binomial(link = "logit"))
+summary(fit_agg)
+```
+

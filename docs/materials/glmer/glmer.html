@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Filippo Gambarota">
+
+<title>Generalized Linear Mixed-Effects Models – Psychometrics4Neuroscience</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Psychometrics4Neuroscience</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../slides.html"> 
+<span class="menu-text">slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../slides-gpt.html"> 
+<span class="menu-text">slides-gpt</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../materials.html"> 
+<span class="menu-text">materials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../scripts-lectures.html"> 
+<span class="menu-text">scripts-lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../examples.html"> 
+<span class="menu-text">examples</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://github.com/stat-teaching/psychometrics4neuroscience" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lets-simulate-a-multilevel-model" id="toc-lets-simulate-a-multilevel-model" class="nav-link active" data-scroll-target="#lets-simulate-a-multilevel-model">Let’s simulate a multilevel model!</a></li>
+  <li><a href="#can-the-multilevel-model-be-misleading" id="toc-can-the-multilevel-model-be-misleading" class="nav-link" data-scroll-target="#can-the-multilevel-model-be-misleading">Can the multilevel model be misleading?</a></li>
+  <li><a href="#diagnostics" id="toc-diagnostics" class="nav-link" data-scroll-target="#diagnostics">Diagnostics</a></li>
+  <li><a href="#effect-sizes" id="toc-effect-sizes" class="nav-link" data-scroll-target="#effect-sizes">Effect sizes</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Generalized Linear Mixed-Effects Models</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Filippo Gambarota </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="notation" class="level2">
+<h2 class="anchored" data-anchor-id="notation">Notation</h2>
+<p><span class="math display">\[
+\mathbf{y}_{N \times 1} = \mathbf{X}_{N \times p} \boldsymbol{\beta}_{p \times 1} + \sum_{i=1}^{m} \mathbf{Z}_i^{(N \times q_i)} \mathbf{b}_i^{(q_i \times 1)} + \boldsymbol{\varepsilon}_{N \times 1}
+\]</span></p>
+<p>Where <span class="math inline">\(N\)</span> is the number of observations, <span class="math inline">\(p\)</span> is the number of predictors, <span class="math inline">\(q\)</span> is the number of clusters (e.g., participants) and <span class="math inline">\(m\)</span> is the number of random effects (e.g., nested or crossed).</p>
+</section>
+<section id="visualizing-the-mathbfz-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-mathbfz-matrix">Visualizing the <span class="math inline">\(\mathbf{Z}\)</span> matrix</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> sleepstudy</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">get_Z_matrix</span>(<span class="sc">~</span> Days <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subject), dat)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Z) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Z) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>reshape2<span class="sc">::</span><span class="fu">melt</span>(Z) <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Var1, <span class="at">y =</span> Var2, <span class="at">fill =</span> <span class="fu">factor</span>(value), <span class="at">color =</span> <span class="fu">factor</span>(value))) <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"transparent"</span>, scales<span class="sc">::</span><span class="fu">alpha</span>(<span class="st">"black"</span>, <span class="fl">0.5</span>))) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"transparent"</span>, <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">aspect.ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$Cluster_q$"</span>)) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$Observation_i$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="why-clustered-data-in-psychology" class="level2">
+<h2 class="anchored" data-anchor-id="why-clustered-data-in-psychology">Why clustered data in Psychology?</h2>
+<p>In Psychology and Neuroscience we (almost) always have clustered data. For example:</p>
+<ul>
+<li>Childrens nested within classrooms (maybe nested within schools)</li>
+<li>Trials of a cognitive experiments nested within participants</li>
+<li>…</li>
+</ul>
+<p>The main point is that, clustered observations are not independent and we want to take into account the correlation.</p>
+</section>
+<section id="example-with-lme4sleepstudy" class="level2">
+<h2 class="anchored" data-anchor-id="example-with-lme4sleepstudy">Example with <code>lme4::sleepstudy</code></h2>
+<p>A very simple example is the <code>lme4::sleepstudy</code> where participants reaction times where evaluated under sleep deprivation.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> lme4<span class="sc">::</span>sleepstudy</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   Reaction Days Subject
+#&gt; 1 249.5600    0     308
+#&gt; 2 258.7047    1     308
+#&gt; 3 250.8006    2     308
+#&gt; 4 321.4398    3     308
+#&gt; 5 356.8519    4     308
+#&gt; 6 414.6901    5     308</code></pre>
+</div>
+</div>
+</section>
+<section id="overall-model" class="level2">
+<h2 class="anchored" data-anchor-id="overall-model">Overall model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> Reaction)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Linear Model (ignore dependency)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="by-participant-model" class="level2">
+<h2 class="anchored" data-anchor-id="by-participant-model">By-participant model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> Reaction)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Subject) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="by-participant-model-1" class="level2">
+<h2 class="anchored" data-anchor-id="by-participant-model-1">By-participant model</h2>
+<p>From the by-participant models, we see a clear dependency. Observations within the same participant are more similar compared to observations across participant.</p>
+<p>In addition, at Day 0, some participants have higher/lower reaction times compared to the overall trend. Similarly, some participants have higher/lower slopes.</p>
+<p><strong>Individual differences are the core of Psychology</strong> and we want to explictly model them!</p>
+</section>
+<section id="individual-differences" class="level2">
+<h2 class="anchored" data-anchor-id="individual-differences">Individual differences</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> Reaction, <span class="at">group =</span> Subject)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="are-the-observations-clustered" class="level2">
+<h2 class="anchored" data-anchor-id="are-the-observations-clustered">Are the observations clustered?</h2>
+<p>We can start assessing the clustering structure by fitting a mixed-model with only the random-intercepts and calculating the intraclass-correlation.</p>
+<p><span class="math display">\[
+y_{ij} = \beta_0 + \beta_{0_i} + \epsilon_{ij}
+\]</span></p>
+</section>
+<section id="are-the-observations-clustered-1" class="level2">
+<h2 class="anchored" data-anchor-id="are-the-observations-clustered-1">Are the observations clustered?</h2>
+<p>The model can be fitted with the <code>lme4::lmer()</code> function:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subject), <span class="at">data =</span> dat)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: Reaction ~ 1 + (1 | Subject)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: 1904.3
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -2.4983 -0.5501 -0.1476  0.5123  3.3446 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  Subject  (Intercept) 1278     35.75   
+#&gt;  Residual             1959     44.26   
+#&gt; Number of obs: 180, groups:  Subject, 18
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error t value
+#&gt; (Intercept)   298.51       9.05   32.98</code></pre>
+</div>
+</div>
+</section>
+<section id="are-the-observations-clustered-2" class="level2">
+<h2 class="anchored" data-anchor-id="are-the-observations-clustered-2">Are the observations clustered?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using the insight::get_variance() function</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>vv <span class="ot">&lt;-</span> insight<span class="sc">::</span><span class="fu">get_variance</span>(fit0)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>vv<span class="sc">$</span>var.intercept <span class="sc">/</span> (vv<span class="sc">$</span>var.intercept <span class="sc">+</span> vv<span class="sc">$</span>var.residual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   Subject 
+#&gt; 0.3948896</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or directly with performance::icc()</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(fit0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # Intraclass Correlation Coefficient
+#&gt; 
+#&gt;     Adjusted ICC: 0.395
+#&gt;   Unadjusted ICC: 0.395</code></pre>
+</div>
+</div>
+<p>Thus roughly 39% of the variance is explained by the clustering structure.</p>
+</section>
+<section id="are-the-observations-clustered-3" class="level2">
+<h2 class="anchored" data-anchor-id="are-the-observations-clustered-3">Are the observations clustered?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Subject, <span class="at">y =</span> Reaction)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_point(position = position_jitter(width = 0.1))</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"dodgerblue"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"ICC = 39%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="are-the-observations-clustered-4" class="level2">
+<h2 class="anchored" data-anchor-id="are-the-observations-clustered-4">Are the observations clustered</h2>
+<p>We can remove the subject-specific effect.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Reaction_cmc =</span> <span class="fu">cmc</span>(Reaction, Subject)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Subject, <span class="at">y =</span> Reaction_cmc)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_point(position = position_jitter(width = 0.1))</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"dodgerblue"</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction (cluster-mean centered)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="how-different-iccs-appear" class="level2">
+<h2 class="anchored" data-anchor-id="how-different-iccs-appear">How different ICCs appear…</h2>
+<p>We can simulate some datasets with different ICC:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>icc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.8</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>sb0 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(icc)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ns <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>nt <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>ns, <span class="at">each =</span> nt)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> <span class="fu">length</span>(icc))</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(icc)){</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  b0i <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(ns, <span class="dv">0</span>, sb0[i])</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  y[[i]] <span class="ot">&lt;-</span> b0 <span class="sc">+</span> b0i[id] <span class="sc">+</span> <span class="fu">rnorm</span>(ns <span class="sc">*</span> nt, <span class="dv">0</span>, <span class="dv">1</span> <span class="sc">-</span> sb0[i])</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">rep</span>(id, <span class="fu">length</span>(sb0)),</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">sb0 =</span> <span class="fu">rep</span>(sb0, <span class="at">each =</span> ns <span class="sc">*</span> nt),</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">icc =</span> <span class="fu">rep</span>(icc, <span class="at">each =</span> ns <span class="sc">*</span> nt),</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">unlist</span>(y)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>dd <span class="sc">|&gt;</span> </span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">icc =</span> <span class="fu">sprintf</span>(<span class="st">"ICC = %s"</span>, icc),</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">icc =</span> <span class="fu">factor</span>(icc, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"ICC = 0"</span>, <span class="st">"ICC = 0.3"</span>,<span class="st">"ICC = 0.8"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(id), <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>icc) <span class="sc">+</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="psychological-interpretation-of-random-intercepts" class="level2">
+<h2 class="anchored" data-anchor-id="psychological-interpretation-of-random-intercepts">Psychological interpretation of random intercepts</h2>
+<p>The random-intercepts are intepreted as baseline variation in the experiment. For example:</p>
+<ul>
+<li>variability at time 0</li>
+<li>variability pre treatment</li>
+<li>variability for the reference condition</li>
+<li>…</li>
+</ul>
+<p>Furthemore, the ICC (that is related to the random-intercepts variance) affects the statistical power of the model.</p>
+</section>
+<section id="statistical-power-and-icc" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-power-and-icc">Statistical power and ICC</h2>
+<p>We will see how to simulate data in a meaningful way, but here just an example on the impact of ICC on the statistical power.</p>
+<p>I estimate the statistical power (for an intercept-only model) using the analytical method by <span class="citation" data-cites="Hedges2001-ra">Hedges and Pigott (<a href="#ref-Hedges2001-ra" role="doc-biblioref">2001</a>)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>powerICC <span class="ot">&lt;-</span> <span class="cf">function</span>(nc, ns, d, icc, <span class="at">alpha =</span> <span class="fl">0.05</span>){</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  tau2 <span class="ot">&lt;-</span> icc</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  vi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>ns <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>ns</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> (vi <span class="sc">+</span> tau2)<span class="sc">/</span>nc</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> d <span class="sc">/</span> <span class="fu">sqrt</span>(v)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  zc <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">qnorm</span>(alpha<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(zc <span class="sc">-</span> z) <span class="sc">+</span> <span class="fu">pnorm</span>(<span class="sc">-</span>zc <span class="sc">-</span> z)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="statistical-power-and-icc-1" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-power-and-icc-1">Statistical power and ICC</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nc =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">10</span>)),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ns =</span> <span class="dv">20</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="fl">0.3</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">icc =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>sim<span class="sc">$</span>power <span class="ot">&lt;-</span> <span class="fu">with</span>(sim, <span class="fu">powerICC</span>(nc, ns, d, icc))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>sim <span class="sc">|&gt;</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> icc, <span class="at">y =</span> power, <span class="at">color =</span> <span class="fu">factor</span>(nc))) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Clusters"</span>) <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"ICC"</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Power"</span>) <span class="sc">+</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"N = 20 (per cluster), d = 0.3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="icc-in-psychology" class="level2">
+<h2 class="anchored" data-anchor-id="icc-in-psychology">ICC in Psychology<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h2>
+<p>In Psychology it is common to collect clustered data and the data collection is usually time expensive. In addition, sample sizes are usually lower than the optimal level according to power calculation. <span class="citation" data-cites="Rao1992-nl">Rao and Scott (<a href="#ref-Rao1992-nl" role="doc-biblioref">1992</a>)</span> defined the concept of <em>effective sample size</em> for the reduction in the sample size (and thus power) according to the ICC in clustered data.</p>
+<p><span class="math display">\[
+N_{\text{eff}} = \frac{N}{1 + (\bar k - 1) \rho}
+\]</span> Where <span class="math inline">\(\bar k\)</span> is the average number of observations per cluster.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>neff <span class="ot">&lt;-</span> <span class="cf">function</span>(N, khat, icc){</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  N <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> (khat <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> icc)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="icc-in-psychology-1" class="level2">
+<h2 class="anchored" data-anchor-id="icc-in-psychology-1">ICC in Psychology</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>khat <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>icc <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.01</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qplot</span>(icc, <span class="fu">neff</span>(N, khat, icc), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-the-fixed-effect" class="level2">
+<h2 class="anchored" data-anchor-id="adding-the-fixed-effect">Adding the fixed effect</h2>
+<p>Then we can add the fixed effect of <code>Days</code>. The variable is numeric starting with 0 up to 5 days. We can just add the variable as it is.</p>
+<p></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Subject), <span class="at">data =</span> dat)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent to</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit1 &lt;- update(fit0, . ~ . + Days)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: Reaction ~ Days + (1 | Subject)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: 1786.5
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.2257 -0.5529  0.0109  0.5188  4.2506 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  Subject  (Intercept) 1378.2   37.12   
+#&gt;  Residual              960.5   30.99   
+#&gt; Number of obs: 180, groups:  Subject, 18
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error t value
+#&gt; (Intercept) 251.4051     9.7467   25.79
+#&gt; Days         10.4673     0.8042   13.02
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;      (Intr)
+#&gt; Days -0.371</code></pre>
+</div>
+</div>
+<p></p>
+</section>
+<section id="adding-the-fixed-effect-1" class="level2">
+<h2 class="anchored" data-anchor-id="adding-the-fixed-effect-1">Adding the fixed effect</h2>
+<p>This means that for each day we have an expected increase in reaction times of 10.47 milliseconds (or 0.01 seconds).</p>
+<p>We have only the random intercept for subjects, thus we are assuming that each subject has the same sleep deprivation effect but can have different baseline reaction times.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">coef</span>(fit1)<span class="sc">$</span>Subject)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     (Intercept)     Days
+#&gt; 308    292.1888 10.46729
+#&gt; 309    173.5556 10.46729
+#&gt; 310    188.2965 10.46729
+#&gt; 330    255.8115 10.46729
+#&gt; 331    261.6213 10.46729
+#&gt; 332    259.6263 10.46729</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent to fixef(fit1)["(Intercept)"] + ranef(fit1)$Subject for the random intercept</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adding-the-fixed-effect-2" class="level2">
+<h2 class="anchored" data-anchor-id="adding-the-fixed-effect-2">Adding the fixed effect</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit1)<span class="sc">$</span>Subject <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Subject =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">b0 =</span> <span class="fu">fixef</span>(fit1)[<span class="dv">1</span>],</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">b1 =</span> <span class="fu">fixef</span>(fit1)[<span class="dv">2</span>]) <span class="sc">|&gt;</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"b0i"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">"b1i"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Days</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_grid</span>(<span class="at">Days =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)) <span class="sc">|&gt;</span> </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pi =</span> b0i <span class="sc">+</span> b1i <span class="sc">*</span> Days,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">p =</span> b0 <span class="sc">+</span> b1 <span class="sc">*</span> Days) <span class="sc">|&gt;</span> </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> pi)) <span class="sc">+</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> Subject),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> p),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">lwd =</span> <span class="fl">1.5</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">col =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adding-the-fixed-effect-3" class="level2">
+<h2 class="anchored" data-anchor-id="adding-the-fixed-effect-3">Adding the fixed effect</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit1)<span class="sc">$</span>Subject <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Subject =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">b0 =</span> <span class="fu">fixef</span>(fit1)[<span class="dv">1</span>],</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">b1 =</span> <span class="fu">fixef</span>(fit1)[<span class="dv">2</span>]) <span class="sc">|&gt;</span> </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"b0i"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">"b1i"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Days</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_grid</span>(<span class="at">Days =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)) <span class="sc">|&gt;</span> </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pi =</span> b0i <span class="sc">+</span> b1i <span class="sc">*</span> Days,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">p =</span> b0 <span class="sc">+</span> b1 <span class="sc">*</span> Days) <span class="sc">|&gt;</span> </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> pi)) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> Subject),</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> p),</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">lwd =</span> <span class="fl">1.5</span>,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">col =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-the-fixed-effect-4" class="level2">
+<h2 class="anchored" data-anchor-id="adding-the-fixed-effect-4">Adding the fixed effect</h2>
+<p>The same can be achieved using:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>DD <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Subject =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Subject),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Days =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>DD<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit1, <span class="at">newdata =</span> DD)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 6 × 3
+#&gt;   Subject  Days    pi
+#&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 308         0  292.
+#&gt; 2 308         1  303.
+#&gt; 3 308         2  313.
+#&gt; 4 308         3  324.
+#&gt; 5 308         4  334.
+#&gt; 6 308         5  345.</code></pre>
+</div>
+</div>
+</section>
+<section id="is-the-fixed-effect-enough" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-fixed-effect-enough">Is the fixed effect enough?</h2>
+<p>A big problem with mixed models is that effects can be included both as fixed and random and the choice is not always easy. From the plots at the beginning there is a clear variability in slopes that the model is ignoring.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (Days<span class="sc">|</span>Subject), <span class="at">data =</span> dat)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: Reaction ~ Days + (Days | Subject)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: 1743.6
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.9536 -0.4634  0.0231  0.4634  5.1793 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev. Corr
+#&gt;  Subject  (Intercept) 612.10   24.741       
+#&gt;           Days         35.07    5.922   0.07
+#&gt;  Residual             654.94   25.592       
+#&gt; Number of obs: 180, groups:  Subject, 18
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error t value
+#&gt; (Intercept)  251.405      6.825  36.838
+#&gt; Days          10.467      1.546   6.771
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;      (Intr)
+#&gt; Days -0.138</code></pre>
+</div>
+</div>
+</section>
+<section id="is-the-fixed-effect-enough-1" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-fixed-effect-enough-1">Is the fixed effect enough?</h2>
+<p>The first important part is the estimation of the random part. Clearly the random slopes variance is not zero.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter_output</span>(<span class="fu">summary</span>(fit2), <span class="fu">c</span>(<span class="st">"^Random effects|^Number of obs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev. Corr
+#&gt;  Subject  (Intercept) 612.10   24.741       
+#&gt;           Days         35.07    5.922   0.07
+#&gt;  Residual             654.94   25.592       
+#&gt; Number of obs: 180, groups:  Subject, 18</code></pre>
+</div>
+</div>
+</section>
+<section id="is-the-fixed-effect-enough-2" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-fixed-effect-enough-2">Is the fixed effect enough?</h2>
+<p>One of the most important part is that the standard error of the fixed coefficients is affected by the inclusion of the random slopes. Omitting the slopes was underestimating the standard error.</p>
+<p>qualcosa su barr, keep it maximal, etc.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">compareCoefs</span>(fit1, fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Calls:
+#&gt; 1: lmer(formula = Reaction ~ Days + (1 | Subject), data = dat)
+#&gt; 2: lmer(formula = Reaction ~ Days + (Days | Subject), data = dat)
+#&gt; 
+#&gt;             Model 1 Model 2
+#&gt; (Intercept)  251.41  251.41
+#&gt; SE             9.75    6.82
+#&gt;                            
+#&gt; Days         10.467  10.467
+#&gt; SE            0.804   1.546
+#&gt; </code></pre>
+</div>
+</div>
+</section>
+<section id="is-the-fixed-effect-enough-3" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-fixed-effect-enough-3">Is the fixed effect enough?</h2>
+<p>We can formally compare the models using a Likelihood Ratio Test (LRT)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fit1, fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Data: dat
+#&gt; Models:
+#&gt; fit1: Reaction ~ Days + (1 | Subject)
+#&gt; fit2: Reaction ~ Days + (Days | Subject)
+#&gt;      npar    AIC    BIC  logLik -2*log(L)  Chisq Df Pr(&gt;Chisq)    
+#&gt; fit1    4 1802.1 1814.8 -897.04    1794.1                         
+#&gt; fit2    6 1763.9 1783.1 -875.97    1751.9 42.139  2  7.072e-10 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or ranova(refitML(fit2))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- TODO vedi se ranova richiede di fare refit ml -->
+</section>
+<section id="plotting-the-random-slopes" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-random-slopes">Plotting the random slopes</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>DD <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Subject =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Subject),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Days =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>DD<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit2, <span class="at">newdata =</span> DD)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>DD <span class="sc">|&gt;</span> </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> pi, <span class="at">group =</span> Subject)) <span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Days"</span>) <span class="sc">+</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="shrinkage" class="level2">
+<h2 class="anchored" data-anchor-id="shrinkage">Shrinkage!</h2>
+<p>We can compare the fit of the multilevel model with linear models for each cluster. We can use the <code>fit_by_cluster()</code> function tha takes a formula, a grouping factor and fit a model for each cluster.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fitl <span class="ot">&lt;-</span> <span class="fu">fit_by_cluster</span>(Reaction <span class="sc">~</span> Days <span class="sc">|</span> Subject,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                       dat,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">model =</span> lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="shrinkage-1" class="level2">
+<h2 class="anchored" data-anchor-id="shrinkage-1">Shrinkage!</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fitl <span class="ot">&lt;-</span> <span class="fu">fit_by_cluster</span>(Reaction <span class="sc">~</span> Days <span class="sc">|</span> Subject,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                       dat,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">model =</span> lm)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>DD <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Subject =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Subject),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Days =</span> <span class="fu">unique</span>(dat<span class="sc">$</span>Days)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>DD<span class="sc">$</span>lmer <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit2, DD)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>DD<span class="sc">$</span>Subject <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DD<span class="sc">$</span>Subject))</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>subjs <span class="ot">&lt;-</span> <span class="fu">unique</span>(DD<span class="sc">$</span>Subject)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>DD<span class="sc">$</span>lm <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(fitl)){</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  pp <span class="ot">&lt;-</span> <span class="fu">predict</span>(fitl[[i]], DD[DD<span class="sc">$</span>Subject <span class="sc">==</span> subjs[i], ])</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  DD<span class="sc">$</span>lm[DD<span class="sc">$</span>Subject <span class="sc">==</span> subjs[i]] <span class="ot">&lt;-</span> pp</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>DD <span class="sc">|&gt;</span> </span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(lmer, lm)) <span class="sc">|&gt;</span> </span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> value, <span class="at">color =</span> name)) <span class="sc">+</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">lwd =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Subject) <span class="sc">+</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction"</span>) <span class="sc">+</span></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Method"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-simulate-a-multilevel-model" class="level1">
+<h1>Let’s simulate a multilevel model!</h1>
+<section id="lets-try-to-simulate-the-previous-model" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model">Let’s try to simulate the previous model</h2>
+<p></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>DAYS <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># max number of days</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>b00 <span class="ot">&lt;-</span> <span class="dv">300</span> <span class="co"># grand-mean of reaction times at time 0</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="dv">20</span>  <span class="co"># increase in reaction time for each day</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>sb0 <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="co"># standard deviation intercepts</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>sb1 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># standard deviaton slopes</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="co"># residual standard deviation</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co"># we are simulating an ICC of</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>sb0<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (sb0<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> s<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.08256881</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>N,</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">days =</span> <span class="dv">0</span><span class="sc">:</span>(DAYS <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="co"># random intercepts and slopes, rho = 0</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>VCOV <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(sb0, sb1)) <span class="sc">%*%</span> R <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">c</span>(sb0, sb1))</span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>RE <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(N, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), VCOV)</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>b0i <span class="ot">&lt;-</span> RE[, <span class="dv">1</span>]</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>b1i <span class="ot">&lt;-</span> RE[, <span class="dv">2</span>]</span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a><span class="co"># linear predictor</span></span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>sim<span class="sc">$</span>lp <span class="ot">&lt;-</span> <span class="fu">with</span>(sim, b00 <span class="sc">+</span> b0i[id] <span class="sc">+</span> (b1 <span class="sc">+</span> b1i[id]) <span class="sc">*</span> days)</span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a>sim<span class="sc">$</span>rt <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(sim), sim<span class="sc">$</span>lp, s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p></p>
+</section>
+<section id="lets-try-to-simulate-the-previous-model-1" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model-1">Let’s try to simulate the previous model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>sim <span class="sc">|&gt;</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> rt)) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">"dodgerblue"</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Reaction Times"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-try-to-simulate-the-previous-model-2" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model-2">Let’s try to simulate the previous model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>sim <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> days, <span class="at">y =</span> rt)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span>DAYS) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Days"</span>) <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction Times"</span>) <span class="sc">+</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">group =</span> id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-try-to-simulate-the-previous-model-3" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model-3">Let’s try to simulate the previous model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>sim <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> days, <span class="at">y =</span> rt)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span>DAYS) <span class="sc">+</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Days"</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction Times"</span>) <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>id, <span class="at">ncol =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-try-to-simulate-the-previous-model-4" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model-4">Let’s try to simulate the previous model</h2>
+<p>A more realistic scenario could be to have an heterogeneous number of observations for each cluster.</p>
+<p></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># minimum 3 observations</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ndays_per_subject <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">3</span><span class="sc">:</span>(DAYS <span class="sc">-</span> <span class="dv">1</span>), <span class="at">size =</span> N, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>siml <span class="ot">&lt;-</span> <span class="fu">split</span>(sim, sim<span class="sc">$</span>id)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(siml)){</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  siml[[i]] <span class="ot">&lt;-</span> siml[[i]][<span class="dv">1</span><span class="sc">:</span>ndays_per_subject[i], ]</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>sim_missing <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, siml)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co"># number of observations</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sim_missing<span class="sc">$</span>rt, sim_missing<span class="sc">$</span>id, length)</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  2  3  4  5  6  7  8  9 10 </span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8  3  3  6  9  5  4  5  7  4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p></p>
+</section>
+<section id="lets-try-to-simulate-the-previous-model-5" class="level2">
+<h2 class="anchored" data-anchor-id="lets-try-to-simulate-the-previous-model-5">Let’s try to simulate the previous model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>sim_missing <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> days, <span class="at">y =</span> rt)) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span>DAYS) <span class="sc">+</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Days"</span>) <span class="sc">+</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Reaction Times"</span>) <span class="sc">+</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>id, <span class="at">ncol =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-fit-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="lets-fit-the-model">Let’s fit the model</h2>
+<p>Here the random-intercepts and slopes model:</p>
+<p></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rt <span class="sc">~</span> days <span class="sc">+</span> (days<span class="sc">|</span>id), <span class="at">data =</span> sim_missing)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: rt ~ days + (days | id)
+#&gt;    Data: sim_missing
+#&gt; 
+#&gt; REML criterion at convergence: 650
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -2.10251 -0.66077  0.00732  0.63516  2.01985 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev. Corr 
+#&gt;  id       (Intercept)  3543.5   59.53        
+#&gt;           days          451.5   21.25   -0.77
+#&gt;  Residual             10994.3  104.85        
+#&gt; Number of obs: 54, groups:  id, 10
+#&gt; 
+#&gt; Fixed effects:
+#&gt;             Estimate Std. Error t value
+#&gt; (Intercept)   313.18      30.20  10.369
+#&gt; days           12.14      11.03   1.101
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;      (Intr)
+#&gt; days -0.761</code></pre>
+</div>
+</div>
+<p></p>
+</section>
+</section>
+<section id="can-the-multilevel-model-be-misleading" class="level1">
+<h1>Can the multilevel model be misleading?</h1>
+<section id="what-do-you-see-in-this-plot" class="level2">
+<h2 class="anchored" data-anchor-id="what-do-you-see-in-this-plot">What do you see in this plot?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># number of clusters/units</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="co"># number of participants within each unit</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> n <span class="sc">*</span> k <span class="co"># total sample size</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>unit <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>k, <span class="at">each =</span> n)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">60</span> <span class="sc">-</span> <span class="dv">3</span> <span class="sc">*</span> (unit <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">5</span>) <span class="co"># age equation</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fl">0.1</span>)[unit] <span class="sc">+</span> <span class="fl">0.01</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> (unit<span class="dv">-1</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="fl">0.1</span>) <span class="co"># response equation</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(unit, age, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<p>There is a clear negative relationship between <code>age</code> and the response variable <code>y</code>!</p>
+</section>
+<section id="what-do-you-see-in-this-plot-1" class="level2">
+<h2 class="anchored" data-anchor-id="what-do-you-see-in-this-plot-1">What do you see in this plot?</h2>
+<p>Let’s add the cluster information. What about now?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(unit))) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simpsons-paradox" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox">Simpson’s paradox</h2>
+<ul>
+<li>We have clustered data, and the relationship <code>y ~ age</code> seems to be different within and between clusters.</li>
+<li>This phenomenon is called <strong>Simpson’s paradox</strong> and can be a serious problem in multilevel models.</li>
+<li>Clearly this is a problem only for variables at the observation level (not at the cluster level).</li>
+<li>For example, if clusters are schools and the observations are children. <code>age</code> is a variable at the children level (or aggregated at the school level). On the other side, the prestige of the school is a variable at the school level (the same for each child)</li>
+</ul>
+</section>
+<section id="simpsons-paradox-1" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-1">Simpson’s paradox</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(unit))) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Cluster"</span>) <span class="sc">+</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">group =</span> unit,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">color =</span> <span class="fu">factor</span>(unit)),</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simpsons-paradox-what-to-do" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-what-to-do">Simpson’s paradox, what to do?</h2>
+<p>The main strategy to deal with the Simpson’s paradox is centering the variables. <span class="citation" data-cites="Enders2007-dk">Enders and Tofighi (<a href="#ref-Enders2007-dk" role="doc-biblioref">2007</a>)</span> provide a clear overview of the strategy.</p>
+</section>
+<section id="simpsons-paradox-what-to-do-1" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-what-to-do-1">Simpson’s paradox, what to do?</h2>
+<p>We can define some centering functions and see how we can model the multilevel structure.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>filor<span class="sc">::</span><span class="fu">print_fun</span>(<span class="fu">c</span>(funs<span class="sc">$</span>cm, funs<span class="sc">$</span>cmc, funs<span class="sc">$</span>gmc))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> <span class="cf">function</span>(x, cluster){</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  cm <span class="ot">&lt;-</span> <span class="fu">tapply</span>(x, cluster, mean)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  cm[cluster]</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>cmc <span class="ot">&lt;-</span> <span class="cf">function</span>(x, cluster){</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">-</span> <span class="fu">cm</span>(x, cluster)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>gmc <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simpsons-paradox-between-clusters-effect" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-between-clusters-effect">Simpson’s paradox, between-clusters effect</h2>
+<p>Firsly we can calculate the clusters mean. This remove the within-effect and a linear model will capture only the between-effect.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_cm =</span> <span class="fu">cm</span>(age, unit),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">y_cm =</span> <span class="fu">cm</span>(y, unit)) <span class="sc">|&gt;</span> </span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(unit))) <span class="sc">+</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> age_cm, <span class="at">y =</span> y_cm,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">factor</span>(unit)),</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="dv">1</span>,</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Unit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simpsons-paradox-between-clusters-effect-1" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-between-clusters-effect-1">Simpson’s paradox, between-clusters effect</h2>
+<p>We have a negative <code>age</code> effect between clusters, as expected.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>dat_cm <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unit) <span class="sc">|&gt;</span> </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">y_cm =</span> <span class="fu">mean</span>(y),</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_cm =</span> <span class="fu">mean</span>(age))</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y_cm <span class="sc">~</span> age_cm, <span class="at">data =</span> dat_cm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = y_cm ~ age_cm, data = dat_cm)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)       age_cm  
+#&gt;     1.92527     -0.02175</code></pre>
+</div>
+</div>
+</section>
+<section id="simpsons-paradox-within-clusters-effect" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-within-clusters-effect">Simpson’s paradox, within-clusters effect</h2>
+<p>We can substract (i.e., centering) from each observation, the cluster mean.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_cm =</span> <span class="fu">cm</span>(age, unit),</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">age_cmc =</span> <span class="fu">cmc</span>(age, unit),</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">y_cm =</span> <span class="fu">cm</span>(y, unit)) <span class="sc">|&gt;</span> </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age_cmc, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(unit))) <span class="sc">+</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$age - </span><span class="sc">\\</span><span class="st">; </span><span class="sc">\\</span><span class="st">bar{age_k}$"</span>)) <span class="sc">+</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> y_cm,</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">factor</span>(unit))) <span class="sc">+</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">group =</span> unit,</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">color =</span> <span class="fu">factor</span>(unit)),</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Unit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="simpsons-paradox-within-clusters-effect-1" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-within-clusters-effect-1">Simpson’s paradox, within-clusters effect</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>age_cmc <span class="ot">&lt;-</span> <span class="fu">cmc</span>(dat<span class="sc">$</span>age, dat<span class="sc">$</span>unit)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>fitl_cmc <span class="ot">&lt;-</span> <span class="fu">fit_by_cluster</span>(</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> age_cmc <span class="sc">|</span> unit,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> lm</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simpsons-paradox-within-clusters-effect-2" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox-within-clusters-effect-2">Simpson’s paradox, within-clusters effect</h2>
+<p>All slopes are similar but positive (compared to the between-effect). Thus estimating only the between (or within) effect is completely misleading.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>fitl_cmc <span class="sc">|&gt;</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(broom<span class="sc">::</span>tidy, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="at">.id =</span> <span class="st">"unit"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">as.numeric</span>(unit)) <span class="sc">|&gt;</span> </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"age_cmc"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> unit)) <span class="sc">+</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>,</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">lty =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_{age}$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-about-the-multilevel-model" class="level2">
+<h2 class="anchored" data-anchor-id="what-about-the-multilevel-model">What about the multilevel model?</h2>
+<p>We can fit a multilevel model on the full dataset. What is the <code>age</code> slope? within or between?</p>
+<p></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> age <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>unit), <span class="at">data =</span> dat)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: y ~ age + (1 | unit)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: -1710.7
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.7439 -0.6848 -0.0165  0.7191  3.0376 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  unit     (Intercept) 0.091429 0.30237 
+#&gt;  Residual             0.009747 0.09872 
+#&gt; Number of obs: 1000, groups:  unit, 10
+#&gt; 
+#&gt; Fixed effects:
+#&gt;              Estimate Std. Error t value
+#&gt; (Intercept) 0.4471843  0.0997411   4.483
+#&gt; age         0.0100761  0.0006074  16.590
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;     (Intr)
+#&gt; age -0.283</code></pre>
+</div>
+</div>
+<p></p>
+</section>
+<section id="what-about-the-multilevel-model-1" class="level2">
+<h2 class="anchored" data-anchor-id="what-about-the-multilevel-model-1">What about the multilevel model?</h2>
+<p>The estimated effect is a sort of weighted average of the within and between effect. This is usually not interesting, especially when the two effects are different. We want to isolate the between and within effects.</p>
+<p>We need to include two version of the <code>age</code> variable, one centered on the clusters and the other representing the clusters means.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>age_cmc <span class="ot">&lt;-</span> <span class="fu">cmc</span>(dat<span class="sc">$</span>age, dat<span class="sc">$</span>unit)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>age_cm <span class="ot">&lt;-</span> <span class="fu">cm</span>(dat<span class="sc">$</span>age, dat<span class="sc">$</span>unit)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>fit_bw <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> age_cmc <span class="sc">+</span> age_cm <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>unit), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-about-the-multilevel-model-2" class="level2">
+<h2 class="anchored" data-anchor-id="what-about-the-multilevel-model-2">What about the multilevel model?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_bw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: y ~ age_cmc + age_cm + (1 | unit)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: -1724.4
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.7518 -0.6848 -0.0136  0.7126  3.0452 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance Std.Dev.
+#&gt;  unit     (Intercept) 0.007530 0.08678 
+#&gt;  Residual             0.009746 0.09872 
+#&gt; Number of obs: 1000, groups:  unit, 10
+#&gt; 
+#&gt; Fixed effects:
+#&gt;               Estimate Std. Error t value
+#&gt; (Intercept)  1.9252710  0.1503998  12.801
+#&gt; age_cmc      0.0101730  0.0006083  16.724
+#&gt; age_cm      -0.0217498  0.0031833  -6.832
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;         (Intr) ag_cmc
+#&gt; age_cmc  0.000       
+#&gt; age_cm  -0.983  0.000</code></pre>
+</div>
+</div>
+</section>
+<section id="what-about-the-multilevel-model-3" class="level2">
+<h2 class="anchored" data-anchor-id="what-about-the-multilevel-model-3">What about the multilevel model?</h2>
+<p>The within-clusters effect can be also included as random slope<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Basically we allows not only the within effect to be different compared to the between effect but also that each cluster has a different sloope.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>fit_bw2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> age_cmc <span class="sc">+</span> age_cm <span class="sc">+</span> (age_cmc<span class="sc">|</span>unit), <span class="at">data =</span> dat)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_bw2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Linear mixed model fit by REML ['lmerMod']
+#&gt; Formula: y ~ age_cmc + age_cm + (age_cmc | unit)
+#&gt;    Data: dat
+#&gt; 
+#&gt; REML criterion at convergence: -1724.5
+#&gt; 
+#&gt; Scaled residuals: 
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.7516 -0.6911 -0.0114  0.7116  3.0458 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Groups   Name        Variance  Std.Dev.  Corr
+#&gt;  unit     (Intercept) 7.528e-03 0.0867634     
+#&gt;           age_cmc     2.053e-08 0.0001433 1.00
+#&gt;  Residual             9.746e-03 0.0987213     
+#&gt; Number of obs: 1000, groups:  unit, 10
+#&gt; 
+#&gt; Fixed effects:
+#&gt;              Estimate Std. Error t value
+#&gt; (Intercept)  1.933188   0.149989  12.889
+#&gt; age_cmc      0.010176   0.000610  16.683
+#&gt; age_cm      -0.021920   0.003174  -6.905
+#&gt; 
+#&gt; Correlation of Fixed Effects:
+#&gt;         (Intr) ag_cmc
+#&gt; age_cmc  0.020       
+#&gt; age_cm  -0.983 -0.006
+#&gt; optimizer (nloptwrap) convergence code: 0 (OK)
+#&gt; boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+</div>
+</section>
+<section id="more-on-the-simpsons-paradox" class="level2">
+<h2 class="anchored" data-anchor-id="more-on-the-simpsons-paradox">More on the Simpson’s Paradox</h2>
+<p><span class="citation" data-cites="Kievit2013-mt">Kievit et al. (<a href="#ref-Kievit2013-mt" role="doc-biblioref">2013</a>)</span> describe the SP problem in Psychology with methods to detect it.</p>
+<p><img src="img/kievit2013.png" class="img-fluid"></p>
+<p>What do you think?</p>
+</section>
+<section id="practical-session" class="level2">
+<h2 class="anchored" data-anchor-id="practical-session">Practical session</h2>
+<ul>
+<li>simulate clustered data with some predictors</li>
+<li>simulate the same dataset but with a some between-within differences</li>
+</ul>
+</section>
+</section>
+<section id="diagnostics" class="level1">
+<h1>Diagnostics</h1>
+<section id="the-performance-package" class="level2">
+<h2 class="anchored" data-anchor-id="the-performance-package">The <code>performance</code> package</h2>
+<p>The <code>performance</code> package has a series of nice functions to visualize and assess the models fit.</p>
+<p>Let’s go back to our reaction times:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (Days<span class="sc">|</span>Subject), <span class="at">data =</span> sleepstudy)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-performance-package-1" class="level2">
+<h2 class="anchored" data-anchor-id="the-performance-package-1">The <code>performance</code> package</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (Days<span class="sc">|</span>Subject), <span class="at">data =</span> sleepstudy)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glmer_files/figure-html/performance-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="influence-measures" class="level2">
+<h2 class="anchored" data-anchor-id="influence-measures">Influence measures</h2>
+<p><span class="citation" data-cites="Nieuwenhuis2012-uv">Nieuwenhuis et al. (<a href="#ref-Nieuwenhuis2012-uv" role="doc-biblioref">2012</a>)</span> describe the <code>Influence.ME</code> package that computes the standard influence measures (Cook’s distance, DFbeta, etc.) for <code>lme4</code> models.</p>
+<p>Also the <code>lme4:::influence.merMod()</code> compute all the measures. You can provide the <code>groups =</code> argument to specify at which level performing the leave-one-out procedure.</p>
+</section>
+<section id="influence-measures-small-exercise" class="level2">
+<h2 class="anchored" data-anchor-id="influence-measures-small-exercise">Influence measures, small exercise</h2>
+<p>Both <code>lme4:::influence.merMod()</code> and <code>Influence.ME</code> do not provide (good enough) plotting tools. Write a set of functions that takes a <code>lme4</code> model in input, calculate the influence measures, organize everything in a data.frame and plot the influence measures results with <code>ggplot2</code>.</p>
+</section>
+</section>
+<section id="effect-sizes" class="level1">
+<h1>Effect sizes</h1>
+<section id="r2-for-multilevel-models" class="level2">
+<h2 class="anchored" data-anchor-id="r2-for-multilevel-models"><span class="math inline">\(R^2\)</span> for multilevel models</h2>
+<p>The <span class="math inline">\(R^2\)</span> for multilevel models is not computed as for standard regression models. <span class="citation" data-cites="Nakagawa2017-hb">Nakagawa, Johnson, and Schielzeth (<a href="#ref-Nakagawa2017-hb" role="doc-biblioref">2017</a>)</span> describe how to calculate the <span class="math inline">\(R^2\)</span>. They described the <em>marginal</em> (only fixed-effects) and the <em>conditional</em> (fixed and random-effects).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or performance::r2()</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">r2_nakagawa</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # R2 for Mixed Models
+#&gt; 
+#&gt;   Conditional R2: 0.799
+#&gt;      Marginal R2: 0.279</code></pre>
+</div>
+</div>
+<p>Clearly the <em>conditional</em> is always greater or equal to the <em>marginal</em> one.</p>
+</section>
+</section>
+<section id="references" class="level1">
+
+
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Enders2007-dk" class="csl-entry" role="listitem">
+Enders, Craig K, and Davood Tofighi. 2007. <span>“Centering Predictor Variables in Cross-Sectional Multilevel Models: A New Look at an Old Issue.”</span> <em>Psychological Methods</em> 12 (June): 121–38. <a href="https://doi.org/10.1037/1082-989X.12.2.121">https://doi.org/10.1037/1082-989X.12.2.121</a>.
+</div>
+<div id="ref-Hedges2001-ra" class="csl-entry" role="listitem">
+Hedges, L V, and T D Pigott. 2001. <span>“The Power of Statistical Tests in Meta-Analysis.”</span> <em>Psychological Methods</em> 6 (September): 203–17. <a href="https://www.ncbi.nlm.nih.gov/pubmed/11570228">https://www.ncbi.nlm.nih.gov/pubmed/11570228</a>.
+</div>
+<div id="ref-Kievit2013-mt" class="csl-entry" role="listitem">
+Kievit, Rogier A, Willem E Frankenhuis, Lourens J Waldorp, and Denny Borsboom. 2013. <span>“Simpson’s Paradox in Psychological Science: A Practical Guide.”</span> <em>Frontiers in Psychology</em> 4 (August): 513. <a href="https://doi.org/10.3389/fpsyg.2013.00513">https://doi.org/10.3389/fpsyg.2013.00513</a>.
+</div>
+<div id="ref-Nakagawa2017-hb" class="csl-entry" role="listitem">
+Nakagawa, Shinichi, Paul C D Johnson, and Holger Schielzeth. 2017. <span>“The Coefficient of Determination <span>R2</span> and Intra-Class Correlation Coefficient from Generalized Linear Mixed-Effects Models Revisited and Expanded.”</span> <em>Journal of the Royal Society, Interface / the Royal Society</em> 14 (September). <a href="https://doi.org/10.1098/rsif.2017.0213">https://doi.org/10.1098/rsif.2017.0213</a>.
+</div>
+<div id="ref-Nieuwenhuis2012-uv" class="csl-entry" role="listitem">
+Nieuwenhuis, Rense, Manfred, Te Grotenhuis, and Ben Pelzer. 2012. <span>“Influence.ME: Tools for Detecting Influential Data in Mixed Effects Models.”</span> <em>The R Journal</em> 4: 38. <a href="https://doi.org/10.32614/rj-2012-011">https://doi.org/10.32614/rj-2012-011</a>.
+</div>
+<div id="ref-Rao1992-nl" class="csl-entry" role="listitem">
+Rao, J N, and A J Scott. 1992. <span>“A Simple Method for the Analysis of Clustered Binary Data.”</span> <em>Biometrics</em> 48 (June): 577–85. <a href="https://doi.org/10.2307/2532311">https://doi.org/10.2307/2532311</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>This is just an approximation to estimate the impact of the ICC<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Note that the <code>anova()</code> function is refitting models using Maximum Likelihood (and not REML). This is required to compare models using LRT<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Of course, including the clusters means as random-slopes is not possible. Note that data are simulated without random slopes, thus the model estimate parameters at the boundaries<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

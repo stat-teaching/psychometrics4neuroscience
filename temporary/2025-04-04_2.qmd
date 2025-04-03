@@ -1,0 +1,59 @@
+---
+title: 2025-04-04
+execute:
+    echo: false
+---
+
+# Simulazione
+
+Proviamo a simulare un mixed-model per un esperimento. L'obiettivo è simulare un dataset realistico dove $k$ soggetti fanno massimo $n = 240$ trials. Il numero di trials non è lo stesso per soggetto. Il modo di campionare i trial potete deciderlo.
+
+L'esperimento si basa sulla seguente teoria:
+
+> Stimoli rilevanti evoluzionisticamente sono elaborati in modo più efficiente rispetto a stimoli meno rilevanti.
+
+Un'ipotesi legata a questo è che ci siano delle categorie (ad esempio i volti) che rispetto ad altre hanno una maggiore rilevanza evoluzionistica. A sua volta, dentro questa categoria, ci sono stimoli con più o meno rilevanza.
+
+In questo caso si stanno testando i tempi di reazione in laboratorio in risposta a 3 categorie di stimoli:
+
+- volti di persone adulte
+- volti di bambini
+- forme geometriche
+
+L'ipotesi è che i tempi di reazione siano sistematicamente inferiori per i volti rispetto alle forme geometriche e per i volti di bambini rispetto a quelli adulti.
+
+```{r}
+library(ggplot2)
+dd <- data.frame(
+    RT = c(300, 500, 1000),
+Stimolo = c("Volto Bambini", "Volto Adulto", "Forme Geometriche")
+)
+dd |> 
+    ggplot(aes(x = Stimolo, y = RT)) +
+    geom_point(size = 5) +
+    geom_line(group = 1)
+```
+
+Per la simulazione è necessario impostare tutti i parametri del modello. Il numero di trials totale è 80 per condizione ma in modo casuale alcuni trial vengono eliminati perchè considerati non validi. La percentuale di dati rimossi da ogni soggetto è sempre inferiore al 30% ma varia da soggetto a soggetto.
+
+Per gli effetti fissi, la differenza tra forme geometriche e volti adulti è considerata un effetto grande e in termini di Cohen's $d$ (andate a cercare cosa significa) si intende $d = 0.7$. Invece la differenza tra adulti e bambini è un effetto medio $d = 0.4$.
+
+Ai ricercatori però interessano due contrasti in particolare:
+
+- forme geometriche vs media di volti adulti e bambini
+- adulti vs bambini
+
+Impostate una simulazione per generare un dataset realistico che rispetta le regole generali introdotte prima e anche il tipo di variabile. I tempi sono positivi e generalmente asimmetrici.
+
+```{r}
+hist(rgamma(1e4, 10, rate = 10 / 500), main = "Esempio di RT", xlab = "RT")
+```
+
+Fate un piccolo report in Quarto o R Markdown dove definite i parametri, codice e qualche grafico di come vengono i dati.
+
+Qualche consiglio:
+
+- non importa i valori effettivi dei tempi ma riuscire a mappare i dati rispettando i vincoli di effetto grande e medio
+- partite dal modello che fareste in questo caso
+- bisogna trasformare i parametri della distribuzione in qualche modo per fissare queste medie di tempi
+- attenzione a `lme4`, non sempre funziona benissimo :)

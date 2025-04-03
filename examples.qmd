@@ -12,4 +12,9 @@ Data are available on [OSF](https://osf.io/zhtbj/)
 
 - [Assignment for 31/03/2025](temporary/2025-03-31.qmd)
 
+## 04/04/2025
+
+- [Assignment for 04/04/2025 (1)](temporary/2025-04-04_1.qmd)
+- [Assignment for 04/04/2025 (2)](temporary/2025-04-04_2.qmd)
+
 ## References
