@@ -469,6 +469,160 @@
     "text": "@Shimizu2024-xl analyzed the impact of the type and intensity of the facial expression on the detection accuracy.\n\nThis study examined the relationship between the intensity of emotional expressions in facial stimuli and receivers’ decoding accuracy for six basic emotions: anger, disgust, fear, happiness, sadness, and surprise. A laboratory experiment was conducted using the forced‐choice method, in which the intensity of each stimulus was manipulated at every 10% interval using the morphing technique. To explore whether a linear relationship would be observed when the intensity was finely manipulated at 10% intervals, a hierarchical multiple regression analysis was performed. The mean percentage of correct responses for each stimulus was the dependent variable, and the linear, quadratic, and cubic terms of the stimulus intensity were the independent variables. The results showed that the linear model was not adopted as the final model for all facial expressions; that is, the effect of the squared term of intensity was significant for anger, disgust, fear, and sadness, while the effect of the cubic term of intensity was significant for happiness and surprise. Our findings indicate that a higher intensity of emotional expression does not yield higher decoding accuracy.\n\nData are available on OSF\nScript di pre-processing:\n\nlibrary(tidyverse)\nlibrary(lme4)\nlibrary(here)\n\n# https://osf.io/zhtbj/?view_only=\n# download.file(\"https://osf.io/download/tph5f/\", \"data-raw/emoint.csv\")\n\ndat &lt;- read.csv(here(\"data-raw/emoint.csv\"))\n\n# conversion for responses\n# 1 = neutral\n# 2 = anger\n# 3 = disgust\n# 4 = fear\n# 5 = happiness\n# 6 = sadness\n# 7 = surprise\n\nresp_code &lt;- c(\n  \"1\" = \"neutral\",\n  \"2\" = \"anger\",\n  \"3\" = \"disgust\",\n  \"4\" = \"fear\",\n  \"5\" = \"happiness\",\n  \"6\" = \"sadness\",\n  \"7\" = \"suprise\"\n)\n\nemotion_code &lt;- c(\n  \"fear\" = \"fear\",\n  \"disop\" = \"disgust\",\n  \"discl\" = \"disgust\",\n  \"hap\" = \"happiness\",\n  \"sad\" = \"sadness\",\n  \"sur\" = \"suprise\",\n  \"angcl\" = \"anger\",\n  \"neutral\" = \"neutral\"\n)\n\ndat_clean &lt;- dat |&gt; \n  pivot_longer(4:ncol(dat), values_to = \"response\") |&gt; \n  separate(name, into = c(\"face\", \"emotion\", \"intensity\"), sep = \"_\")  |&gt;\n  # intensity as number\n  mutate(intensity = as.numeric(intensity)) |&gt; \n  # neutral as maximal intensity, avoid NA\n  mutate(intensity = ifelse(emotion == \"neutral\", 100, intensity))\n\nnames(dat_clean)[1:3] &lt;- c(\"id\", \"gender\", \"age\")\n\n# recoding response with labels\n# see https://adv-r.hadley.nz/subsetting.html?q=look#lookup-tables\n\ndat_clean$response_lbl &lt;- resp_code[dat_clean$response]\n\n# recoding the displayed emotion as the response\n\ndat_clean$emotion_lbl &lt;- emotion_code[dat_clean$emotion]\n\n# binary accuracy if emotion_lbl == response_lbl\n\ndat_clean$acc &lt;- as.integer(dat_clean$response_lbl == dat_clean$emotion_lbl)\n\nhead(dat_clean)\n\n# A tibble: 6 × 10\n     id gender age   face  emotion intensity response response_lbl emotion_lbl\n  &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;      \n1     1 f      32    f1    fear           60        4 fear         fear       \n2     1 f      32    m3    disop          60        3 disgust      disgust    \n3     1 f      32    m3    hap            70        5 happiness    happiness  \n4     1 f      32    m1    hap           100        5 happiness    happiness  \n5     1 f      32    m4    disop          60        6 sadness      disgust    \n6     1 f      32    m1    fear           20        1 neutral      fear       \n# ℹ 1 more variable: acc &lt;int&gt;\n\nsaveRDS(dat_clean, here(\"data/emoint.rds\"))"
   },
   {
+    "objectID": "materials/signal-detection-theory.html",
+    "href": "materials/signal-detection-theory.html",
+    "title": "Signal Detection Theory",
+    "section": "",
+    "text": "devtools::load_all()\nlibrary(tidyverse)\nlibrary(cowplot)\nlibrary(here)\n\nmtheme &lt;- function(){\n    theme_minimal(20)\n}\n\ntheme_set(mtheme())\n\nfuns &lt;- filor::get_funs(here(\"R\", \"utils-glm_phd.R\"))"
+  },
+  {
+    "objectID": "materials/signal-detection-theory.html#probit-link-1",
+    "href": "materials/signal-detection-theory.html#probit-link-1",
+    "title": "Signal Detection Theory",
+    "section": "Probit link",
+    "text": "Probit link\n\nThe mostly used link function when using a binomial GLM is the logit link. The probit link is another link function that can be used. The overall approach is the same between logit and probit models. The only difference is the parameter interpretation (i.e., no odds ratios) and the specific link function (and the inverse) to use.\nThe probit model use the cumulative normal distribution but the actual difference with a logit functions is neglegible."
+  },
+  {
+    "objectID": "materials/signal-detection-theory.html#probit-link-2",
+    "href": "materials/signal-detection-theory.html#probit-link-2",
+    "title": "Signal Detection Theory",
+    "section": "Probit link",
+    "text": "Probit link"
+  },
+  {
+    "objectID": "materials/signal-detection-theory.html#probit-link-3",
+    "href": "materials/signal-detection-theory.html#probit-link-3",
+    "title": "Signal Detection Theory",
+    "section": "Probit link",
+    "text": "Probit link\nWhen using the probit link the parameters are interpreted as difference in z-scores associated with a unit increase in the predictors. In fact probabilities are mapped into z-scores using the cumulative normal distribution.\n\np1 &lt;- 0.7\np2 &lt;- 0.5\n\nqlogis(c(p1, p2)) # log(odds(p1)), logit link\n\n[1] 0.8472979 0.0000000\n\nqnorm(c(p1, p2)) # probit link\n\n[1] 0.5244005 0.0000000\n\nlog(odds_ratio(p1, p2)) # ~ beta1, logit link\n\n[1] 0.8472979\n\npnorm(p1) - pnorm(p2) # ~beta1, probit link\n\n[1] 0.06657389"
+  },
+  {
+    "objectID": "materials/signal-detection-theory.html#probit-link-4",
+    "href": "materials/signal-detection-theory.html#probit-link-4",
+    "title": "Signal Detection Theory",
+    "section": "Probit link",
+    "text": "Probit link"
+  },
+  {
+    "objectID": "materials/signal-detection-theory.html#signal-detection-theory",
+    "href": "materials/signal-detection-theory.html#signal-detection-theory",
+    "title": "Signal Detection Theory",
+    "section": "Signal Detection Theory",
+    "text": "Signal Detection Theory\nIl modello probit è utilizzato per stimare i parametri della signal detection theory.\nBrevemente l’idea è quella di modellare decisioni binarie (o anche come rating) rispetto a come uno stimolo viene percepito ed elaborato internamente.\nLa teoria (nella sua versione di base) assume che uno stimolo (segnale) venga elaborato e l’informazione contenuta sostenga un qualche tipo di decisione su questo stimolo.\nAd esempio, immaginiamo di voler valutare la capacità di un radiologo di rilevare la presenza di un’anomalia in una radiografia. Possiamo immaginare di prendere 100 radiografie. 50 di queste contengono un’anomalia (signal trials) mentre 50 non la contengono (catch trials).\nPer ogni radiografia, chiediamo ai radiologi di valutare se rilevano un’anomalia oppure no.\nIncrociando lo stimolo (signal o catch) e la risposta (presente o assente) otteniamo una tipica tabella di contingenza 2x2, simile a quello che si ottiene nei test diagnostici.\n\n\n\n\nSegnale: Si\nSegnale: No\n\n\n\n\nRisposta: Si\nHit (H)\nFalse Alarm (FA)\n\n\nRisposta: No\nMiss (M)\nCorrect Rejection (CR)\n\n\n\nIn questo tipo di classificazione solitamente è ottimale massimizzare gli Hit (o True Positive) e minimizzare i False Alarm (False Positive).\nLa teoria formalizza che le distribuzioni del segnale e del rumore sono delle Gaussiane standard. La distribuzione del rumore ha \\(\\mu = 0\\) mentre la distribuzione del segnale ha \\(\\mu = d'\\). In questo modo il parametro \\(d'\\) (pronunciato d-prime) rappresenta il grado di separazione tra segnale e rumore.\nUna radiografia che contiene un segno chiaramente visibile avrà molta separazione tra le due distribuzioni mentre una radiografia con un segnale molto debole avrà più sovrapposizione.\n\n\n\n\n\n\n\n\n\nOra, questa rappresentazione interna del segnale e del rumore che dipende dal tipo di stimolo e dall’abilità del soggetto. Tuttavia noi non osserviamo direttamente questa variabile latente ma la riposta si/no del soggetto.\nIl soggetto quindi, in base ad un qualche tipo di regola interna, decide di rispondere. La SDT formalizza questa regola interna come una soglia (criterio) che viene decisa internamente dal soggetto. Se in quel trial (radiografia) il segnale supera la soglia, il soggetto risponde Si, se non supera la soglia il soggetto risponde no.\nQuindi con la stessa intensità del segnale \\(d'\\) soggetti diversi o lo stesso soggetto in condizioni diverse può avere un pattern di risposte diverse.\nCi sono alcuni punti importanti:\n\nqualcunque criterio si scelga (in condizioni plausibili) non è mai possibile annullare i falsi allarmi e massimizzare gli hit\nquando il criterio è nel mezzo tra le due distribuzioni (\\(d'/2\\)) viene definito unbiased\nquando il soggetto (a prescindere dal segnale) tende a dare più risposte si viene definito un criterio liberale\nquando il soggetto (a prescindere dal segnale) tende a dare più risposte no viene definito un criterio conservatore\n\n\n\n\n\n\n\n\n\n\nQuindi, per ogni possibile criterio (assumendo di poterlo variare sperimentalmente) abbiamo una diversa tabella di contingenza. Se lo facciamo tante volte, otteniamo una curva:\n\n\nCode\nd &lt;- 1\ndat &lt;- sim_sdt(1e3, d = d, 0.5)\nmid &lt;- d/2\ncr &lt;- c(-Inf, seq(mid - 4, mid + 4, 0.001), Inf)\nres &lt;- sdt(is_signal = dat$is_signal, x = dat$x, c = cr)\n\ndata.frame(res) |&gt; \n    ggplot(aes(x = pfa, y = phit)) +\n    geom_line() +\n    ylim(c(0, 1)) +\n    scale_x_reverse(limits = c(1, 0)) +\n    geom_abline(slope = -1, col = alpha(\"black\", 0.5)) +\n    xlab(\"P (FA)\") +\n    ylab(\"P (Hit)\") +\n    ggtitle(\"d' = 1\")\n\n\n\n\n\n\n\n\n\nQuesta in altri contesti (come quello dei test diagnostici) viene chiamata curva di ROC. Infatti l’area under the curve (AUC) assumendo la normalità delle due distribuzioni è:\n\\[\n\\mbox{AUC} = \\Phi(\\frac{d'}{\\sqrt{2}})\n\\] Quindi:\n\nd &lt;- 1 # dalla simulazione precedente\npnorm(1 / sqrt(2))\n\n[1] 0.7602499\n\n\n\ndata.frame(res) |&gt; \n    pivot_longer(c(phit, pfa, pmiss, pcr)) |&gt; \n    ggplot(aes(x = c, y = value, color = name)) +\n    geom_line() +\n    theme(legend.title = element_blank()) +\n    xlab(\"Criterio\") +\n    ylab(\"Probabilità\")\n\n\n\n\n\n\n\n\nTornando all’esperimento delle radiografie, quello che osserviamo empiricamente è qualcosa di questo tipo (dati simulati usando sim_sdt()):\n\ndat &lt;- sim_sdt(100, 1, c = 0.5) |&gt; \n    select(-x)\nhead(dat)\n\n  say_signal is_signal\n1          0         0\n2          0         1\n3          0         0\n4          0         1\n5          1         0\n6          1         1\n\n\nDove is_signal indica se la radiografia contiene il segnale o no e say_signal indica la risposta del soggetto.\nIn questo caso il \\(d'\\) è la distanza tra la distribuzione latente di segnale e rumore e \\(c\\) è il criterio di risposta.\n\ncl &lt;- sdt(is_signal = dat$is_signal, dat$say_signal)\ncl\n\n$hit\n[1] 13\n\n$miss\n[1] 12\n\n$fa\n[1] 5\n\n$cr\n[1] 20\n\n$phit\n[1] 0.52\n\n$pfa\n[1] 0.2\n\n$pmiss\n[1] 0.48\n\n$pcr\n[1] 0.8\n\n$c\n[1] NA\n\n\nPossiamo semplicemente calcolare la distanza tra le due distribuzioni, assumendo che siano gaussiane a varianza 1:\n\n# dprime\nqnorm(cl$phit) - qnorm(cl$pfa)\n\n[1] 0.8917748\n\n# criterio\n-(qnorm(cl$phit) + qnorm(cl$pfa)) / 2 # - perchè per convenzione c negativo = liberale, c positivo = conservatore\n\n[1] 0.3957338\n\n\nGli stessi parametri possono essere stimati con un glm binomiale con link function probit. Infatti il criterio è il punto di mezzo tra signal e noise mentre il \\(d'\\) non è altro che la distanza tra le due distribuzioni (di segnale e rumore).\nSe facciamo un modello predicendo le risposte (binarie) con il tipo di trial (binario) otteniamo esattamente questi parametri.\n\ndat$say_signal01 &lt;- as.integer(as.character(dat$say_signal))\n\nfit &lt;- glm(say_signal01 ~ is_signal, data = dat, family = binomial(link = \"probit\"))\n\nsummary(fit)\n\n\nCall:\nglm(formula = say_signal01 ~ is_signal, family = binomial(link = \"probit\"), \n    data = dat)\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)  \n(Intercept)  0.05015    0.25078   0.200    0.841  \nis_signal0  -0.89177    0.38019  -2.346    0.019 *\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 65.342  on 49  degrees of freedom\nResidual deviance: 59.637  on 48  degrees of freedom\nAIC: 63.637\n\nNumber of Fisher Scoring iterations: 4\n\n\nL’intercetta è la probabilità (in \\(z\\) scores) di rispondere Si quando il segnale è 0 (catch). Quindi è la probabilità di fare falsi allarmi.\nLa slope è la distanza (in \\(z\\) scores) tra i trial con il segnale e con il rumore che è esattamente il concetto di \\(d'\\). Cambia solo il segno rispetto a quello calcolato manualmente.\nPer calcolare anche il criterio nel modo convenzionale è sufficiente centrare il predittore is_signal:\n\nfit &lt;- glm(say_signal01 ~ is_signal, \n           data = dat,\n           contrasts = list(is_signal = contr.sum(2)/2), # -0.5, 0.5\n           family = binomial(link = \"probit\"))\n\nsummary(fit)\n\n\nCall:\nglm(formula = say_signal01 ~ is_signal, family = binomial(link = \"probit\"), \n    data = dat, contrasts = list(is_signal = contr.sum(2)/2))\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)  \n(Intercept)  -0.3957     0.1901  -2.082   0.0374 *\nis_signal1    0.8918     0.3802   2.346   0.0190 *\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 65.342  on 49  degrees of freedom\nResidual deviance: 59.637  on 48  degrees of freedom\nAIC: 63.637\n\nNumber of Fisher Scoring iterations: 4\n\n\nAttenzione che per come è parametrizzato, il criterio ha il segno opposto rispetto a quello convenzionale.\nIl vantaggio è che possiamo inserire dei predittori sia per il criterio che per il \\(d'\\). Ad esempio, immaginiamo che ci siano 100 radiografie che indagano un’ipotetica condizione a bassa mortalità vs una condizione ad alta mortalità. Potremmo immaginare che in funzione dell’incentivo decisionale lo stile di risposta possa cambiare (da più a meno conservativo/liberale).\n\n\n  say_signal is_signal          x cond\n1          1         0 -0.1394558  low\n2          1         1  0.9247223  low\n3          1         0  0.4679482  low\n4          1         1  2.5450425  low\n5          0         0 -0.6927086  low\n6          1         1 -0.3094458  low\n\n\n\nfit_low &lt;- glm(say_signal ~ is_signal,\n               subset = cond == \"low\",\n               contrasts = list(is_signal = -contr.sum(2)/2),\n               data = dat, \n               family = binomial(link = \"probit\"))\n\nfit_high &lt;- glm(say_signal ~ is_signal,\n               subset = cond == \"high\",\n               contrasts = list(is_signal = -contr.sum(2)/2),\n               data = dat, \n               family = binomial(link = \"probit\"))\n\n\nfit &lt;- glm(say_signal ~ is_signal * cond, \n           contrasts = list(is_signal = -contr.sum(2)/2),\n           data = dat, \n           family = binomial(link = \"probit\"))\n\n\ncar::compareCoefs(fit_low, fit_high, fit)\n\nCalls:\n1: glm(formula = say_signal ~ is_signal, family = binomial(link = \"probit\"),\n   data = dat, subset = cond == \"low\", contrasts = list(is_signal = \n  -contr.sum(2)/2))\n2: glm(formula = say_signal ~ is_signal, family = binomial(link = \"probit\"),\n   data = dat, subset = cond == \"high\", contrasts = list(is_signal = \n  -contr.sum(2)/2))\n3: glm(formula = say_signal ~ is_signal * cond, family = binomial(link = \n  \"probit\"), data = dat, contrasts = list(is_signal = -contr.sum(2)/2))\n\n                   Model 1 Model 2 Model 3\n(Intercept)        -0.4798  0.5210  0.5210\nSE                  0.0195  0.0197  0.0197\n                                          \nis_signal1          0.9837  1.0139  1.0139\nSE                  0.0390  0.0395  0.0395\n                                          \ncondlow                            -1.0008\nSE                                  0.0278\n                                          \nis_signal1:condlow                 -0.0301\nSE                                  0.0555\n                                          \n\nlibrary(multcomp)\n\nglht(fit, \n     linfct = c(\n         \"-(Intercept) == 0\",\n         # criterion low\n         \"-(Intercept) + condlow == 0\",\n         # dprime condition high\n         \"is_signal1 == 0\",\n         # dprime condition low\n         \"is_signal1 + is_signal1:condlow == 0\",\n         # difference between criterion\n         \"condlow == 0\",\n         # difference between dprime\n         \"is_signal1:condlow == 0\"\n     )\n) |&gt; summary()\n\n\n     Simultaneous Tests for General Linear Hypotheses\n\nFit: glm(formula = say_signal ~ is_signal * cond, family = binomial(link = \"probit\"), \n    data = dat, contrasts = list(is_signal = -contr.sum(2)/2))\n\nLinear Hypotheses:\n                                     Estimate Std. Error z value Pr(&gt;|z|)    \n-(Intercept) == 0                    -0.52097    0.01975 -26.379   &lt;1e-05 ***\n-(Intercept) + condlow == 0          -1.52176    0.04405 -34.546   &lt;1e-05 ***\nis_signal1 == 0                       1.01386    0.03950  25.668   &lt;1e-05 ***\nis_signal1 + is_signal1:condlow == 0  0.98373    0.03900  25.223   &lt;1e-05 ***\ncondlow == 0                         -1.00080    0.02775 -36.059   &lt;1e-05 ***\nis_signal1:condlow == 0              -0.03012    0.05551  -0.543    0.964    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n(Adjusted p values reported -- single-step method)\n\n\nInfine, un aspetto interessante è che in qualunque caso, il criterio unbiased è quello che massimizza l’accuratezza intesa come HIT + CR.\n\ndat &lt;- sim_sdt(1e4, 1, 0)\ncr &lt;- seq(-3, 3, 0.1)\nres &lt;- sdt(dat$is_signal, x = dat$x, c = cr)\nres &lt;- data.frame(res)\n\nres |&gt; \n    mutate(acc = 0.5 * (phit + pcr)) |&gt; \n    ggplot(aes(x = c, y = acc)) +\n    geom_line() +\n    xlab(\"Criterio\") +\n    ylab(\"pCR + pHIT\")\n\n\n\n\n\n\n\n\nPer tutti gli esempi ho simulato i dati usando due funzioni custom:\nsim_sdt &lt;- function(nt, d, c = 0, ps = 0.5, sr = 1){\n  ns &lt;- floor(ps * nt)\n  nn &lt;- nt - ns\n  is_signal &lt;- rep(c(0, 1), nn, ns)\n  x &lt;- ifelse(is_signal == 1, rnorm(ns, d/2, sr), rnorm(nn, -d/2, 1))\n  say_signal &lt;- ifelse(x &gt; c, 1, 0)\n  is_signal &lt;- factor(is_signal, levels = c(1,0))\n  say_signal &lt;- factor(say_signal, levels = c(1,0))\n  data.frame(say_signal, is_signal, x)\n}\nsdt &lt;- function(is_signal, say_signal = NULL, x = NULL, c = NULL){\n\n  if(is.null(say_signal)){\n    say_signal &lt;- lapply(c, function(ci) ifelse(x &gt; ci, 1, 0))\n  }else{\n    say_signal &lt;- list(say_signal)\n    c &lt;- NA\n  }\n\n  hit &lt;- miss &lt;- fa &lt;- cr &lt;- rep(0, length(c))\n\n  for(i in 1:length(c)){\n    hit[i] &lt;- sum(is_signal == 1 & say_signal[[i]] == 1)\n    miss[i] &lt;- sum(is_signal == 1 & say_signal[[i]] == 0)\n    fa[i] &lt;- sum(is_signal == 0 & say_signal[[i]] == 1)\n    cr[i] &lt;- sum(is_signal == 0 & say_signal[[i]] == 0)\n  }\n\n  list(hit = hit,\n       miss = miss,\n       fa = fa,\n       cr = cr,\n       phit = hit / (hit + miss),\n       pfa = fa / (fa + cr),\n       pmiss = miss / (miss + hit),\n       pcr = cr / (cr + fa),\n       c = c)\n}"
+  },
+  {
+    "objectID": "materials/functional-programming-examples.html",
+    "href": "materials/functional-programming-examples.html",
+    "title": "Functional programming examples",
+    "section": "",
+    "text": "library(ggplot2)\nlibrary(tidyr)\nlibrary(dplyr)\nlibrary(purrr)\n\ndat &lt;- iris\n\n# functions\n\nremove_rownames &lt;- function(x){\n    rownames(x) &lt;- NULL\n    x\n}\n\nsum_lm &lt;- function(x, conf.level = 0.95){\n    xs &lt;- data.frame(summary(x)$coefficients)\n    xs$param &lt;- rownames(xs)\n    rownames(xs) &lt;- NULL\n    names(xs) &lt;- c(\"b\", \"se\", \"t\", \"pval\", \"param\")\n    cc &lt;- data.frame(confint(x, level = conf.level))\n    names(cc) &lt;- c(\"ci.lb\", \"ci.ub\")\n    rownames(cc) &lt;- NULL\n    cbind(\n        xs[, c(\"param\", \"b\", \"se\", \"t\", \"pval\")],\n        cc\n    )\n}\n\n# fit a linear model for each Species\n\ndatl &lt;- split(dat, dat$Species)\nfitl &lt;- lapply(datl, function(d) lm(Sepal.Length ~ Petal.Width + Petal.Length, data = d))\nresl &lt;- lapply(fitl, sum_lm)\n\nres_by_species &lt;- do.call(rbind, resl)\nres_by_species &lt;- remove_rownames(res_by_species)\nres_by_species$species &lt;- rep(names(resl), sapply(resl, nrow))\n\nggplot(res_by_species, aes(x = param, \n                           y = b, \n                           ymin = ci.lb, \n                           ymax = ci.ub,\n                           color = species)) +\n    geom_pointrange(position = position_dodge(width = 0.5))\n\n\n\n\n\n\n\n# alternative version using other packages\n\nresl &lt;- lapply(fitl, broom::tidy, conf.int = TRUE)\nres_by_species &lt;- dplyr::bind_rows(resl, .id = \"species\")\n\nres_by_species\n\n# A tibble: 9 × 8\n  species    term       estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 setosa     (Intercep…  4.25       0.411    10.3    1.13e-13   3.42       5.08 \n2 setosa     Petal.Wid…  0.712      0.487     1.46   1.51e- 1  -0.268      1.69 \n3 setosa     Petal.Len…  0.399      0.296     1.35   1.84e- 1  -0.196      0.994\n4 versicolor (Intercep…  2.38       0.449     5.30   3.04e- 6   1.48       3.28 \n5 versicolor Petal.Wid… -0.320      0.402    -0.795  4.30e- 1  -1.13       0.489\n6 versicolor Petal.Len…  0.934      0.169     5.52   1.44e- 6   0.594      1.27 \n7 virginica  (Intercep…  1.05       0.514     2.05   4.63e- 2   0.0179     2.09 \n8 virginica  Petal.Wid…  0.00706    0.179     0.0394 9.69e- 1  -0.354      0.368\n9 virginica  Petal.Len…  0.995      0.0893   11.1    8.87e-15   0.815      1.17 \n\n# bootstrapping\n\nboot &lt;- function(data, B = 100){\n    res &lt;- vector(mode = \"list\", length = B)\n    n &lt;- nrow(data)\n    for(i in 1:B){\n        idx &lt;- sample(x = 1:n, size = n, replace = TRUE)\n        dataB &lt;- data[idx, ]\n        rownames(dataB) &lt;- NULL\n        res[[i]] &lt;- dataB\n    }\n    return(res)\n}\n\nfit_lm &lt;- function(data){\n    lm(Sepal.Length ~ Petal.Width + Petal.Length, data = data)\n}\n\nbootl &lt;- lapply(datl, boot, B = 100)\nfit_bootl &lt;- lapply(bootl, function(x) lapply(x, fit_lm))\nres_bootl &lt;- lapply(fit_bootl, function(x) lapply(x, sum_lm))\nres_bootl &lt;- lapply(res_bootl, function(x) do.call(rbind, x))\nres_boot_by_species &lt;- do.call(rbind, res_bootl)\nres_boot_by_species &lt;- remove_rownames(res_boot_by_species)\nres_boot_by_species$species &lt;- rep(names(res_bootl), sapply(res_bootl, nrow))\n\nggplot(res_boot_by_species, aes(x = param, y = b, fill = species)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n# using nested tibbles\n\ndat |&gt; \n    group_by(Species) |&gt; \n    nest() |&gt; \n    mutate(boot = map(data, boot)) |&gt; \n    select(-data) |&gt; \n    unnest(boot) |&gt; \n    mutate(fit = map(boot, fit_lm)) |&gt; \n    mutate(res = map(fit, sum_lm)) |&gt; \n    select(-boot, -fit) |&gt; \n    unnest(res)\n\n# A tibble: 900 × 8\n# Groups:   Species [3]\n   Species param            b    se      t     pval  ci.lb ci.ub\n   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;\n 1 setosa  (Intercept)  4.27  0.369 11.6   2.20e-15  3.53  5.01 \n 2 setosa  Petal.Width  1.57  0.596  2.64  1.12e- 2  0.376 2.77 \n 3 setosa  Petal.Length 0.280 0.265  1.06  2.96e- 1 -0.253 0.813\n 4 setosa  (Intercept)  3.62  0.460  7.87  4.02e-10  2.70  4.55 \n 5 setosa  Petal.Width  0.457 0.575  0.796 4.30e- 1 -0.699 1.61 \n 6 setosa  Petal.Length 0.847 0.353  2.40  2.05e- 2  0.136 1.56 \n 7 setosa  (Intercept)  4.17  0.473  8.81  1.62e-11  3.22  5.12 \n 8 setosa  Petal.Width  0.297 0.469  0.632 5.30e- 1 -0.648 1.24 \n 9 setosa  Petal.Length 0.591 0.348  1.70  9.63e- 2 -0.110 1.29 \n10 setosa  (Intercept)  4.22  0.431  9.78  6.55e-13  3.35  5.08 \n# ℹ 890 more rows"
+  },
+  {
+    "objectID": "materials.html",
+    "href": "materials.html",
+    "title": "Psychometrics4Neuroscience",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nBase R vs Tidyverse\n\n\n \n\n\n\n\nFunctional programming examples\n\n\n \n\n\n\n\nGeneralized Linear Mixed-Effects Models\n\n\n \n\n\n\n\nSignal Detection Theory\n\n\n \n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "Shared Notepad: online notepad to share the R code during the class.\nShared Drive: folder to share files and script if necessary\n\n\nQRcode always redirecting here:"
+  },
+  {
+    "objectID": "index.html#quarto",
+    "href": "index.html#quarto",
+    "title": "Getting started",
+    "section": "Quarto",
+    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
+  },
+  {
+    "objectID": "index.html#gitgithub",
+    "href": "index.html#gitgithub",
+    "title": "Getting started",
+    "section": "Git/Github",
+    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
+  },
+  {
+    "objectID": "index.html#cloning-the-repository",
+    "href": "index.html#cloning-the-repository",
+    "title": "Getting started",
+    "section": "Cloning the repository",
+    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
+  },
+  {
+    "objectID": "index.html#creating-your-repository",
+    "href": "index.html#creating-your-repository",
+    "title": "Getting started",
+    "section": "Creating your repository",
+    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
+  },
+  {
+    "objectID": "index.html#renv",
+    "href": "index.html#renv",
+    "title": "Getting started",
+    "section": "renv",
+    "text": "renv\nrenv is the equivalent of venv in Python. Basically allows to create a by-project library of R packages with a specific version. Sometimes packages change defaults, functions, etc. thus fixing them improve the reproducibility and remove unexpected results.\nFor a detailed guide about renv you can read the official documentation https://rstudio.github.io/renv/articles/renv.html.\nWhen opening the R project of the repository, renv should prompt you to install renv itself (if missing) and then to install the packages included into the renv.lock file.\nTo create new project with renv you can type:\nrenv::init()\nand following the instructions. renv will create all the required files and folders and switch to the local library."
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html",
+    "href": "materials/baseR-vs-tidyverse.html",
+    "title": "Base R vs Tidyverse",
+    "section": "",
+    "text": "In this exercise, we will use two datasets:\n\nThe iris dataset for complex operations on grouped data.\nThe mtcars dataset for reshaping between long and wide formats.\n\nThis will allow us to compare different data manipulation tasks using base R and the tidyverse."
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#base-r-solution",
+    "href": "materials/baseR-vs-tidyverse.html#base-r-solution",
+    "title": "Base R vs Tidyverse",
+    "section": "Base R Solution",
+    "text": "Base R Solution\n\n# Load the iris dataset\ndata(iris)\n\n# Base R approach using tapply and aggregate\nmean_sd_base &lt;- aggregate(cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) ~ Species, data = iris, \n                          FUN = function(x) c(mean = mean(x), sd = sd(x)))\n\n# Flatten the results\nmean_sd_base &lt;- do.call(data.frame, mean_sd_base)\n\n# Display the result\nmean_sd_base\n\n     Species Sepal.Length.mean Sepal.Length.sd Sepal.Width.mean Sepal.Width.sd\n1     setosa             5.006       0.3524897            3.428      0.3790644\n2 versicolor             5.936       0.5161711            2.770      0.3137983\n3  virginica             6.588       0.6358796            2.974      0.3224966\n  Petal.Length.mean Petal.Length.sd Petal.Width.mean Petal.Width.sd\n1             1.462       0.1736640            0.246      0.1053856\n2             4.260       0.4699110            1.326      0.1977527\n3             5.552       0.5518947            2.026      0.2746501"
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#tidyverse-solution",
+    "href": "materials/baseR-vs-tidyverse.html#tidyverse-solution",
+    "title": "Base R vs Tidyverse",
+    "section": "Tidyverse Solution",
+    "text": "Tidyverse Solution\n\n# Load the tidyverse package\nlibrary(tidyverse)\n\n# Tidyverse approach using dplyr\nmean_sd_tidy &lt;- iris %&gt;%\n  group_by(Species) %&gt;%\n  summarize(across(starts_with(\"Sepal\") | starts_with(\"Petal\"), \n                   list(mean = ~mean(.), sd = ~sd(.)), \n                   .names = \"{col}_{fn}\"))\n\n# Display the result\nmean_sd_tidy\n\n# A tibble: 3 × 9\n  Species    Sepal.Length_mean Sepal.Length_sd Sepal.Width_mean Sepal.Width_sd\n  &lt;fct&gt;                  &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;\n1 setosa                  5.01           0.352             3.43          0.379\n2 versicolor              5.94           0.516             2.77          0.314\n3 virginica               6.59           0.636             2.97          0.322\n# ℹ 4 more variables: Petal.Length_mean &lt;dbl&gt;, Petal.Length_sd &lt;dbl&gt;,\n#   Petal.Width_mean &lt;dbl&gt;, Petal.Width_sd &lt;dbl&gt;"
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#base-r-solution-1",
+    "href": "materials/baseR-vs-tidyverse.html#base-r-solution-1",
+    "title": "Base R vs Tidyverse",
+    "section": "Base R Solution",
+    "text": "Base R Solution\n\n# Load the mtcars dataset\ndata(mtcars)\n\n# Add car names as a column instead of row names\nmtcars$car &lt;- rownames(mtcars)\n\n# Base R approach to long format\nmtcars_long_base &lt;- reshape(mtcars, idvar = \"car\", varying = names(mtcars)[1:11], \n                            v.names = \"value\", timevar = \"variable\", \n                            times = names(mtcars)[1:11], direction = \"long\")\n\n# Back to wide format\nmtcars_wide_base &lt;- reshape(mtcars_long_base, idvar = \"car\", timevar = \"variable\", \n                            direction = \"wide\")\n\n# Display results\nhead(mtcars_long_base)\n\n                                    car variable value\nMazda RX4.mpg                 Mazda RX4      mpg  21.0\nMazda RX4 Wag.mpg         Mazda RX4 Wag      mpg  21.0\nDatsun 710.mpg               Datsun 710      mpg  22.8\nHornet 4 Drive.mpg       Hornet 4 Drive      mpg  21.4\nHornet Sportabout.mpg Hornet Sportabout      mpg  18.7\nValiant.mpg                     Valiant      mpg  18.1\n\nhead(mtcars_wide_base)\n\n                                    car value.mpg value.cyl value.disp value.hp\nMazda RX4.mpg                 Mazda RX4      21.0         6        160      110\nMazda RX4 Wag.mpg         Mazda RX4 Wag      21.0         6        160      110\nDatsun 710.mpg               Datsun 710      22.8         4        108       93\nHornet 4 Drive.mpg       Hornet 4 Drive      21.4         6        258      110\nHornet Sportabout.mpg Hornet Sportabout      18.7         8        360      175\nValiant.mpg                     Valiant      18.1         6        225      105\n                      value.drat value.wt value.qsec value.vs value.am\nMazda RX4.mpg               3.90    2.620      16.46        0        1\nMazda RX4 Wag.mpg           3.90    2.875      17.02        0        1\nDatsun 710.mpg              3.85    2.320      18.61        1        1\nHornet 4 Drive.mpg          3.08    3.215      19.44        1        0\nHornet Sportabout.mpg       3.15    3.440      17.02        0        0\nValiant.mpg                 2.76    3.460      20.22        1        0\n                      value.gear value.carb\nMazda RX4.mpg                  4          4\nMazda RX4 Wag.mpg              4          4\nDatsun 710.mpg                 4          1\nHornet 4 Drive.mpg             3          1\nHornet Sportabout.mpg          3          2\nValiant.mpg                    3          1"
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#tidyverse-solution-1",
+    "href": "materials/baseR-vs-tidyverse.html#tidyverse-solution-1",
+    "title": "Base R vs Tidyverse",
+    "section": "Tidyverse Solution",
+    "text": "Tidyverse Solution\n\n# Tidyverse approach to long format\nmtcars_long_tidy &lt;- mtcars %&gt;% \n  pivot_longer(cols = -car, names_to = \"variable\", values_to = \"value\")\n\n# Back to wide format\nmtcars_wide_tidy &lt;- mtcars_long_tidy %&gt;% \n  pivot_wider(names_from = variable, values_from = value)\n\n# Display results\nhead(mtcars_long_tidy)\n\n# A tibble: 6 × 3\n  car       variable  value\n  &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;\n1 Mazda RX4 mpg       21   \n2 Mazda RX4 cyl        6   \n3 Mazda RX4 disp     160   \n4 Mazda RX4 hp       110   \n5 Mazda RX4 drat       3.9 \n6 Mazda RX4 wt         2.62\n\nhead(mtcars_wide_tidy)\n\n# A tibble: 6 × 12\n  car            mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb\n  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 Mazda RX4     21       6   160   110  3.9   2.62  16.5     0     1     4     4\n2 Mazda RX4 W…  21       6   160   110  3.9   2.88  17.0     0     1     4     4\n3 Datsun 710    22.8     4   108    93  3.85  2.32  18.6     1     1     4     1\n4 Hornet 4 Dr…  21.4     6   258   110  3.08  3.22  19.4     1     0     3     1\n5 Hornet Spor…  18.7     8   360   175  3.15  3.44  17.0     0     0     3     2\n6 Valiant       18.1     6   225   105  2.76  3.46  20.2     1     0     3     1"
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-base-r",
+    "href": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-base-r",
+    "title": "Base R vs Tidyverse",
+    "section": "Pros and Cons of Base R",
+    "text": "Pros and Cons of Base R\n\nPros:\n\nFlexibility: Base R allows detailed control over transformations.\nNo external dependencies: No need to install additional packages.\nSuitable for simple tasks: If transformations are minimal, base R can be effective.\n\n\n\nCons:\n\nVerbose: Base R code for reshaping data is long and requires multiple parameters.\nLess intuitive: The syntax for reshape() can be confusing.\nMore manual work: Intermediate steps often need to be managed explicitly."
+  },
+  {
+    "objectID": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-tidyverse",
+    "href": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-tidyverse",
+    "title": "Base R vs Tidyverse",
+    "section": "Pros and Cons of Tidyverse",
+    "text": "Pros and Cons of Tidyverse\n\nPros:\n\nConcise and readable: Functions like pivot_longer() and pivot_wider() are intuitive.\nStreamlined workflow: Tidyverse simplifies common operations like grouping and reshaping.\nBetter suited for modern data analysis: Works well with pipes and declarative transformations.\n\n\n\nCons:\n\nRequires package installation: Tidyverse needs additional dependencies.\nLearning curve: Users new to functional programming might need time to adapt.\nMay not cover every niche use case: Highly specific transformations might need workarounds."
+  },
+  {
     "objectID": "materials/glmer/glmer.html",
     "href": "materials/glmer/glmer.html",
     "title": "Generalized Linear Mixed-Effects Models",
@@ -903,118 +1057,6 @@
     "text": "Footnotes\n\n\nThis is just an approximation to estimate the impact of the ICC↩︎\nNote that the anova() function is refitting models using Maximum Likelihood (and not REML). This is required to compare models using LRT↩︎\nOf course, including the clusters means as random-slopes is not possible. Note that data are simulated without random slopes, thus the model estimate parameters at the boundaries↩︎"
   },
   {
-    "objectID": "materials/baseR-vs-tidyverse.html",
-    "href": "materials/baseR-vs-tidyverse.html",
-    "title": "Base R vs Tidyverse",
-    "section": "",
-    "text": "In this exercise, we will use two datasets:\n\nThe iris dataset for complex operations on grouped data.\nThe mtcars dataset for reshaping between long and wide formats.\n\nThis will allow us to compare different data manipulation tasks using base R and the tidyverse."
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#base-r-solution",
-    "href": "materials/baseR-vs-tidyverse.html#base-r-solution",
-    "title": "Base R vs Tidyverse",
-    "section": "Base R Solution",
-    "text": "Base R Solution\n\n# Load the iris dataset\ndata(iris)\n\n# Base R approach using tapply and aggregate\nmean_sd_base &lt;- aggregate(cbind(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) ~ Species, data = iris, \n                          FUN = function(x) c(mean = mean(x), sd = sd(x)))\n\n# Flatten the results\nmean_sd_base &lt;- do.call(data.frame, mean_sd_base)\n\n# Display the result\nmean_sd_base\n\n     Species Sepal.Length.mean Sepal.Length.sd Sepal.Width.mean Sepal.Width.sd\n1     setosa             5.006       0.3524897            3.428      0.3790644\n2 versicolor             5.936       0.5161711            2.770      0.3137983\n3  virginica             6.588       0.6358796            2.974      0.3224966\n  Petal.Length.mean Petal.Length.sd Petal.Width.mean Petal.Width.sd\n1             1.462       0.1736640            0.246      0.1053856\n2             4.260       0.4699110            1.326      0.1977527\n3             5.552       0.5518947            2.026      0.2746501"
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#tidyverse-solution",
-    "href": "materials/baseR-vs-tidyverse.html#tidyverse-solution",
-    "title": "Base R vs Tidyverse",
-    "section": "Tidyverse Solution",
-    "text": "Tidyverse Solution\n\n# Load the tidyverse package\nlibrary(tidyverse)\n\n# Tidyverse approach using dplyr\nmean_sd_tidy &lt;- iris %&gt;%\n  group_by(Species) %&gt;%\n  summarize(across(starts_with(\"Sepal\") | starts_with(\"Petal\"), \n                   list(mean = ~mean(.), sd = ~sd(.)), \n                   .names = \"{col}_{fn}\"))\n\n# Display the result\nmean_sd_tidy\n\n# A tibble: 3 × 9\n  Species    Sepal.Length_mean Sepal.Length_sd Sepal.Width_mean Sepal.Width_sd\n  &lt;fct&gt;                  &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;\n1 setosa                  5.01           0.352             3.43          0.379\n2 versicolor              5.94           0.516             2.77          0.314\n3 virginica               6.59           0.636             2.97          0.322\n# ℹ 4 more variables: Petal.Length_mean &lt;dbl&gt;, Petal.Length_sd &lt;dbl&gt;,\n#   Petal.Width_mean &lt;dbl&gt;, Petal.Width_sd &lt;dbl&gt;"
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#base-r-solution-1",
-    "href": "materials/baseR-vs-tidyverse.html#base-r-solution-1",
-    "title": "Base R vs Tidyverse",
-    "section": "Base R Solution",
-    "text": "Base R Solution\n\n# Load the mtcars dataset\ndata(mtcars)\n\n# Add car names as a column instead of row names\nmtcars$car &lt;- rownames(mtcars)\n\n# Base R approach to long format\nmtcars_long_base &lt;- reshape(mtcars, idvar = \"car\", varying = names(mtcars)[1:11], \n                            v.names = \"value\", timevar = \"variable\", \n                            times = names(mtcars)[1:11], direction = \"long\")\n\n# Back to wide format\nmtcars_wide_base &lt;- reshape(mtcars_long_base, idvar = \"car\", timevar = \"variable\", \n                            direction = \"wide\")\n\n# Display results\nhead(mtcars_long_base)\n\n                                    car variable value\nMazda RX4.mpg                 Mazda RX4      mpg  21.0\nMazda RX4 Wag.mpg         Mazda RX4 Wag      mpg  21.0\nDatsun 710.mpg               Datsun 710      mpg  22.8\nHornet 4 Drive.mpg       Hornet 4 Drive      mpg  21.4\nHornet Sportabout.mpg Hornet Sportabout      mpg  18.7\nValiant.mpg                     Valiant      mpg  18.1\n\nhead(mtcars_wide_base)\n\n                                    car value.mpg value.cyl value.disp value.hp\nMazda RX4.mpg                 Mazda RX4      21.0         6        160      110\nMazda RX4 Wag.mpg         Mazda RX4 Wag      21.0         6        160      110\nDatsun 710.mpg               Datsun 710      22.8         4        108       93\nHornet 4 Drive.mpg       Hornet 4 Drive      21.4         6        258      110\nHornet Sportabout.mpg Hornet Sportabout      18.7         8        360      175\nValiant.mpg                     Valiant      18.1         6        225      105\n                      value.drat value.wt value.qsec value.vs value.am\nMazda RX4.mpg               3.90    2.620      16.46        0        1\nMazda RX4 Wag.mpg           3.90    2.875      17.02        0        1\nDatsun 710.mpg              3.85    2.320      18.61        1        1\nHornet 4 Drive.mpg          3.08    3.215      19.44        1        0\nHornet Sportabout.mpg       3.15    3.440      17.02        0        0\nValiant.mpg                 2.76    3.460      20.22        1        0\n                      value.gear value.carb\nMazda RX4.mpg                  4          4\nMazda RX4 Wag.mpg              4          4\nDatsun 710.mpg                 4          1\nHornet 4 Drive.mpg             3          1\nHornet Sportabout.mpg          3          2\nValiant.mpg                    3          1"
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#tidyverse-solution-1",
-    "href": "materials/baseR-vs-tidyverse.html#tidyverse-solution-1",
-    "title": "Base R vs Tidyverse",
-    "section": "Tidyverse Solution",
-    "text": "Tidyverse Solution\n\n# Tidyverse approach to long format\nmtcars_long_tidy &lt;- mtcars %&gt;% \n  pivot_longer(cols = -car, names_to = \"variable\", values_to = \"value\")\n\n# Back to wide format\nmtcars_wide_tidy &lt;- mtcars_long_tidy %&gt;% \n  pivot_wider(names_from = variable, values_from = value)\n\n# Display results\nhead(mtcars_long_tidy)\n\n# A tibble: 6 × 3\n  car       variable  value\n  &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;\n1 Mazda RX4 mpg       21   \n2 Mazda RX4 cyl        6   \n3 Mazda RX4 disp     160   \n4 Mazda RX4 hp       110   \n5 Mazda RX4 drat       3.9 \n6 Mazda RX4 wt         2.62\n\nhead(mtcars_wide_tidy)\n\n# A tibble: 6 × 12\n  car            mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb\n  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 Mazda RX4     21       6   160   110  3.9   2.62  16.5     0     1     4     4\n2 Mazda RX4 W…  21       6   160   110  3.9   2.88  17.0     0     1     4     4\n3 Datsun 710    22.8     4   108    93  3.85  2.32  18.6     1     1     4     1\n4 Hornet 4 Dr…  21.4     6   258   110  3.08  3.22  19.4     1     0     3     1\n5 Hornet Spor…  18.7     8   360   175  3.15  3.44  17.0     0     0     3     2\n6 Valiant       18.1     6   225   105  2.76  3.46  20.2     1     0     3     1"
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-base-r",
-    "href": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-base-r",
-    "title": "Base R vs Tidyverse",
-    "section": "Pros and Cons of Base R",
-    "text": "Pros and Cons of Base R\n\nPros:\n\nFlexibility: Base R allows detailed control over transformations.\nNo external dependencies: No need to install additional packages.\nSuitable for simple tasks: If transformations are minimal, base R can be effective.\n\n\n\nCons:\n\nVerbose: Base R code for reshaping data is long and requires multiple parameters.\nLess intuitive: The syntax for reshape() can be confusing.\nMore manual work: Intermediate steps often need to be managed explicitly."
-  },
-  {
-    "objectID": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-tidyverse",
-    "href": "materials/baseR-vs-tidyverse.html#pros-and-cons-of-tidyverse",
-    "title": "Base R vs Tidyverse",
-    "section": "Pros and Cons of Tidyverse",
-    "text": "Pros and Cons of Tidyverse\n\nPros:\n\nConcise and readable: Functions like pivot_longer() and pivot_wider() are intuitive.\nStreamlined workflow: Tidyverse simplifies common operations like grouping and reshaping.\nBetter suited for modern data analysis: Works well with pipes and declarative transformations.\n\n\n\nCons:\n\nRequires package installation: Tidyverse needs additional dependencies.\nLearning curve: Users new to functional programming might need time to adapt.\nMay not cover every niche use case: Highly specific transformations might need workarounds."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "Shared Notepad: online notepad to share the R code during the class.\nShared Drive: folder to share files and script if necessary\n\n\nQRcode always redirecting here:"
-  },
-  {
-    "objectID": "index.html#quarto",
-    "href": "index.html#quarto",
-    "title": "Getting started",
-    "section": "Quarto",
-    "text": "Quarto\nQuarto is an an open-source scientific and technical publishing system. It is very easy to install and you can find instructions here https://quarto.org/docs/get-started/.\nTo check if Quarto is installed, you can open a terminal (e.g., Powershell or CMD in Windows) and type:\nquarto --version\nThis should return the version of Quarto without errors or strange messages."
-  },
-  {
-    "objectID": "index.html#gitgithub",
-    "href": "index.html#gitgithub",
-    "title": "Getting started",
-    "section": "Git/Github",
-    "text": "Git/Github\nGit is a version-control system that you can easily install from here https://git-scm.com/. You can use Git from the command line depending on your operating system or you can use the Github Desktop software https://desktop.github.com/download/ to work with a GUI.\nGithub is the online version of Git and works as an online repository to share and store the code. In order to work with Git and Github you need to:\n\ncreate an account https://github.com/\nconfigure your local machine with an SSH key (with this you do not need to write the password every time). Configuring an SSH key is not so easy thus I suggest you to use the Github CLI tool https://cli.github.com/ where you can configure your account using SSH very easily. The instructions can be found here https://cli.github.com/manual/gh_auth_login and we need to use the gh auth login command.\n\nAlso here you can check the Git installation typing this command in the terminal:\ngit --version"
-  },
-  {
-    "objectID": "index.html#cloning-the-repository",
-    "href": "index.html#cloning-the-repository",
-    "title": "Getting started",
-    "section": "Cloning the repository",
-    "text": "Cloning the repository\nNow that we have all the tools we can clone the repository of the course. You can navigate into the folder that you want in your machine and type:\ngit clone git@github.com:stat-teaching/psychometrics4neuroscience.git\nOr manually (but there will not be the Git-Github link) downloading the zip folder from https://github.com/stat-teaching/psychometrics4neuroscience.\nIf you cloned the repository you can navigate into the folder and type:\ngit status\nThis should return some info or messages not errors or messages related to non being in a Git repository.\nNow you have the repository of the course. I will update this repository during the course with new slides and materials.\nDo not modify the files and everytime you start working or using this repository run:\ngit pull\nAnd your local repository will be updated."
-  },
-  {
-    "objectID": "index.html#creating-your-repository",
-    "href": "index.html#creating-your-repository",
-    "title": "Getting started",
-    "section": "Creating your repository",
-    "text": "Creating your repository\nFor the course exercises, notes and everything else, I suggest you to create a local folder to track with Git and Github. Follow these steps:\n\ncreate an R Project\ncreate an R/ folder\ninit the git repository with the command git init\nadd all files with git add .\ncommit the changes with git commit -m \"message\"\n\nThen you need to create and link the online repository. Go to Github and create a new empty repository. Copy the SSH address and run git remote add origin &lt;ssh link&gt;. Then run git push. In this way your local and online Git repositories will be linked.\nCheck these other resources to learn Git:\n\nhttps://rogerdudler.github.io/git-guide/\nhttps://www.freecodecamp.org/news/learn-the-basics-of-git-in-under-10-minutes-da548267cc91/"
-  },
-  {
-    "objectID": "index.html#renv",
-    "href": "index.html#renv",
-    "title": "Getting started",
-    "section": "renv",
-    "text": "renv\nrenv is the equivalent of venv in Python. Basically allows to create a by-project library of R packages with a specific version. Sometimes packages change defaults, functions, etc. thus fixing them improve the reproducibility and remove unexpected results.\nFor a detailed guide about renv you can read the official documentation https://rstudio.github.io/renv/articles/renv.html.\nWhen opening the R project of the repository, renv should prompt you to install renv itself (if missing) and then to install the packages included into the renv.lock file.\nTo create new project with renv you can type:\nrenv::init()\nand following the instructions. renv will create all the required files and folders and switch to the local library."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "materials.html",
-    "href": "materials.html",
-    "title": "Psychometrics4Neuroscience",
-    "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nscript\n\n\n\n\n\n\nBase R vs Tidyverse\n\n\n \n\n\n\n\nFunctional programming examples\n\n\n \n\n\n\n\nGeneralized Linear Mixed-Effects Models\n\n\n \n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "materials/functional-programming-examples.html",
-    "href": "materials/functional-programming-examples.html",
-    "title": "Functional programming examples",
-    "section": "",
-    "text": "library(ggplot2)\nlibrary(tidyr)\nlibrary(dplyr)\nlibrary(purrr)\n\ndat &lt;- iris\n\n# functions\n\nremove_rownames &lt;- function(x){\n    rownames(x) &lt;- NULL\n    x\n}\n\nsum_lm &lt;- function(x, conf.level = 0.95){\n    xs &lt;- data.frame(summary(x)$coefficients)\n    xs$param &lt;- rownames(xs)\n    rownames(xs) &lt;- NULL\n    names(xs) &lt;- c(\"b\", \"se\", \"t\", \"pval\", \"param\")\n    cc &lt;- data.frame(confint(x, level = conf.level))\n    names(cc) &lt;- c(\"ci.lb\", \"ci.ub\")\n    rownames(cc) &lt;- NULL\n    cbind(\n        xs[, c(\"param\", \"b\", \"se\", \"t\", \"pval\")],\n        cc\n    )\n}\n\n# fit a linear model for each Species\n\ndatl &lt;- split(dat, dat$Species)\nfitl &lt;- lapply(datl, function(d) lm(Sepal.Length ~ Petal.Width + Petal.Length, data = d))\nresl &lt;- lapply(fitl, sum_lm)\n\nres_by_species &lt;- do.call(rbind, resl)\nres_by_species &lt;- remove_rownames(res_by_species)\nres_by_species$species &lt;- rep(names(resl), sapply(resl, nrow))\n\nggplot(res_by_species, aes(x = param, \n                           y = b, \n                           ymin = ci.lb, \n                           ymax = ci.ub,\n                           color = species)) +\n    geom_pointrange(position = position_dodge(width = 0.5))\n\n\n\n\n\n\n\n# alternative version using other packages\n\nresl &lt;- lapply(fitl, broom::tidy, conf.int = TRUE)\nres_by_species &lt;- dplyr::bind_rows(resl, .id = \"species\")\n\nres_by_species\n\n# A tibble: 9 × 8\n  species    term       estimate std.error statistic  p.value conf.low conf.high\n  &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 setosa     (Intercep…  4.25       0.411    10.3    1.13e-13   3.42       5.08 \n2 setosa     Petal.Wid…  0.712      0.487     1.46   1.51e- 1  -0.268      1.69 \n3 setosa     Petal.Len…  0.399      0.296     1.35   1.84e- 1  -0.196      0.994\n4 versicolor (Intercep…  2.38       0.449     5.30   3.04e- 6   1.48       3.28 \n5 versicolor Petal.Wid… -0.320      0.402    -0.795  4.30e- 1  -1.13       0.489\n6 versicolor Petal.Len…  0.934      0.169     5.52   1.44e- 6   0.594      1.27 \n7 virginica  (Intercep…  1.05       0.514     2.05   4.63e- 2   0.0179     2.09 \n8 virginica  Petal.Wid…  0.00706    0.179     0.0394 9.69e- 1  -0.354      0.368\n9 virginica  Petal.Len…  0.995      0.0893   11.1    8.87e-15   0.815      1.17 \n\n# bootstrapping\n\nboot &lt;- function(data, B = 100){\n    res &lt;- vector(mode = \"list\", length = B)\n    n &lt;- nrow(data)\n    for(i in 1:B){\n        idx &lt;- sample(x = 1:n, size = n, replace = TRUE)\n        dataB &lt;- data[idx, ]\n        rownames(dataB) &lt;- NULL\n        res[[i]] &lt;- dataB\n    }\n    return(res)\n}\n\nfit_lm &lt;- function(data){\n    lm(Sepal.Length ~ Petal.Width + Petal.Length, data = data)\n}\n\nbootl &lt;- lapply(datl, boot, B = 100)\nfit_bootl &lt;- lapply(bootl, function(x) lapply(x, fit_lm))\nres_bootl &lt;- lapply(fit_bootl, function(x) lapply(x, sum_lm))\nres_bootl &lt;- lapply(res_bootl, function(x) do.call(rbind, x))\nres_boot_by_species &lt;- do.call(rbind, res_bootl)\nres_boot_by_species &lt;- remove_rownames(res_boot_by_species)\nres_boot_by_species$species &lt;- rep(names(res_bootl), sapply(res_bootl, nrow))\n\nggplot(res_boot_by_species, aes(x = param, y = b, fill = species)) +\n    geom_boxplot()\n\n\n\n\n\n\n\n# using nested tibbles\n\ndat |&gt; \n    group_by(Species) |&gt; \n    nest() |&gt; \n    mutate(boot = map(data, boot)) |&gt; \n    select(-data) |&gt; \n    unnest(boot) |&gt; \n    mutate(fit = map(boot, fit_lm)) |&gt; \n    mutate(res = map(fit, sum_lm)) |&gt; \n    select(-boot, -fit) |&gt; \n    unnest(res)\n\n# A tibble: 900 × 8\n# Groups:   Species [3]\n   Species param            b    se      t     pval  ci.lb ci.ub\n   &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;\n 1 setosa  (Intercept)  4.27  0.369 11.6   2.20e-15  3.53  5.01 \n 2 setosa  Petal.Width  1.57  0.596  2.64  1.12e- 2  0.376 2.77 \n 3 setosa  Petal.Length 0.280 0.265  1.06  2.96e- 1 -0.253 0.813\n 4 setosa  (Intercept)  3.62  0.460  7.87  4.02e-10  2.70  4.55 \n 5 setosa  Petal.Width  0.457 0.575  0.796 4.30e- 1 -0.699 1.61 \n 6 setosa  Petal.Length 0.847 0.353  2.40  2.05e- 2  0.136 1.56 \n 7 setosa  (Intercept)  4.17  0.473  8.81  1.62e-11  3.22  5.12 \n 8 setosa  Petal.Width  0.297 0.469  0.632 5.30e- 1 -0.648 1.24 \n 9 setosa  Petal.Length 0.591 0.348  1.70  9.63e- 2 -0.110 1.29 \n10 setosa  (Intercept)  4.22  0.431  9.78  6.55e-13  3.35  5.08 \n# ℹ 890 more rows"
-  },
-  {
     "objectID": "scripts-lectures.html",
     "href": "scripts-lectures.html",
     "title": "Psychometrics4Neuroscience",
@@ -1082,14 +1124,21 @@
     "href": "scripts-lectures/2025-04-07.html",
     "title": "2025-04-07",
     "section": "",
-    "text": "Per oggi facciamo una simulazione, descritta in questo documento"
+    "text": "Facciamo un’approfondimento su un’applicazione interessante del modello probit alle decisioni signal detection theory"
+  },
+  {
+    "objectID": "scripts-lectures/2025-04-07.html#topics",
+    "href": "scripts-lectures/2025-04-07.html#topics",
+    "title": "2025-04-07",
+    "section": "",
+    "text": "Facciamo un’approfondimento su un’applicazione interessante del modello probit alle decisioni signal detection theory"
   },
   {
     "objectID": "scripts-lectures/2025-04-07.html#assignment",
     "href": "scripts-lectures/2025-04-07.html#assignment",
     "title": "2025-04-07",
-    "section": "",
-    "text": "Per oggi facciamo una simulazione, descritta in questo documento"
+    "section": "Assignment",
+    "text": "Assignment\nPer oggi facciamo una simulazione, descritta in questo documento"
   },
   {
     "objectID": "slides.html",

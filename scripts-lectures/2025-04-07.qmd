@@ -3,6 +3,10 @@ title: "2025-04-07"
 format: html
 ---
 
+## Topics
+
+Facciamo un'approfondimento su un'applicazione interessante del modello probit alle decisioni [signal detection theory](../materials/signal-detection-theory.qmd)
+
 ## Assignment
 
 Per oggi facciamo una simulazione, descritta in questo [documento](2025-04-07_extra/2025-04-07_simulazione.qmd)

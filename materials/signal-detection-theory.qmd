@@ -1,0 +1,459 @@
+---
+title: Signal Detection Theory
+format: html
+---
+
+```{r}
+devtools::load_all()
+library(tidyverse)
+library(cowplot)
+library(here)
+
+mtheme <- function(){
+    theme_minimal(20)
+}
+
+theme_set(mtheme())
+
+funs <- filor::get_funs(here("R", "utils-glm_phd.R"))
+```
+
+
+# Probit link {.section}
+
+## Probit link
+
+- The mostly used *link function* when using a binomial GLM is the **logit link**. The **probit** link is another *link function* that can be used. The overall approach is the same between **logit** and **probit** models. The only difference is the parameter interpretation (i.e., no odds ratios) and the specific link function (and the inverse) to use.
+- The **probit** model use the **cumulative normal distribution** but the actual difference with a **logit** functions is neglegible.
+
+## Probit link
+
+```{r, echo=FALSE}
+ggplot() +
+    stat_function(aes(color = "Probit"),
+                      fun = pnorm) +
+    stat_function(aes(color = "Logit"),
+                  fun = plogis) +
+    xlim(-4, 4) +
+    theme(legend.title = element_blank(),
+          legend.position = c(0.9,0.2),
+          axis.title.x = element_blank()) +
+    ylab("Probability")
+```
+
+## Probit link
+
+When using the **probit link** the parameters are interpreted as difference in *z-scores* associated with a unit increase in the predictors. In fact probabilities are mapped into *z-scores* using the cumulative normal distribution.
+
+```{r}
+p1 <- 0.7
+p2 <- 0.5
+
+qlogis(c(p1, p2)) # log(odds(p1)), logit link
+qnorm(c(p1, p2)) # probit link
+
+log(odds_ratio(p1, p2)) # ~ beta1, logit link
+pnorm(p1) - pnorm(p2) # ~beta1, probit link
+```
+
+## Probit link
+
+```{r, echo = FALSE}
+probit_cum <- ggplot() +
+    stat_function(fun = pnorm) +
+    xlim(-4, 4) +
+    theme(legend.title = element_blank(),
+          legend.position = c(0.9,0.2)) +
+    ylab(latex2exp::TeX("$p = \\Phi^{-1}(z)$")) +
+    xlab("z") +
+    geom_segment(aes(x = qnorm(c(p1,p2)),
+                     y = c(0, 0),
+                     xend = qnorm(c(p1,p2)),
+                     yend = c(p1, p2))) +
+    geom_segment(aes(x = qnorm(c(p1,p2)),
+                     y = c(p1,p2),
+                     xend = c(-4, -4),
+                     yend = c(p1,p2))) +
+    geom_point(aes(x = qnorm(c(p1,p2)),
+                   y = c(p1, p2)),
+               color = c("red", "blue"),
+               size = 5) +
+    geom_point(aes(x = qnorm(c(p1,p2)),
+                   y = c(0, 0)),
+               color = c("red", "blue"),
+               size = 5) +
+    geom_point(aes(x = c(-4, -4)),
+               y = c(p1, p2),
+               color = c("red", "blue"),
+               size = 5) +
+    theme(aspect.ratio = 1)
+
+probit_denp1 <- ggplot() +
+    stat_function(fun = dnorm) +
+    xlim(-4, 4) +
+    ylab("Density") +
+    geom_point(aes(x = qnorm(p1),
+                   y = c(0)),
+               color = c("red"),
+               size = 5) +
+    geom_point(aes(x = qnorm(p1),
+                   y = dnorm(qnorm(p1))),
+               color = c("red"),
+               size = 5) +
+    geom_area(aes(x = c(-4, 4)),
+              stat = "function", 
+              fun = dnorm,
+              fill = "red",
+              xlim = c(-4, qnorm(p1)),
+              alpha = 0.5) +
+    xlab(latex2exp::TeX("$\\Phi(p)$"))
+
+probit_denp2 <- ggplot() +
+    stat_function(fun = dnorm) +
+    xlim(-4, 4) +
+    ylab("Density") +
+    geom_point(aes(x = qnorm(p2),
+                   y = c(0)),
+               color = c("blue"),
+               size = 5) +
+    geom_point(aes(x = qnorm(p2),
+                   y = dnorm(qnorm(p2))),
+               color = c("blue"),
+               size = 5) +
+    geom_area(aes(x = c(-4, 4)),
+              stat = "function", 
+              fun = dnorm,
+              fill = "blue",
+              xlim = c(-4, qnorm(p2)),
+              alpha = 0.5) +
+    xlab(latex2exp::TeX("$\\Phi(p)$"))
+
+right_plot <- cowplot::plot_grid(
+    probit_denp1 + theme_minimal(base_size = 15), 
+    probit_denp2 + theme_minimal(base_size = 15),
+    nrow = 2
+)
+
+left_plot <- probit_cum
+
+cowplot::plot_grid(
+    left_plot + theme_minimal(base_size = 15), 
+    right_plot,
+    rel_widths = c(2,1)
+)
+```
+
+## Signal Detection Theory
+
+Il modello probit è utilizzato per stimare i parametri della **signal detection theory**.
+
+Brevemente l'idea è quella di modellare decisioni binarie (o anche come rating) rispetto a come uno stimolo viene percepito ed elaborato internamente.
+
+La teoria (nella sua versione di base) assume che uno stimolo (segnale) venga elaborato e l'informazione contenuta sostenga un qualche tipo di decisione su questo stimolo.
+
+Ad esempio, immaginiamo di voler valutare la capacità di un radiologo di rilevare la presenza di un'anomalia in una radiografia. Possiamo immaginare di prendere 100 radiografie. 50 di queste contengono un'anomalia (signal trials) mentre 50 non la contengono (catch trials).
+
+Per ogni radiografia, chiediamo ai radiologi di valutare se rilevano un'anomalia oppure no.
+
+Incrociando lo stimolo (signal o catch) e la risposta (presente o assente) otteniamo una tipica tabella di contingenza 2x2, simile a quello che si ottiene nei test diagnostici.
+
+|              | Segnale: Si | Segnale: No            |
+|--------------|-------------|------------------------|
+| **Risposta: Si** | Hit (H)     | False Alarm (FA)       |
+| **Risposta: No** | Miss (M)    | Correct Rejection (CR) |
+
+In questo tipo di classificazione solitamente è ottimale massimizzare gli Hit (o True Positive) e minimizzare i False Alarm (False Positive).
+
+La teoria formalizza che le distribuzioni del segnale e del rumore sono delle Gaussiane standard. La distribuzione del rumore ha $\mu = 0$ mentre la distribuzione del segnale ha $\mu = d'$. In questo modo il parametro $d'$ (pronunciato d-prime) rappresenta il grado di separazione tra segnale e rumore.
+
+Una radiografia che contiene un segno chiaramente visibile avrà molta separazione tra le due distribuzioni mentre una radiografia con un segnale molto debole avrà più sovrapposizione.
+
+```{r}
+#| echo: false
+library(ggplot2)
+
+dlow <- 0.3
+dhigh <- 2
+
+plt_dlow <- ggplot() +
+    # signal
+    stat_function(aes(color = "Noise"),
+                  fun = dnorm,
+                  args = list(mean = 0, sd = 1),
+                  lwd = 1) +
+    # noise
+    stat_function(mapping = aes(color = "Signal"),
+                  fun = dnorm,
+                  args = list(mean = dlow, sd = 1),
+                  lwd = 1) +
+    xlim(c(dlow/2 - 5, dlow/2 + 5)) +
+    scale_color_manual(values = c("black", "dodgerblue")) +
+    theme(legend.title = element_blank(),
+          legend.position = "bottom") +
+    ggtitle("d = 0.3")
+
+plt_dhigh <-  ggplot() +
+    # signal
+    stat_function(aes(color = "Noise"),
+                  fun = dnorm,
+                  args = list(mean = 0, sd = 1),
+                  lwd = 1) +
+    # noise
+    stat_function(mapping = aes(color = "Signal"),
+                  fun = dnorm,
+                  args = list(mean = dhigh, sd = 1),
+                  lwd = 1) +
+    xlim(c(dhigh/2 - 5, dhigh/2 + 5)) +
+    scale_color_manual(values = c("black", "dodgerblue")) +
+    theme(legend.title = element_blank(),
+          legend.position = "bottom") +
+    ggtitle("d = 2")
+
+cowplot::plot_grid(plt_dlow, plt_dhigh)
+```
+
+Ora, questa rappresentazione interna del segnale e del rumore che dipende dal tipo di stimolo e dall'abilità del soggetto. Tuttavia noi non osserviamo direttamente questa variabile latente ma la riposta si/no del soggetto.
+
+Il soggetto quindi, in base ad un qualche tipo di regola interna, decide di rispondere. La SDT formalizza questa regola interna come una soglia (*criterio*) che viene decisa internamente dal soggetto. Se in quel trial (radiografia) il segnale supera la soglia, il soggetto risponde **Si**, se non supera la soglia il soggetto risponde no.
+
+Quindi con la stessa intensità del segnale $d'$ soggetti diversi o lo stesso soggetto in condizioni diverse può avere un pattern di risposte diverse.
+
+Ci sono alcuni punti importanti:
+
+- qualcunque criterio si scelga (in condizioni plausibili) non è mai possibile annullare i falsi allarmi e massimizzare gli hit
+- quando il criterio è nel mezzo tra le due distribuzioni ($d'/2$) viene definito unbiased
+- quando il soggetto (a prescindere dal segnale) tende a dare più risposte si viene definito un criterio liberale
+- quando il soggetto (a prescindere dal segnale) tende a dare più risposte no viene definito un criterio conservatore
+
+```{r}
+#| echo: false
+#| fig-width: 10
+dhigh <- 1
+cr <- 1
+
+plt_cons <- ggplot() +
+    # signal
+    stat_function(aes(color = "Noise"),
+                  fun = dnorm,
+                  args = list(mean = 0, sd = 1),
+                  lwd = 1) +
+    # noise
+    stat_function(mapping = aes(color = "Signal"),
+                  fun = dnorm,
+                  args = list(mean = dhigh, sd = 1),
+                  lwd = 1) +
+    xlim(c(dhigh/2 - 5, dhigh/2 + 5)) +
+    scale_color_manual(values = c("black", "dodgerblue")) +
+    theme(legend.title = element_blank(),
+          legend.position = "bottom") +
+    ggtitle("d = 1, conservative") +
+    geom_vline(xintercept = dhigh/2, lty = "dashed") +
+    geom_vline(xintercept = dhigh + cr,
+               lwd = 1, col = "firebrick")
+
+
+plt_lib <- ggplot() +
+    # signal
+    stat_function(aes(color = "Noise"),
+                  fun = dnorm,
+                  args = list(mean = 0, sd = 1),
+                  lwd = 1) +
+    # noise
+    stat_function(mapping = aes(color = "Signal"),
+                  fun = dnorm,
+                  args = list(mean = dhigh, sd = 1),
+                  lwd = 1) +
+    xlim(c(dhigh/2 - 5, dhigh/2 + 5)) +
+    scale_color_manual(values = c("black", "dodgerblue")) +
+    theme(legend.title = element_blank(),
+          legend.position = "bottom") +
+    ggtitle("d = 1, liberal") +
+    geom_vline(xintercept = dhigh/2, lty = "dashed") +
+    geom_vline(xintercept = dhigh/2 - cr,
+               lwd = 1, col = "firebrick")
+
+
+cowplot::plot_grid(plt_cons, plt_lib)
+```
+
+Quindi, per ogni possibile criterio (assumendo di poterlo variare sperimentalmente) abbiamo una diversa tabella di contingenza. Se lo facciamo tante volte, otteniamo una curva:
+
+```{r}
+#| code-fold: true
+d <- 1
+dat <- sim_sdt(1e3, d = d, 0.5)
+mid <- d/2
+cr <- c(-Inf, seq(mid - 4, mid + 4, 0.001), Inf)
+res <- sdt(is_signal = dat$is_signal, x = dat$x, c = cr)
+
+data.frame(res) |> 
+    ggplot(aes(x = pfa, y = phit)) +
+    geom_line() +
+    ylim(c(0, 1)) +
+    scale_x_reverse(limits = c(1, 0)) +
+    geom_abline(slope = -1, col = alpha("black", 0.5)) +
+    xlab("P (FA)") +
+    ylab("P (Hit)") +
+    ggtitle("d' = 1")
+```
+
+Questa in altri contesti (come quello dei test diagnostici) viene chiamata curva di ROC. Infatti l'*area under the curve* (AUC) assumendo la normalità delle due distribuzioni è:
+
+$$
+\mbox{AUC} = \Phi(\frac{d'}{\sqrt{2}})
+$$
+Quindi:
+
+```{r}
+d <- 1 # dalla simulazione precedente
+pnorm(1 / sqrt(2))
+```
+
+```{r}
+data.frame(res) |> 
+    pivot_longer(c(phit, pfa, pmiss, pcr)) |> 
+    ggplot(aes(x = c, y = value, color = name)) +
+    geom_line() +
+    theme(legend.title = element_blank()) +
+    xlab("Criterio") +
+    ylab("Probabilità")
+```
+
+Tornando all'esperimento delle radiografie, quello che osserviamo empiricamente è qualcosa di questo tipo (dati simulati usando `sim_sdt()`):
+
+```{r}
+dat <- sim_sdt(100, 1, c = 0.5) |> 
+    select(-x)
+head(dat)
+```
+
+Dove `is_signal` indica se la radiografia contiene il segnale o no e `say_signal` indica la risposta del soggetto.
+
+In questo caso il $d'$ è la distanza tra la distribuzione latente di segnale e rumore e $c$ è il criterio di risposta.
+
+```{r}
+cl <- sdt(is_signal = dat$is_signal, dat$say_signal)
+cl
+```
+
+Possiamo semplicemente calcolare la distanza tra le due distribuzioni, assumendo che siano gaussiane a varianza 1:
+
+```{r}
+# dprime
+qnorm(cl$phit) - qnorm(cl$pfa)
+
+# criterio
+-(qnorm(cl$phit) + qnorm(cl$pfa)) / 2 # - perchè per convenzione c negativo = liberale, c positivo = conservatore
+```
+
+Gli stessi parametri possono essere stimati con un `glm` binomiale con link function `probit`. Infatti il criterio è il punto di mezzo tra signal e noise mentre il $d'$ non è altro che la distanza tra le due distribuzioni (di segnale e rumore).
+
+Se facciamo un modello predicendo le risposte (binarie) con il tipo di trial (binario) otteniamo esattamente questi parametri.
+
+```{r}
+dat$say_signal01 <- as.integer(as.character(dat$say_signal))
+
+fit <- glm(say_signal01 ~ is_signal, data = dat, family = binomial(link = "probit"))
+
+summary(fit)
+```
+
+L'intercetta è la probabilità (in $z$ scores) di rispondere Si quando il segnale è 0 (catch). Quindi è la probabilità di fare falsi allarmi.
+
+La slope è la distanza (in $z$ scores) tra i trial con il segnale e con il rumore che è esattamente il concetto di $d'$. Cambia solo il segno rispetto a quello calcolato manualmente.
+
+Per calcolare anche il criterio nel modo convenzionale è sufficiente centrare il predittore `is_signal`:
+
+```{r}
+fit <- glm(say_signal01 ~ is_signal, 
+           data = dat,
+           contrasts = list(is_signal = contr.sum(2)/2), # -0.5, 0.5
+           family = binomial(link = "probit"))
+
+summary(fit)
+```
+Attenzione che per come è parametrizzato, il criterio ha il segno opposto rispetto a quello convenzionale.
+
+Il vantaggio è che possiamo inserire dei predittori sia per il criterio che per il $d'$. Ad esempio, immaginiamo che ci siano 100 radiografie che indagano un'ipotetica condizione a bassa mortalità vs una condizione ad alta mortalità. Potremmo immaginare che in funzione dell'incentivo decisionale lo stile di risposta possa cambiare (da più a meno conservativo/liberale).
+
+```{r}
+#| echo: false
+low_mortality <- sim_sdt(1e4, d = 1, c = -0.5)
+high_mortality <- sim_sdt(1e4, d = 1, c = 0.5)
+
+low_mortality$cond <- "low"
+high_mortality$cond <- "high"
+
+dat <- rbind(low_mortality, high_mortality)
+
+head(dat)
+```
+
+```{r}
+fit_low <- glm(say_signal ~ is_signal,
+               subset = cond == "low",
+               contrasts = list(is_signal = -contr.sum(2)/2),
+               data = dat, 
+               family = binomial(link = "probit"))
+
+fit_high <- glm(say_signal ~ is_signal,
+               subset = cond == "high",
+               contrasts = list(is_signal = -contr.sum(2)/2),
+               data = dat, 
+               family = binomial(link = "probit"))
+
+
+fit <- glm(say_signal ~ is_signal * cond, 
+           contrasts = list(is_signal = -contr.sum(2)/2),
+           data = dat, 
+           family = binomial(link = "probit"))
+
+
+car::compareCoefs(fit_low, fit_high, fit)
+
+
+library(multcomp)
+
+glht(fit, 
+     linfct = c(
+         "-(Intercept) == 0",
+         # criterion low
+         "-(Intercept) + condlow == 0",
+         # dprime condition high
+         "is_signal1 == 0",
+         # dprime condition low
+         "is_signal1 + is_signal1:condlow == 0",
+         # difference between criterion
+         "condlow == 0",
+         # difference between dprime
+         "is_signal1:condlow == 0"
+     )
+) |> summary()
+```
+
+Infine, un aspetto interessante è che in qualunque caso, il criterio unbiased è quello che massimizza l'accuratezza intesa come HIT + CR.
+
+```{r}
+dat <- sim_sdt(1e4, 1, 0)
+cr <- seq(-3, 3, 0.1)
+res <- sdt(dat$is_signal, x = dat$x, c = cr)
+res <- data.frame(res)
+
+res |> 
+    mutate(acc = 0.5 * (phit + pcr)) |> 
+    ggplot(aes(x = c, y = acc)) +
+    geom_line() +
+    xlab("Criterio") +
+    ylab("pCR + pHIT")
+```
+
+Per tutti gli esempi ho simulato i dati usando due funzioni custom:
+
+```{r}
+#| echo: false
+#| results: asis
+filor::print_fun(c(funs$sim_sdt, funs$sdt))
+```
+
+
+

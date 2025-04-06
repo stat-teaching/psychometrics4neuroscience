@@ -88,5 +88,8 @@
   },
   "scripts-lectures/2025-04-07_extra/2025-04-07_simulazione.qmd": {
     "2025-04-07_simulazione.html": "bda40242"
+  },
+  "materials/signal-detection-theory.qmd": {
+    "signal-detection-theory.html": "229bf841"
   }
 }

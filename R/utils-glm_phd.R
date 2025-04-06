@@ -546,5 +546,7 @@ sdt <- function(is_signal, say_signal = NULL, x = NULL, c = NULL){
        cr = cr,
        phit = hit / (hit + miss),
        pfa = fa / (fa + cr),
+       pmiss = miss / (miss + hit),
+       pcr = cr / (cr + fa),
        c = c)
 }
