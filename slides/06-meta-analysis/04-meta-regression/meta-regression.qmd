@@ -1,0 +1,479 @@
+---
+title: "Meta-regression"
+execute: 
+  echo: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# packages
+library(tidyverse)
+library(patchwork)
+library(metafor)
+library(here)
+devtools::load_all()
+
+# ggplot theme
+theme_set(mtheme())
+
+# objects
+imgs <- readRDS(here("slides", "06-meta-analysis", "03-meta-analysis-models", "objects", "r-imgs.rds"))
+```
+
+```{r}
+#| label: functions
+#| include: false
+funs <- read_all_funs()
+```
+
+# Meta-analysis as (weighted) linear regression {.section}
+
+## MA as (weighted) linear regression
+
+Both the EE and RE model can be seen as standard (weighted) linear regression models. Precisely, there is a difference in fitting a meta-analysis using `lm` or `lme4::lmer()` and `rma` (see [https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer](https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer)).
+
+. . .
+
+Beyond these differences a general the EE and RE models are intercept-only linear regressions.
+
+$$
+\boldsymbol{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}
+$$
+
+The EE model:
+
+$$
+y_i = \beta_0 + \epsilon_i 
+$$
+
+The RE model:
+
+$$
+y_i = \beta_0 + \beta_{0_i} + \epsilon_i 
+$$
+
+## MA as (weighted) linear regression
+
+In the EE model $\beta_0$ is $\theta$ and $\epsilon_i \sim \mathcal{N}(0, \sigma^2_i)$
+
+$$
+y_i = \beta_0 + \epsilon_i 
+$$
+
+In the RE model $\beta_0$ is $\mu_{\theta}$ and $\beta_{0_i}$ are the $\delta_i$.
+
+## Explaining $\tau^2$
+
+So far we simply assumed $\tau^2 = 0$ (for the EE model) or estimated it using the RE model.
+
+. . .
+
+We can extend the intercept-only meta-analysis by including study-level predictors (as in standard linear regression) to explain the estimated true heterogeneity.
+
+## Explaining $\tau^2$
+
+Let's make an example where we simulate a meta-analysis with $k = 100$ studies. Beyond the effect size, we extracted an experimental condition where 50 studies where lab-based experiments $x_{lab}$ and 50 studies where online experiments.
+
+We assume that there could be a **lab effect** thus we included a predictor in the model.
+
+```{r}
+k <- 100
+n <- 10 + rpois(k, 40 - 10)
+exp <- rep(c("lab", "online"), each = k/2)
+```
+
+## Explaining $\tau^2$
+
+Now the model have a predictor $x$ (the type of experiment) and two parameters $\beta_0$ and $\beta_1$. Depending on the contrast coding (default to `contr.treatment()` in R) the $\beta_0$ is different. Coding `exp` as 0 for lab-based experiments and 1 for online experiments:
+
+$$
+y_i = \beta_0 + \beta_1X_{1_i} + \epsilon_i
+$$
+
+$$
+y_{\text{lab}_i} = \beta_0 + \epsilon_i
+$$
+
+$$
+y_{\text{online}_i} = \beta_0 + \beta_1 + \epsilon_i
+$$
+
+## Explaining $\tau^2$
+
+What is missing is the random-effect. Basically we still have $\tau^2$ determining the $\delta_i \sim \mathcal{N}(0, \tau^2)$ but now is the residual $\tau^2_r$. The heterogeneity after including the predictor.
+
+$$
+y_i = \beta_0 + \beta_{0_i} + \beta_1X_{1_i} + \epsilon_i
+$$ {#eq-metareg-cat}
+
+$$
+\beta_{0_i} \sim \mathcal{N}(0, \tau^2_r)
+$$
+
+Clearly the difference between $\tau^2$ (the total heterogeneity) and $\tau^2_r$ (residual heterogeneity) is an index of the impact of $X$.
+
+## Simulating the $X$ effect
+
+To simulate a meta-regression we just need to choose the parameters values ($\beta_0$ and $\beta_1$) and implement @eq-metareg-cat. Using treatment coding, $\beta_0$ is the effect size when $X = 0$ (i.e., lab-based experiments) and $\beta_1$ is the difference between lab and online experiments.
+
+```{r}
+#| echo: true
+b0 <- 0.3 # lab-based effect size
+b1 <- 0.5 # online - lab-based --> online = b0 + b1
+exp_dummy <- ifelse(exp == "lab", 0, 1) # dummy version
+es <- b0 + b1 * exp_dummy
+ht(data.frame(exp, exp_dummy, es))
+```
+
+## Simulating the $X$ effects
+
+Now we can use the `sim_studies()` function as usual. The difference is that `es` is no longer a single value but a vector (with different values according to the $X$ level) and `tau2` is $\tau^2_r$ (this the leftover heterogeneity after including the $X$ effect)
+
+```{r}
+#| echo: true
+tau2r <- 0.05 # residual heterogeneity
+dat <- sim_studies(k = k, es = es, tau2 = tau2r, n1 = n, add = list(exp = exp))
+ht(dat)
+```
+
+## Fitting a meta-regression Model
+
+To fit a meta-regression we still use the `metafor::rma()` function, adding the `mods = ~` parameter with the model formula (same as the right-hand side of a `y ~ x` call in `lm`). The name of the predictor in the formula need to match a column of the `data = ` dataframe.
+
+```{r}
+#| echo: true
+#| collapse: true
+fit <- rma(yi, vi, mods = ~ exp, data = dat, method = "REML")
+summary(fit)
+```
+
+## Intepreting a meta-regression Model
+
+The output is similar to the RE model with few additions:
+
+- Everything related to the heterogeneity ($H^2$, $I^2$, $Q$, etc.) is now about **residual heterogeneity**
+- There is the (pseudo) $R^2$
+- There is an overall test for the moderators $Q_M$
+- There is a section (similar to standard regression models) with the estimated parameters, standard error and Wald test
+
+## Model parameters
+
+`intrcpt` and `exponline` are the estimates of $\beta_0$ and $\beta_1$. The interpretation depends on the scale of the effect size and the contrast coding.
+
+We can plot the model results using the `metafor::regplot()`^[The functions is made for numerical variables thus is less appropriate for categorical variables].
+
+```{r}
+#| echo: true
+regplot(fit)
+```
+
+## Omnibus Moderator Test
+
+The `Test of Moderators` section report the so-called omnibus test for model coeffiecients. Is a simultaneous test for 1 or more coefficients where $H_0: \beta_j = 0$.
+
+In this case, **coefficient 2** means that we are testing only the 2nd coefficient $\beta_1$. By default, the intercept is ignored. In fact, the `exponline` line and the omnibus test are the same (the $\chi^2$ is just the $z^2$)
+
+```{r}
+#| echo: false
+#| collapse: true
+get_result(fit, lines = c("^Test of Moderators", "^QM"))
+get_result(fit, lines = c("^\\s*estimate", "^exponline"))
+```
+
+## General Linear Hypotheses Testing (GLHT)
+
+We can also test any combination of parameters. For example we could test if lab-based experiments and online experiments are both different from 0. This is the same as fitting a model without the intercept^[see [https://www.metafor-project.org/doku.php/tips:models_with_or_without_intercept](https://www.metafor-project.org/doku.php/tips:models_with_or_without_intercept) on removing the intercept] thus estimating the cell means [see @Schad2020-ht].
+
+```{r}
+#| echo: true
+# now we are testing two coefficients
+fit_no_int <- rma(yi, vi, mods = ~ 0 + exp, data = dat)
+```
+
+## General Linear Hypotheses Testing (GLHT)
+
+```{r}
+#| echo: true
+#| collapse: true
+fit_no_int
+```
+
+## General Linear Hypotheses Testing (GLHT)
+
+A more elegant way is by using the GLHT framework. Basically we provide a contrast matrix expressing linear combinations of model parameters to be tested. In our case $\text{lab} = \beta_0 = 0$ and $\text{online} = \beta_0 + \beta_1 = 0$.
+
+Practically, the matrix formulation is the following:
+
+$$
+\begin{pmatrix}  
+1 & 0 \\
+1 & 1
+\end{pmatrix}
+\begin{pmatrix}  
+\beta_0\\
+\beta_1
+\end{pmatrix}
+=
+\begin{pmatrix}  
+0\\
+0
+\end{pmatrix}
+$$
+
+In R:
+
+```{r}
+#| echo: true
+C <- rbind(c(1, 0), c(1, 1))
+B <- coef(fit)
+C %*% B # same as coef(fit)[1] and coef(fit)[1] +  coef(fit)[2]
+```
+
+## General Linear Hypotheses Testing (GLHT)
+
+We can use the `anova()` function providing the model and the hypothesis matrix.
+
+```{r}
+#| echo: true
+anova(fit) # the default
+anova(fit, X = C)
+```
+
+Notice that is the same as the model without the intercept.
+
+## Likelihood Ratio Test (LRT)
+
+As in standard regression modelling, we can also compare models using LRT. The `anova()` function will compute the LRT when two (nested) models are provided. In this case we compared a null (intercept-only) model with the model including the predictor.
+
+```{r}
+#| echo: true
+# the null model
+fit0 <- rma(yi, vi, data = dat, method = "REML")
+anova(fit0, fit, refit = TRUE) # refit = TRUE because LRT with REML is not meaningful, using ML instead
+```
+
+## $R^2$
+
+The $R^2$ value reported in the model output is not calculated as in standard regression analysis.
+
+$$
+R^2 = 1 - \frac{\tau^2_r}{\tau^2}
+$$
+
+Basically is the percentage of heterogeneity reduction from the intercept-only model to the model including predictors.
+
+In R:
+
+```{r}
+#| echo: true
+#| collapse: true
+(1 - fit$tau2/fit0$tau2)*100
+fit$R2
+```
+
+## $R^2$
+
+Despite useful, the $R^2$ has some limitations:
+
+- @Lopez-Lopez2014-it showed that precise estimations require a large number of studies $k$ 
+- Sometimes could results in negative values (usually truncated to zero)
+- Depends on the $\tau^2$ estimator
+
+More about $R^2$ and limitations can be found:
+
+- [https://www.metafor-project.org/doku.php/faq#for_mixed-effects_models_how_i](https://www.metafor-project.org/doku.php/faq#for_mixed-effects_models_how_i)
+- [https://www.metafor-project.org/doku.php/tips:ci_for_r2](https://www.metafor-project.org/doku.php/tips:ci_for_r2)
+
+## Numerical predictor
+
+The same logic of simulating a meta-regression can be applied to numerical predictors. We still have $\beta_0$ and $\beta_1$ but $X$ has more levels. Let's simulate an impact of the average participants' age on the effect size.
+
+- $\beta_0$ is the effect size when **age** is zero
+- $\beta_1$ is the expected increase in the effect size for a unit increase in `age`
+
+How we can choose plausible values for the parameters and parametrize the model correctly?
+
+## Parametrize $\beta_0$
+
+The intepretation (and the inference) of $\beta_0$ is strongly dependent on the type of numerical predictor. An age of zero is (probably) empirically meaningless thus the  $\beta_0$ is somehow not useful.
+
+We can for example mean-center (or other type of centering procedure) moving the zero on a meaningful value.
+
+```{r}
+#| echo: true
+age <- 10:50 # the raw vector
+age0 <- age - mean(age) # centering on the mean
+age20 <- age - min(age) # centering on the minimum
+
+ht(data.frame(age, age0, age20))
+```
+
+## Parametrize $\beta_0$
+
+```{r}
+#| echo: false
+par(mfrow = c(1, 3))
+hist(age, col = "dodgerblue", main = "Age")
+hist(age0, col = "dodgerblue", main = latex2exp::TeX("\\textbf{$Age_i - \\bar{Age}$}"))
+hist(age20, col = "dodgerblue", main = latex2exp::TeX("\\textbf{$Age_i - \\min(Age)$}"))
+```
+
+## Parametrize $\beta_0$
+
+Using different parametrizations will only affect the estimation (and the interpretation) of $\beta_0$. Other parameters and indexes will be the same.
+
+```{r}
+#| echo: true
+k <- 100
+b0 <- 0.2 # effect size when age 0
+b1 <- 0.05 # slope (random for now)
+age <- round(runif(k, 20, 50)) # sampling from uniform distribution
+tau2r <- 0.05
+n <- 10 + rpois(k, 30 - 10)
+
+es <- b0 + b1 * age # raw
+
+age0 <- age - mean(age)
+age20 <- age - 20
+
+dat <- sim_studies(k = k, es = es, tau2 = tau2r, n1 = n, add = list(age = age, age0 = age0, age20 = age20))
+
+fit <- rma(yi, vi, mods = ~ age, data = dat)
+fit0 <- rma(yi, vi, mods = ~ age0, data = dat)
+fit20 <- rma(yi, vi, mods = ~ age20, data = dat)
+
+# showing the intercept
+compare_rma(fit, fit0, fit20, extra_params = "R2") |> 
+  round(3)
+
+  # showing the intercept
+compare_rma(fit, fit0, fit20, b = "age", extra_params = "R2") |> 
+  round(3)
+```
+
+## Choosing $\beta_1$
+
+The core of the model is $\beta_1$ that is the **age** effect. Compared to the categorical case where $\beta_1$ is just the standardized difference between two conditions, with numerical $X$ choosing a meaningful $\beta_1$ is more challenging.
+
+Two (maybe more) strategies:
+
+- simulating a lot of effects sizes fixing $beta_0$ and $\beta_1$ and see the expected range of $y_i$
+- fixing a certain $R^2$ and choose the $\beta_1$ producing that $R^2$
+- ...
+
+## $\beta_1$ by simulations
+
+A strategy could be to simulate from the generative model a large number of studies and see the expected range of effect size [@Gelman2020-tg, Chapter 5 and p. 97]. A large number of unplausible values suggest that the chosen $\beta_1$ is probably not appropriate.
+
+```{r}
+#| echo: true
+#| collapse: true
+k <- 1e3
+n <- 30
+tau2 <- 0
+x <- runif(k, 20, 50) # age
+b0 <- 0.1
+b1 <- c(0.001, 0.05, 0.2)
+esl <- lapply(b1, function(b) b0 + b*x)
+datl <- lapply(esl, function(es) sim_studies(k = k, es = es, tau2 = tau2, n1 = n, add = list(x = x)))
+names(datl) <- b1
+dat <- dplyr::bind_rows(datl, .id = "b1")
+ht(dat)
+```
+
+## $\beta_1$ by simulations
+
+Clearly given the limited range of the $x$ variable (`age`) some $\beta_1$ values are implausible leading to effect sizes that are out of a meaningful empirical range.
+
+```{r}
+#| code-fold: true
+dat$b1 <- factor(dat$b1, labels = latex2exp::TeX(sprintf("$\\beta_1 = %s$", unique(dat$b1))))
+dat |> 
+  ggplot(aes(x = x, y = yi)) +
+  geom_point() +
+  facet_wrap(~b1, scales = "free_y", labeller = label_parsed) +
+  xlab("Age") +
+  ylab(latex2exp::TeX("$y_i$"))
+```
+
+## Fixing $R^2$
+
+We can use the approach by @Lopez-Lopez2014-it where predictors $x$ are sampled from a standard normal distribution (or standardized). $\beta_1$ is calculated as $\beta_1 = \sqrt{\tau^2 R^2}$ and the residual heterogeneity as $\tau^2_r = \tau^2 - \beta^2_1$.
+
+```{r}
+k <- 100
+n <- 30
+tau2 <- 0.3
+R2 <- 0.4
+b0 <- 0.1
+b1_2 <- tau2 * R2
+b1 <- sqrt(b1_2)
+tau2r <- tau2 - b1_2
+```
+
+## Fixing $R^2$
+
+We can check the simulation approach:
+```{r}
+#| echo: true
+#| collapse: true
+#| cache: true
+k <- 1e3
+1 - tau2r/tau2
+x <- rnorm(k)
+es <- b0 + b1 * x
+dat <- sim_studies(k, es, tau2r, n1 = 1e3, add = list(x = x))
+fit <- rma(yi, vi, data = dat, mods = ~x)
+summary(fit)
+```
+
+## $R^2$ using simulations
+
+The results from @Lopez-Lopez2014-it (and also our previous simulation) suggested that we need a large number of studies for precise $R^2$ estimations. Let's check using simulations the sampling distribution of $R^2$ using a plausible meta-analysis scenario.
+
+```{r}
+#| echo: true
+#| cache: true
+
+k <- 40 # number of studies
+n <- 10 + rpois(k, 40 - 10) # sample size
+tau2 <- 0.05 # tau ~ 0.22
+R2 <- 0.3
+b0 <- 0.1
+b1_2 <- tau2 * R2
+b1 <- sqrt(b1_2)
+tau2r <- tau2 - b1_2
+nsim <- 1e3
+
+R2i <- rep(NA, nsim)
+
+for(i in 1:nsim){
+  x <- rnorm(k)
+  dat <- sim_studies(k = k, es = b0 + b1*x, tau2 = tau2r, n1 = n, add = list(x))
+  fit <- rma(yi, vi, data = dat, mods = ~x)
+  R2i[i] <- fit$R2
+}
+```
+
+## $R^2$ using simulations
+
+We estimated the true $R^2$ correctly but there is a lot of uncertainty with a plausible meta-analysis scenario. There are a lot of meta-analysis also with lower $k$ worsening the results.
+
+```{r}
+#| echo: false
+mR2 <- mean(R2i)
+hist(R2i, breaks = 30, main = latex2exp::TeX("$k = 40$, $\\bar{N} = 30$, $R^2 = 30\\%$"), col = "dodgerblue2", xlab = latex2exp::TeX("$R^2$"))
+abline(v = mR2, lwd = 2)
+text(mR2 + 10, 100, label = sprintf("Median = %.2f", mR2))
+```
+
+## References
+
+::: {#refs}
+:::

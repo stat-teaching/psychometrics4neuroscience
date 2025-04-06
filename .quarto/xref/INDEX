@@ -91,5 +91,23 @@
   },
   "materials/signal-detection-theory.qmd": {
     "signal-detection-theory.html": "229bf841"
+  },
+  "slides/06-meta-analysis/01-monte-carlo-simulations/monte-carlo-simulations.qmd": {
+    "monte-carlo-simulations.tex": "da53ce2e"
+  },
+  "slides/06-meta-analysis/02-intro-meta-analysis/intro-meta-analysis.qmd": {
+    "intro-meta-analysis.html": "17f7e621"
+  },
+  "slides/06-meta-analysis/03-meta-analysis-models/meta-analysis-models.qmd": {
+    "meta-analysis-models.html": "ad8b6dc3"
+  },
+  "slides/06-meta-analysis/04-meta-regression/meta-regression.qmd": {
+    "meta-regression.html": "4d6e830a"
+  },
+  "slides/06-meta-analysis/05-publication-bias/publication-bias.qmd": {
+    "publication-bias.html": "05318fff"
+  },
+  "slides/06-meta-analysis/06-power-analysis/power-analysis.qmd": {
+    "power-analysis.html": "f47a79e6"
   }
 }

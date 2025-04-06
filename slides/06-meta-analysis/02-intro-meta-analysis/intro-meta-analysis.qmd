@@ -1,0 +1,500 @@
+---
+title: "Introduction to Meta-Analysis"
+execute: 
+  echo: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# packages
+library(tidyverse)
+library(patchwork)
+library(metafor)
+devtools::load_all()
+
+# ggplot theme
+theme_set(mtheme())
+```
+
+```{r}
+#| label: functions
+#| include: false
+
+funs <- read_all_funs(path = "R/")
+```
+
+# Meta-analysis {.section}
+
+## Meta-analysis
+
+- The meta-analysis is a statistical procedure to combine evidence from a group of studies.
+
+. . .
+
+- The idea is to "switch" the statistical unit from e.g., participants to studies
+
+. . .
+
+- The motto could be that (appropriately) combining similar studies with a similar aim is the best way to understand something about a phenomenon
+
+## Meta-analysis and Systematic Review {.smaller}
+
+Usually a meta-analysis work follows these steps:
+
+1. **Identify the research question**: is the treatment *x* effective?, Does the experimental effect *y* exist?
+2. **Define inclusion/exclusion criteria**: From the research question (1), keep only e.g., randomized controlled trials, studies with healthy participants, etc.
+3. **Systematically search for studies**: Analyze the literature to find all relevant studies
+4. **Extract relevant information**: Read, extract and organize relevant information e.g., sample size, treatment type, age, etc.
+5. **Summarize the results**: Create a narrative (flowcharts, tables, etc.) summary of included studies. This is the Systematic review part.
+6. **Choose an effect size**: Choose a way to standardize the effect across included studies
+7. **Meta-analysis model**: Choose and implement a meta-analysis model
+8. **Interpret and report results**
+
+## Before the fun part...
+
+::: {.incremental}
+- We are dealing only with the **statistical part**. The study selection, data extraction, studies evaluation etc. is another story
+- The quality of the meta-analysis is the **quality of included studies**
+:::
+
+. . .
+
+![](img/gigo.png){fig-align="center" width=60%}
+
+## Unstandardized effect sizes
+
+The basic idea of an effect size is just using the raw measure. For example studies using reaction times we can calculate the difference between two conditions as $\overline X_1 - \overline X_2$:
+
+```{r}
+#| echo: false
+y1 <- rgamma(1e4, 5, scale = 128)
+y2 <- rgamma(1e4, 6, scale = 120)
+
+rt <- data.frame(y = c(y1, y2), x = rep(1:2, each = 1e4))
+
+rt_plot <- rt |> 
+  ggplot(aes(x = y, fill = factor(x))) +
+  geom_density(alpha = 0.5,
+               show.legend = FALSE)
+rt_plot
+```
+
+## Unstandardized effect sizes
+
+But another study (with the same research question) could use another measure, e.g., accuracy. We can still (not the best strategy but) compute the difference between the group means.
+
+```{r}
+#| echo: false
+
+y1 <- rbeta(1e4, 90, 80)
+y2 <- rbeta(1e4, 60, 40)
+
+acc <- data.frame(y = c(y1, y2), x = rep(1:2, each = 1e4))
+
+acc_plot <- acc |> 
+  ggplot(aes(x = y, fill = factor(x))) +
+  geom_density(alpha = 0.5,
+               show.legend = FALSE)
+acc_plot
+```
+
+
+## Unstandardized effect sizes
+
+Clearly we cannot directly compare the two effects but we need to standardize the measure.
+
+```{r}
+#| echo: false
+rt_plot + acc_plot
+```
+
+## Standardized effect sizes
+
+To compare results from different studies, we should use a common metric. Frequently meta-analysts use *standardized* effect sizes. For example the Pearson correlation or the Cohen's $d$.
+
+$$
+r = \frac{\sum{(x_i - \bar{x})(y_i - \bar{y})}}{\sqrt{\sum{(x_i - \bar{x})^2}\sum{(y_i - \bar{y})^2}}}
+$$ {#eq-correlation}
+
+$$
+d = \frac{\bar{x_1} - \bar{x_2}}{s_p}
+$$
+
+$$
+s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
+$$
+
+## Standardized effect sizes
+
+The advantage of standardized effect size is that regardless the original variable, the interpretation and the scale is the same. For example the pearson correlation ranges between -1 and 1 and the Cohen's $d$ between $- \infty$ and $\infty$ and is interpreted as how many standard deviations the two groups/conditions differs.
+
+```{r}
+#| code-fold: true
+S <- matrix(c(1, 0.7, 0.7, 1), nrow = 2)
+X <- MASS::mvrnorm(100, c(0, 2), S, empirical = TRUE)
+
+par(mfrow = c(1,2))
+plot(X, xlab = "x", ylab = "y", cex = 1.3, pch = 19,
+     cex.lab = 1.2, cex.axis = 1.2,
+     main = latex2exp::TeX(sprintf("$r = %.2f$", cor(X[, 1], X[, 2]))))
+abline(lm(X[, 2] ~ X[, 1]), col = "firebrick", lwd = 2)
+
+
+plot(density(X[, 1]), xlim = c(-5, 7), ylim = c(0, 0.5), col = "dodgerblue", lwd = 2,
+     main = latex2exp::TeX(sprintf("$d = %.2f$", lsr::cohensD(X[, 1], X[, 2]))),
+     xlab = "")
+lines(density(X[, 2]), col = "firebrick", lwd = 2)
+```
+
+## Standardized vs unstandardized
+
+The main difference is (usually) the absence of a effect-size-variance relationship for unstandardized effects. For example, the variance of the difference between two groups is:
+
+$$
+V_d = \frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}
+$$ {#eq-var-umd}
+
+While the variance of a Cohen's $d$ can be calculated as:
+
+$$
+V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
+$$
+
+## Standardized vs unstandardized
+
+In this [amazing blog post](https://www.jepusto.com/alternative-formulas-for-the-smd/) James Pustejovsky explained where the equations comes from. Basically, the $\frac{n_1 + n_2}{n_1 n_2}$ term is the same as the $\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}$ while the extra $\frac{d^2}{2(n_1 + n_2)}$ is for the non-centrality induced by the standardized difference.
+
+```{r}
+#| code-fold: true
+n <- c(10, 50, 100)
+d <- seq(0, 2, 0.001)
+
+dd <- expand.grid(n = n, d = d)
+
+dd$vumd <- with(dd, 1/n + 1/n)
+dd$vd <- with(dd, (n + n) / (n * n) + d^2/(2 * (n + n)))
+
+tidyr::pivot_longer(dd, 3:4) |> 
+  ggplot(aes(x = d, y = value, color = name, linetype = factor(n))) +
+  geom_line() +
+  labs(linetype = "Sample Size",
+       color = NULL)
+```
+
+## Effect size sampling variability {#sec-effsize-se}
+
+Crucially, we can calculate also the **sampling variability** of each effect size. The **sampling variability** is the precision of estimated value.
+
+For example, there are multiple methods to estimate the Cohen's $d$ sampling variability. For example:
+
+$$
+V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
+$$
+
+Each effect size has a specific formula for the sampling variability. The sample size is usually the most important information. Studies with high sample size have low sampling variability.
+
+## Effect size sampling variability
+
+As the sample size grows and tends to infinity, the sampling variability approach zero.
+
+```{r}
+#| echo: false
+n <- seq(10, 500)
+d <- 2
+se <- (n+n) / (n*n) + d^2/(2*(n+n))
+
+plot(n, se, type = "l", xlab = "N", ylab = latex2exp::TeX("$SE_d$"),
+     main = latex2exp::TeX("$d = 2$"))
+```
+
+## Unstandardized effect sizes
+
+For the examples and plots I'm going to use simulated data. We simulate *unstandardized* effect sizes (UMD) because the computations are easier and the estimator is unbiased [e.g., @Viechtbauer2005-zt]
+
+More specifically we simulate hypothetical studies where two independent groups are compared:
+
+$$
+\Delta = \overline{X_1} - \overline{X_2}
+$$ {#eq-umd}
+
+$$
+SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
+$$
+
+With $X_{1_i} \sim \mathcal{N}(0, 1)$ and $X_{2_i} \sim \mathcal{N}(\Delta, 1)$
+
+The main advantage is that, compared to standardized effect size, the sampling variability do not depends on the effect size itself, simplifying the computations.
+
+# Simulating a single study {.section}
+
+## Simulating a single study - UMD
+
+To simulate a single study using a UMD we need to generate data according to the appropriate model. Here we have a difference between two groups. We can assume that the two groups comes from a normal distribution where group 1 $g_1 \sim \mathcal{N}(0, 1)$ and group 2 $g_2 \sim \mathcal{N}(D, 1)$ where $D$ is the effect size. Then using Equations [-@eq-var-umd; -@eq-umd] we can estimate the effect size and the variance.
+
+```{r}
+D <- 1  # effect size
+n <- 50 # sample size
+g1 <- rnorm(n, mean = 0, sd = 1)
+g2 <- rnorm(n, mean = D, sd = 1)
+
+# effect size
+mean(g2) - mean(g1)
+
+# variance
+var(g1)/n + var(g2)/n
+```
+
+## Simulating a single study - UMD
+
+For simplicity we can wrap everything within a function:
+
+```{r}
+# default sd = 1
+sim_umd <- function(n1, n2 = NULL, D, sd = 1){
+  if(is.null(n2)) n2 <- n1 # same to n1 if null 
+  g1 <- rnorm(n1, mean = 0, sd = sd)
+  g2 <- rnorm(n2, mean = D, sd = sd)
+  yi <- mean(g2) - mean(g1)
+  vi <- var(g1)/n1 + var(g2)/n2
+  data.frame(yi, vi)
+}
+
+sim_umd(100, D = 0.5)
+sim_umd(50, D = 0.1)
+```
+
+## Simulating a single study - UMD
+
+We can also generate a large number of studies and check the distribution of effect size and sampling variances. Note that the real $D = 1$ and the real variance $V_D = 1/50 + 1/50 = 0.04$
+
+```{r}
+#| collapse: false
+studies <- replicate(1000, sim_umd(n1 = 50, D = 1), simplify = FALSE) # simplify = FALSE return a list
+studies <- do.call(rbind, studies) # to dataframe
+head(studies)
+```
+
+## Simulating a single study - UMD {#sec-umd-sampling-distribution}
+
+Then we can plot the sampling distributions:
+
+```{r}
+#| echo: false
+#| code-fold: true
+
+par(mfrow = c(1,2))
+hist(studies$yi, main = latex2exp::TeX("Sampling Distribution $D$"), breaks = 50, xlab = "yi", col = "firebrick1")
+abline(v = 1, col = "black", lwd = 3)
+hist(studies$vi, main = latex2exp::TeX("Sampling Distribution $V_D$"), breaks = 50, xlab = "vi", col = "dodgerblue")
+abline(v = 1/50 + 1/50, col = "black", lwd = 3)
+```
+
+## Simulating a single study - SMD
+
+The idea is the same when simulating a SDM but we need extra steps. Let's adjust the previous function:
+
+```{r}
+sim_smd <- function(n1, n2 = NULL, D){
+  if(is.null(n2)) n2 <- n1 # same to n1 if null 
+  g1 <- rnorm(n1, mean = 0, sd = 1)
+  g2 <- rnorm(n2, mean = D, sd = 1)
+  
+  v1 <- var(g1)
+  v2 <- var(g2)
+  
+  # pooled standard deviation
+  sp <- sqrt((v1 * (n1 - 1) + v2 * (n2 - 1)) / (n1 + n2 - 2))
+  
+  yi <- (mean(g2) - mean(g1)) / sp
+  vi <- (n1 + n2) / (n1 * n2) + yi^2/(2*(n1 + n2))
+  data.frame(yi, vi)
+}
+```
+
+## Simulating a single study - SMD
+
+When working with SMD, calculating the sampling variance can be challenging. @Veroniki2016-nw identified 16 different estimators with different properties. Furthermore, it is a common practice to correct the SDM effect and variance using the Hedges's correction [@Hedges1989-ip]. 
+
+You can directly implement another equation for the sampling variance or the Hedges's correction directly in the simulation function.
+
+## Simulating a single study - Pearson $\rho$
+
+Another common effect size is the Pearson correlation coefficient $\rho$ (and the estimate $r$, see @eq-correlation). The variance of the correlation is calculated as:
+
+$$
+V_{r} = \frac{(1 - r^2)^2}{n - 1}
+$$
+
+## Simulating a single study - Pearson $\rho$
+
+There is a huge dependency between $r$ and it's sampling variance (similar to the Cohen's $d$):
+
+```{r}
+#| code-fold: true
+n <- 50
+r <- seq(0, 1, 0.01)
+v <- (1 - r^2)^2 / (n - 1) 
+
+plot(r, v, type = "l", main = "N = 50", xlab = "r", ylab = latex2exp::TeX("$V_r$"))
+```
+
+## Simulating a single study - Pearson $\rho$
+
+For this reason the so-called Fisher's $z$ transformation is used to stabilize the relationship.
+
+$$
+z = \frac{\log{\frac{1 + r}{1 - r}}}{2}
+$$
+
+$$
+V_z = \frac{1}{n - 3}
+$$
+
+Now the variance is completely independent from the correlation value.
+
+## Simulating a single study - Pearson $\rho$
+
+This is the relationship between $r$ and $z$:
+
+```{r}
+#| code-fold: true
+n <- 50
+r <- seq(-1, 1, 0.01)
+v <- (1 - r^2)^2 / (n - 1) 
+z <- log((1 + r)/(1 - r))/2
+
+plot(z, r, type = "l", xlab = "Fisher's z", ylab = "Correlation", main = "Correlation to Fisher's z")
+```
+
+## Simulating a single study - Pearson $\rho$
+
+To simulate a study using correlations we can use the `MASS::mvrnorm()` function that can generate correlated data from a multivariate normal distribution.
+
+```{r}
+sim_r <- function(n, r){
+  R <- r + diag(1 - r, nrow = 2) # 2 x 2 correlation matrix
+  X <- MASS::mvrnorm(n, mu = c(0, 0), Sigma = R) # the means are not relevant here
+  r <- cor(X)[1, 2] # extract correlation
+  vr <- (1 - r^2)^2 / (n - 1)  # variance of r
+  yi <- log((1 + r)/(1 - r))/2 # fisher z
+  vi <- 1 / (n - 3) # fisher z variance
+  data.frame(yi, vi, r, vr) # including also the pearson correlation and variance
+}
+```
+
+## Simulating a single study - Pearson $\rho$
+
+```{r}
+sim_r(100, 0.5)
+sim_r(50, 0.8)
+
+# also here the sampling distributions
+studies <- replicate(1000, sim_r(50, 0.7), simplify = FALSE)
+studies <- do.call(rbind, studies)
+summary(studies)
+```
+
+## More on effect sizes
+
+The same logic can be applied to any situation. Just understand the data generation process, find the effect size equations and generate data.
+
+- @Borenstein2009-mo for all effect sizes equations. Also with equations to convert among effect sizes (useful in real-world meta-analyses)   
+- the [`metafor::escalc()`](https://wviechtb.github.io/metafor/reference/escalc.html) function implements basically any effect size. You can see also the [source code](https://github.com/wviechtb/metafor/blob/master/R/escalc.r) to see the actual R implementation.
+- [Guide to effect sizes](https://matthewbjane.quarto.pub/guide-to-effect-sizes-and-confidence-intervals): a modern and complete overview of effect sizes
+
+## Simulating from sampling distributions [#extra]
+
+The previous simulation examples are participant-level simulations. In fact we simulated $n$ observations then we aggregated calculating the effect sizes.
+
+. . .
+
+This is the most flexible and general data simulation strategy but is computationally not efficient.
+
+. . .
+
+Another strategy individuate the exact effect size sampling distribution. Then we can sample directly from it. The downside is that we need to derive (or find) the equation.
+
+## Simulating from sampling distributions [#extra]
+
+For example, when generating UMD we can simulate from the sampling distribution presented in @sec-umd-sampling-distribution.
+
+$$
+y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
+$$
+$$
+\sigma^2_i \sim \frac{\chi^2_{n_1 + n_2 - 2}}{n_1 + n_2 - 2} (\frac{1}{n_1} + \frac{1}{n_2})
+$$
+
+In this way we can sample $k$ effects and sampling variances directly from the sampling distributions. Without generating data and then aggregate.
+
+## Simulating from sampling distributions [#extra]
+
+We can again put everything within a function:
+
+```r
+sim_k_umd <- function(k, D, n1, n2 = NULL){
+  if(is.null(n2)) n2 <- n1
+  yi <- rnorm(k, D, sqrt(1/n1 + 1/n2))
+  vi <- (rchisq(k, n1 + n2 - 2) / (n1 + n2 - 2)) * (1/n1 + 1/n2)
+  data.frame(yi, vi)
+}
+```
+
+## Simulating from sampling distributions [#extra]
+
+```{r}
+sim_k_umd(k = 10, D = 0.5, n1 = 50)
+```
+
+## Simulating from sampling distributions [#extra]
+
+We can compare the two methods and see that we are sampling from the same data generation process.
+
+```{r}
+#| code-fold: true
+k <- 1e4
+s_umd <- sim_k_umd(k, D = 1, n1 = 50)
+ip_umd <- replicate(k, sim_umd(n1 = 50, D = 1), simplify = FALSE)
+ip_umd <- do.call(rbind, ip_umd)
+```
+
+```{r}
+#| echo: false
+#| code-fold: true
+par(mfrow = c(2,2))
+
+# umd from sampling distribution
+hist(s_umd$yi, breaks = 50, main = "D (from sampling distribution)", xlab = "", col = "firebrick2")
+hist(s_umd$vi, breaks = 50, main = "V_D (from sampling distribution)", xlab = "", col = "dodgerblue")
+
+# umd from participant-level data
+hist(ip_umd$yi, breaks = 50, main = "D (from participant-level)", xlab = "", col = "firebrick2")
+hist(ip_umd$vi, breaks = 50, main = "V_D (from participant-level)", xlab = "", col = "dodgerblue")
+```
+
+## Simulating from sampling distributions [#extra]
+
+The actual advantage is in terms of computational speed. To simulate $k = 10$ studies for 1000 times (similar to a standard Monte Carlo simulation):
+
+```{r}
+bench <- microbenchmark::microbenchmark(
+  sampling = sim_k_umd(k = 10, n1 = 50, D = 1),
+  participant = replicate(10, sim_umd(n1 = 50, D = 1)),
+  times = 1000 
+)
+
+(bench <- summary(bench))
+
+bench$mean[2] / bench$mean[1] # faster
+```
+
+## References
+
+::: {#refs}
+:::

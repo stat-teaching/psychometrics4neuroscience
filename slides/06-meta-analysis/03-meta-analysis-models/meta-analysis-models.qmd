@@ -1,0 +1,1033 @@
+---
+title: Meta-analysis Models
+execute: 
+  echo: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# packages
+library(tidyverse)
+library(patchwork)
+library(metafor)
+library(here)
+library(ltxplot)
+devtools::load_all()
+
+# ggplot theme
+theme_set(mtheme())
+
+# objects
+imgs <- readRDS(here("slides", "06-meta-analysis", "03-meta-analysis-models", "objects", "r-imgs.rds"))
+```
+
+```{r}
+#| label: functions
+#| include: false
+funs <- read_all_funs()
+```
+
+# Simulation setup {.section}
+
+## Notation {.smaller}
+
+Meta-analysis notation is a little bit inconsistent in textbooks and papers. We define here some rules to simplify the work.
+
+- $k$ is the number of studies
+- $n_j$ is the sample size of the group $j$ within a study
+- $y_i$ are the observed effect size included in the meta-analysis
+- $\sigma_i^2$ are the observed sampling variance of studies and $\epsilon_i$ are the sampling errors
+- $\theta$ is the equal-effects parameter (see @eq-ee1)
+- $\delta_i$ is the random-effect (see @eq-re-mod2)
+- $\mu_\theta$ is the average effect of a random-effects model (see @eq-re-mod1)
+- $w_i$ are the meta-analysis weights
+- $\tau^2$ is the heterogeneity (see @eq-re-mod2)
+- $\Delta$ is the (generic) population effect size
+- $s_j^2$ is the variance of the group $j$ within a study
+
+## Simulation setup
+
+Given the introduction to effect sizes, from now we will simulate data using UMD and the individual-level data. 
+
+Basically we are simulating an effect size $D$ coming from the comparison of two independent groups $G_1$ and $G_2$.
+
+Each group is composed by $n$ participants measured on a numerical outcome (e.g., reaction times)
+
+## Simulation setup
+
+A more general, clear and realistic approach to simulate data is by generating $k$ studies with same/different sample sizes and (later) true effect sizes.
+
+```{r}
+#| echo: true
+
+k <- 10 # number of studies
+n1 <- n2 <- 10 + rpois(k, 30 - 10) # sample size from poisson distribution with lambda 40 and minimum 10
+D <- 0.5 # effect size
+
+yi <- rep(NA, k)
+vi <- rep(NA, k)
+  
+for(i in 1:k){
+  g1 <- rnorm(n1[i], 0, 1)
+  g2 <- rnorm(n2[i], D, 1)
+  yi[i] <- mean(g2) - mean(g1)
+  vi[i] <- var(g1)/n1[i] + var(g2)/n2[i]
+}
+  
+sim <- data.frame(id = 1:k, yi, vi)
+
+head(sim)
+```
+
+## Simulation setup
+
+We can again put everything within a function:
+
+```{r}
+#| echo: true
+sim_studies <- function(k, es, n1, n2 = NULL){
+  if(length(n1) == 1) n1 <- rep(n1, k)
+  if(is.null(n2)) n2 <- n1
+  if(length(es) == 1) es <- rep(es, k)
+  
+  yi <- rep(NA, k)
+  vi <- rep(NA, k)
+  
+  for(i in 1:k){
+    g1 <- rnorm(n1[i], 0, 1)
+    g2 <- rnorm(n2[i], es[i], 1)
+    yi[i] <- mean(g2) - mean(g1)
+    vi[i] <- var(g1)/n1[i] + var(g2)/n2[i]
+  }
+  
+  sim <- data.frame(id = 1:k, yi, vi, n1 = n1, n2 = n2)
+  
+  # convert to escalc for using metafor methods
+  sim <- metafor::escalc(yi = yi, vi = vi, data = sim)
+  
+  return(sim)
+}
+```
+
+## Simulation setup - Disclaimer
+
+The proposed simulation approach using a `for` loop and separated vectors. For the purpose of the workshop this is the best option. In real-world meta-analysis simulations you can choose a more functional approach starting from a simulation grid as `data.frame` and mapping the simulation functions.
+
+For some examples see:
+
+- @Gambarota2023-on
+- [www.jepusto.com/simulating-correlated-smds](https://www.jepusto.com/simulating-correlated-smds)
+
+## Simulation setup - Disclaimer
+
+For a more extended overview of the simulation setup we have an entire paper. Supplementary materials ([github.com/shared-research/simulating-meta-analysis](https://github.com/shared-research/simulating-meta-analysis)) contains also more examples for complex (multilevel and multivariate models.)
+
+![](img/gambarota2023.png){fig-align="center"}
+
+# Combining studies {.section}
+
+## Combining studies
+
+Let's imagine to have $k = 10$ studies, a $D = 0.5$ and heterogeneous sample sizes in each study.
+
+```{r}
+#| echo: true
+k <- 10
+D <- 0.5
+n <- 10 + rpois(k, lambda = 20) 
+dat <- sim_studies(k = k, es = D, n1 = n)
+head(dat)
+```
+
+. . .
+
+What is the best way to combine the studies?
+
+## Combining studies
+
+We can take the average effect size and considering it as a huge study. This can be considered the best way to combine the effects.
+
+$$
+\hat{D} = \frac{\sum^{k}_{i = 1} D_i}{k}
+$$
+
+```{r}
+#| echo: true
+#| collapse: true
+mean(dat$yi)
+```
+
+. . .
+
+It is appropriate? What do you think? Are we missing something?
+
+## Weighting studies
+
+We are not considering that some studies, despite providing a similar effect size could give more information. An higher sample size (or lower sampling variance) produce a more reliable estimation.
+
+. . .
+
+Would you trust more a study with $n = 100$ and $D = 0.5$ or a study with $n = 10$ and $D = 0.5$? The "meta-analysis" that we did before is completely ignoring this information.
+
+## Weighting studies
+
+We need to find a value (called weight $w_i$) that allows assigning more trust to a study because it provide more information. 
+
+. . .
+
+The simplest weights are just the sample size, but in practice we use the so-called **inverse-variance weighting**. We use the (inverse) of the sampling variance of the effect size to weight each study. 
+
+. . .
+
+The basic version of a meta-analysis is just a **weighted average**:
+
+$$
+\overline D_w = \frac{\sum^k_{i = 1}{w_iD_i}}{\sum^k_{i = 1}{w_i}}
+$$
+
+. . .
+
+```{r}
+#| echo: true
+wi <- 1/dat$vi
+sum(dat$yi * wi) / sum(wi)
+# weighted.mean(dat$yi, wi)
+```
+
+## Weighting studies
+
+Graphically, the two models can be represented in this way:
+
+```{r}
+#| code-fold: true
+dw <- weighted.mean(dat$yi, 1/dat$vi)
+dunw <- mean(dat$yi)
+
+unw_plot <- ggplot(dat, aes(x = yi, y = factor(id))) +
+  geom_point(size = 3) +
+  xlim(c(-0.5, 1.5)) +
+  geom_vline(xintercept = dunw) +
+  xlab(latex2exp::TeX("$y_i$")) +
+  ylab("Study") +
+  theme_minimal(15) +
+  annotate("label", x = 0.5, y = k + 0.4, label = latex2exp::TeX(sprintf("$\\bar{D} = %.2f$", dunw))) +
+  geom_label(aes(x = 1, y = id, label = paste0("n = ", n1)))
+
+w_plot <- ggplot(dat, aes(x = yi, y = factor(id))) +
+  geom_point(aes(size = 1/vi),
+             show.legend = FALSE) +
+  xlim(c(-0.5, 1.5)) +
+  geom_vline(xintercept = dw) +
+  xlab(latex2exp::TeX("$y_i$")) +
+  ylab("Study") +
+  theme_minimal(15) +
+  annotate("label", x = 0.5, y = k + 0.4, label = latex2exp::TeX(sprintf("$\\bar{D}_w = %.2f$", dw))) +
+  geom_label(aes(x = 1, y = id, label = paste0("n = ", n1)))
+
+unw_plot + w_plot
+```
+# Equal-effects (EE) meta-analysis {.section}
+
+## EE meta-analysis
+
+What we did in the last example (the weighted mean) is the exactly a meta-analysis model called **equal-effects** (or less precisely fixed-effect). The assumptions are very simple:
+
+- there is a unique, true effect size to estimate $\theta$
+- each study is a more or less precise estimate of $\theta$
+- there is no TRUE variability among studies. The observed variability is due to studies that are imprecise (i.e., sampling error)
+- assuming that each study has a very large sample size, the observed variability is close to zero.
+
+## EE meta-analysis, formally
+
+$$
+y_i = \theta + \epsilon_i
+$$ {#eq-ee1}
+
+$$
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_i)
+$$ {#eq-ee2}
+
+Where $\sigma^2_i$ is the vector of sampling variabilities of $k$ studies. This is a standard linear model but with heterogeneous sampling variances.
+
+## EE meta-analysis
+
+```{r}
+#| echo: false
+#| fig-height: 7
+imgs$equal
+```
+
+## Simulating an EE model
+
+What we were doing with the `sim_studies()` function so far was simulating an EE model. In fact, there were a single $\theta$ parameter and the observed variability was a function of the `rnorm()` randomness.
+
+Based on previous assumptions and thinking a little bit, what could be the result of simulating studies with a very large $n$?
+
+. . .
+
+```{r}
+#| echo: true
+ns <- c(10, 50, 100, 1000, 1e4)
+D <- 0.5
+dats <- lapply(ns, function(n) sim_studies(10, es = D, n1 = n))
+```
+
+## Simulating an EE modelm {#sec-ee-impact-n}
+
+```{r}
+#| echo: false
+#| fig-width: 15
+#| fig-height: 8
+#| eval: false
+dats <- lapply(dats, summary)
+plts <- lapply(dats, qforest)
+plts <- lapply(1:length(plts), function(i) plts[[i]] + ggtitle(paste("n1 = n2 =", ns[i])) + geom_vline(xintercept = D))
+cowplot::plot_grid(plotlist = plts, nrow = 1)
+```
+
+## Simulating an EE model
+
+Formulating the model as a intercept-only regression (see Equations [@eq-ee1] and [@eq-ee2]) we can generate data directly:
+
+```{r}
+D <- 0.5
+n <- 30
+k <- 10
+
+yi <- D + rnorm(k, 0, sqrt(1/n + 1/n))
+# or equivalently
+# yi <- rnorm(k, D, sqrt(1/n + 1/n))
+```
+
+As we did for the aggregated data approach. Clearly we need to simulate also the `vi` vector from the appropriate distribution. Given that we simulated data starting from the participant-level the uncertainty of `yi` and `vi` is already included.
+
+## Fitting an EE model
+
+The model can be fitted using the `metafor::rma()` function, with `method = "EE"`^[There is a confusion about the *fixed-effects* vs *fixed-effect* (no *s*) and *equal-effects* models. See [https://wviechtb.github.io/metafor/reference/misc-models.html](https://wviechtb.github.io/metafor/reference/misc-models.html)].
+
+```{r}
+#| echo: true
+#| collapse: true
+theta <- 0.5
+k <- 15
+n <- 10 + rpois(k, 30 - 10)
+dat <- sim_studies(k = k, es = theta, n1 = n)
+fit <- rma(yi, vi, data = dat, method = "EE")
+summary(fit)
+```
+
+## Interpreting an EE model
+
+- The first section (`logLik`, `deviance`, etc.) presents some general model statistics and information criteria
+- The $I^2$ and $H^2$ are statistics evaluating the observed heterogeneity (see next slides)
+- The `Test of Heterogeneity` section presents the test of the $Q$ statistics for the observed heterogeneity (see next slides)
+- The `Model Results` section presents the estimation of the $\theta$ parameter along with the standard error and the Wald $z$ test ($H_0: \theta = 0$)
+
+The `metafor` package has a several well documented functions to calculate and plot model results, residuals analysis etc.
+
+## Interpreting an EE model
+
+```{r}
+#| echo: true
+plot(fit) # general plots
+```
+
+## Interpreting an EE Model
+
+The main function for plotting model results is the `forest()` function that produce the forest plot.
+
+```{r}
+#| echo: true
+forest(fit)
+```
+
+## Interpreting an EE Model
+
+We did not introduced the concept of heterogeneity, but the $I^2$, $H^2$ and $Q$ statistics basically evaluate if the observed heterogeneity should be attributed to **sampling variability** (uncertainty in estimating $\theta$ because we have a limited $k$ and $n$) or **sampling variability** plus other sources of heterogeneity.
+
+## EE model as a weighted Average
+
+Formally $\theta$ is estimated as [see @Borenstein2009-mo, p. 66]
+
+$$
+\hat{\theta} = \frac{\sum^k_{i = 1}{w_iy_i}}{\sum^k_{i = 1}{w_i}}; \;\;\; w_i = \frac{1}{\sigma^2_i}
+$$
+
+$$
+SE_{\theta} = \frac{1}{\sum^k_{i = 1}{w_i}}
+$$
+
+```{r}
+#| echo: true
+#| collapse: true
+wi <- 1/dat$vi
+theta_hat <- with(dat, sum(yi * wi)/sum(wi))
+se_theta_hat <- sqrt(1/sum(wi))
+c(theta = theta_hat, se = se_theta_hat, z = theta_hat / se_theta_hat)
+```
+
+# Random-effects (RE) meta-analysis {.section}
+
+## Are the EE assumptions realistic?
+
+The EE model is appropriate if our studies are somehow **exact replications** of the exact same effect. We are assuming that there is **no real variability**.
+
+. . .
+
+However, meta-analysis rarely report the results of $k$ exact replicates. It is more common to include **studies answering the same research question** but with different methods, participants, etc.
+
+. . .
+
+- people with different ages or other participant-level differences
+- different methodology
+- ...
+
+## Are the EE assumptions realistic?
+
+. . .
+
+If we relax the previous assumption we are able to combine studies that are not exact replications. 
+
+. . .
+
+Thus the real effect $\theta$ is no longer a single **true** value but can be larger or smaller in some conditions.
+
+. . .
+
+In other terms we are assuming that there could be some variability (i.e., **heterogeneity**) among studies that is independent from the sample size. Even with studies with $\lim_{n\to\infty}$ the observed variability is not zero.
+
+## Random-effects model (RE)
+
+We can extend the EE model including another source of variability, $\tau^2$. $\tau^2$ is the true heterogeneity among studies caused by methdological differences or intrisic variability in the phenomenon.
+
+Formally we can extend @eq-ee1 as:
+$$
+y_i = \mu_{\theta} + \delta_i + \epsilon_i
+$$ {#eq-re-mod1}
+
+$$
+\delta_i \sim \mathcal{N}(0, \tau^2)
+$$ {#eq-re-mod2}
+
+$$
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_i)
+$$
+
+Where $\mu_{\theta}$ is the average effect size and $\delta_i$ is the study-specific deviation from the average effect (regulated by $\tau^2$). Clearly each study specific effect is $\theta_i = \mu_{\theta} + \delta_i$.
+
+## RE model
+
+```{r}
+#| echo: false
+#| fig-height: 8
+#| out-width: 60%
+imgs$random
+```
+
+## RE model estimation
+
+Given that we extended the EE model equation. Also the estimation of the average effect need to be extended. Basically the RE is still a weighted average but weights need to include also $\tau^2$.
+
+$$
+\overline y = \frac{\sum_{i = 1}^k y_iw^*_i}{\sum_{i = 1}^k w^*_i}
+$$ {#eq-re1}
+
+$$
+w^*_i = \frac{1}{\sigma^2_i + \tau^2}
+$$ {#eq-re2}
+
+The weights are different compared to the EE model. Extremely precise/imprecise studies will have less impact in the RE model.
+
+## RE vs EE model
+
+The crucial difference with the EE model is that even with large $n$, only the $\mu_{\theta} + \delta_i$ are estimated (almost) without error. As long $\tau^2 \neq 0$ there will be variability in the effect sizes.
+
+```{r}
+#| echo: false
+#| fig-height: 8
+imgs$equal_vs_random
+```
+
+## Simulating a RE Model
+
+To simulate the RE model we simply need to include $\tau^2$ in the EE model simulation.
+
+```{r}
+#| echo: true
+k <- 15 # number of studies
+mu <- 0.5 # average effect
+tau2 <- 0.1 # heterogeneity
+n <- 10 + rpois(k, 30 - 10) # sample size
+deltai <- rnorm(k, 0, sqrt(tau2)) # random-effects
+thetai <- mu + deltai # true study effect
+
+dat <- sim_studies(k = k, es = thetai, n1 = n)
+
+head(dat)
+```
+
+## Simulating a RE model
+
+Again, we can put everything within a function expanding the previous `sim_studies()` by including $\tau^2$:
+
+```{r}
+#| include: false
+rm(sim_studies) # remove previous function and use the R/utils-meta.R
+```
+
+```r
+sim_studies <- function(k, es, tau2 = 0, n1, n2 = NULL, add = NULL){
+  if(length(n1) == 1) n1 <- rep(n1, k)
+  if(is.null(n2)) n2 <- n1
+  if(length(es) == 1) es <- rep(es, k)
+  
+  yi <- rep(NA, k)
+  vi <- rep(NA, k)
+  
+  # random effects
+  deltai <- rnorm(k, 0, sqrt(tau2))
+  
+  for(i in 1:k){
+    g1 <- rnorm(n1[i], 0, 1)
+    g2 <- rnorm(n2[i], es[i] + deltai[i], 1)
+    yi[i] <- mean(g2) - mean(g1)
+    vi[i] <- var(g1)/n1[i] + var(g2)/n2[i]
+  }
+  
+  sim <- data.frame(id = 1:k, yi, vi, n1 = n1, n2 = n2)
+  
+  if(!is.null(add)){
+    sim <- cbind(sim, add)
+  }
+  
+  # convert to escalc for using metafor methods
+  sim <- metafor::escalc(yi = yi, vi = vi, data = sim)
+  
+  return(sim)
+}
+```
+
+## Simulating a RE model
+
+The data are similar to the EE simulation but we have an extra source of heterogeneity.
+
+```{r}
+#| code-fold: true
+#| eval: false
+dat |>
+  summary() |>
+  qforest()
+```
+
+## Simulating a RE model
+
+To see the actual impact of $\tau^2$ we can follow the same approach of @sec-ee-impact-n thus using a large $n$. The sampling variance `vi` of each study is basically 0.
+
+```{r}
+#| echo: true
+# ... other parameters as before
+n <- 1e4
+deltai <- rnorm(k, 0, sqrt(tau2)) # random-effects
+thetai <- mu + deltai # true study effect
+dat <- sim_studies(k = k, es = thetai, n1 = n)
+# or equivalently 
+# dat <- sim_studies(k = k, es = mu, tau2 = tau2, n1 = n)
+
+head(dat)
+```
+
+## Simulating a RE Model
+
+Clearly, compared to @sec-ee-impact-n, even with large $n$ the variability is not reduced because $\tau^2 \neq 0$. As $\tau^2$ approach zero the EE and RE models are similar.
+
+```{r}
+#| code-fold: true
+dat |>
+  summary() |>
+  qforest()
+```
+
+## RE model estimation
+
+Given that we extended the EE model equation. Also the estimation of the average effect need to be extended. Basically the RE is still a weighted average but weights need to include also $\tau^2$.
+
+$$
+\overline y = \frac{\sum_{i = 1}^k y_iw^*_i}{\sum_{i = 1}^k w^*_i}
+$$ {#eq-re1}
+
+$$
+w^*_i = \frac{1}{\sigma^2_i + \tau^2}
+$$ {#eq-re2}
+
+The weights are different compared to the EE model. Extremely precise/imprecise studies will have less impact in the RE model.
+
+## Fitting a RE model
+
+In R we can use the `metafor::rma()` function using the `method = "REML"`.
+
+```{r}
+#| echo: true
+#| collapse: true
+fit <- rma(yi, vi, data = dat, method = "REML")
+summary(fit)
+```
+
+## Intepreting the RE model
+
+The model output is quite similar to the EE model and also the intepretation is similar.
+
+The only extra section is `tau^2/tau` that is the estimation of the between-study heterogeneity.
+
+```{r}
+summary(fit)
+```
+
+
+## Estimating $\tau^2$
+
+
+![](img/langan2017.png){fig-align="center" width=80%}
+
+## Estimating $\tau^2$
+
+The **Restricted Maximum Likelihood** (REML) estimator is considered one of the best. We can compare the results using the `all_rma()` custom function that tests all the estimators^[The `filor::compare_rma()` function is similar to the `car::compareCoefs()` function].
+
+```{r}
+#| echo: true
+fitl <- all_rma(fit)
+round(filor::compare_rma(fitlist = fitl), 3)
+```
+
+## Intepreting heterogeneity $\tau^2$
+
+Looking at @eq-re-mod2, $\tau^2$ is essentially the variance of the random-effect. This means that we can intepret it as the variability (or the standard deviation) of the true effect size distribution.
+
+```{r}
+#| code-fold: true
+
+tau2s <- c(0.01, 0.05, 0.1, 0.2)
+tau2s_t <- latex2exp::TeX(sprintf("$\\tau^2 = %.2f$", tau2s))
+
+par(mfrow = c(1, 3))
+hist(rnorm(1e4, 0, sqrt(tau2s[1])), xlim = c(-2, 2), xlab = latex2exp::TeX("$y_i$"), main = tau2s_t[1], probability = TRUE, ylim = c(0, 4.5), col = "dodgerblue")
+hist(rnorm(1e4, 0, sqrt(tau2s[2])), xlim = c(-2, 2), xlab = latex2exp::TeX("$y_i$"), main = tau2s_t[2], probability = TRUE, ylim = c(0, 4.5), col = "dodgerblue")
+#hist(rnorm(1e4, 0, sqrt(tau2s[3])), xlim = c(-2, 2), xlab = latex2exp::TeX("$y_i$"), main = tau2s_t[3], probability = TRUE, ylim = c(0, 5))
+hist(rnorm(1e4, 0, sqrt(tau2s[4])), xlim = c(-2, 2), xlab = latex2exp::TeX("$y_i$"), main = tau2s_t[4], probability = TRUE, ylim = c(0, 4.5), col = "dodgerblue")
+```
+
+## Intepreting $\tau^2$
+
+As in the previus plot we can assume $n = \infty$ and generate true effects from @eq-re-mod2. In this way we understand the impact of assuming (or estimating) a certain $\tau^2$.
+
+For example, a $\tau = 0.2$ and a $\mu_{\theta} = 0.5$, 50% of the true effects ranged between:
+
+```{r}
+#| echo: true
+D <- 0.5
+yis <- D + rnorm(1e5, 0, 0.2)
+quantile(yis, c(0.75, 0.25))
+```
+
+## The $Q$ Statistics^[See @Harrer2021-go (Chapter 5) and @Hedges2019-ry for an overview about the Q statistics]
+
+The Q statistics is used to make inference on the heterogeneity. Can be considered as a weighted sum of squares:
+
+$$
+Q = \sum^k_{i = 1}w_i(y_i - \hat \mu)^2
+$$
+
+Where $\hat \mu$ is EE estimation (regardless if $\tau^2 \neq 0$) and $w_i$ are the inverse-variance weights. Note that in the case of $w_1 = w_2 ... = w_i$, Q is just a standard sum of squares (or deviance).
+
+## The $Q$ Statistics
+
+- Given that we are summing up squared distances, they should be approximately $\chi^2$ with $df = k - 1$. In case of no heterogeneity ($\tau^2 = 0$) the observed variability is only caused by sampling error and the expectd value of the $\chi^2$ is just the degrees of freedom ($df = k - 1$).
+- In case of $\tau^2 \neq 0$, the expected value is $k - 1 + \lambda$ where $\lambda$ is a non-centrality parameter.
+- In other terms, if the expected value of $Q$ exceed the expected value assuming no heterogeneity, we have evidence that $\tau^2 \neq 0$.
+
+## The $Q$ Statistics
+
+Let's try a more practical approach. We simulate a lot of meta-analysis with and without heterogeneity and we check the Q statistics.
+
+```{r}
+#| code-fold: true
+#| echo: true
+#| cache: true
+get_Q <- function(yi, vi){
+  wi <- 1/vi
+  theta_ee <- weighted.mean(yi, wi)
+  sum(wi*(yi - theta_ee)^2)
+}
+
+k <- 30
+n <- 30
+tau2 <- 0.1
+nsim <- 1e4
+
+Qs_tau2_0 <- rep(0, nsim)
+Qs_tau2 <- rep(0, nsim)
+res2_tau2_0 <- vector("list", nsim)
+res2_tau2 <- vector("list", nsim)
+
+for(i in 1:nsim){
+  dat_tau2_0 <- sim_studies(k = 30, es = 0.5, tau2 = 0, n1 = n)
+  dat_tau2 <- sim_studies(k = 30, es = 0.5, tau2 = tau2, n1 = n)
+  
+  theta_ee_tau2_0 <- weighted.mean(dat_tau2_0$yi, 1/dat_tau2_0$vi)
+  theta_ee <- weighted.mean(dat_tau2$yi, 1/dat_tau2$vi)
+  
+  res2_tau2_0[[i]] <- dat_tau2_0$yi - theta_ee_tau2_0
+  res2_tau2[[i]] <- dat_tau2$yi - theta_ee
+  
+  Qs_tau2_0[i] <- get_Q(dat_tau2_0$yi, dat_tau2_0$vi)
+  Qs_tau2[i] <- get_Q(dat_tau2$yi, dat_tau2$vi)
+}
+```
+
+```{r}
+#| echo: false
+df <- k - 1
+
+par(mfrow = c(2,2))
+hist(Qs_tau2_0, probability = TRUE, ylim = c(0, 0.08), xlim = c(0, 150),
+     xlab = "Q",
+     main = latex2exp::TeX("$\\tau^2 = 0$"))
+curve(dchisq(x, df), 0, 100, add = TRUE, col = "firebrick", lwd = 2)
+
+hist(unlist(res2_tau2_0), probability = TRUE, main = latex2exp::TeX("$\\tau^2 = 0$"), ylim = c(0, 2),
+     xlab = latex2exp::TeX("$y_i - \\hat{\\mu}$"))
+curve(dnorm(x, 0, sqrt(1/n + 1/n)), add = TRUE, col = "dodgerblue", lwd = 2)
+
+hist(Qs_tau2, probability = TRUE, ylim = c(0, 0.08), xlim = c(0, 150),
+     xlab = "Q",
+     main = latex2exp::TeX("$\\tau^2 = 0.1$"))
+curve(dchisq(x, df), 0, 100, add = TRUE, col = "firebrick", lwd = 2)
+
+hist(unlist(res2_tau2), probability = TRUE, main = latex2exp::TeX("$\\tau^2 = 0.1$"), ylim = c(0, 2),
+     xlab = latex2exp::TeX("$y_i - \\hat{\\mu}$"))
+curve(dnorm(x, 0, sqrt(1/n + 1/n)), add = TRUE, col = "dodgerblue", lwd = 2)
+```
+
+## The $Q$ Statistics
+
+Let's try a more practical approach. We simulate a lot of meta-analysis with and without heterogeneity and we check the Q statistics.
+
+. . .
+
+- clearly, in the presence of heterogeneity, the expected value of the Q statistics is higher (due to $\lambda \neq 0$) and also residuals are larger (the $\chi^2$ is just a sum of squared weighted residuals)
+
+. . .
+
+- we can calculate a p-value for deviation from the $\tau^2 = 0$ case as evidence agaist the absence of heterogeneity
+
+## $I^2$ [@Higgins2002-fh]
+
+We have two sources of variability in a random-effects meta-analysis, the sampling variability $\sigma_i^2$ and true heterogeneity $\tau^2$. We can use the $I^2$ to express the interplay between the two.
+$$
+I^2 = 100\% \times \frac{\hat{\tau}^2}{\hat{\tau}^2 + \tilde{v}}
+$${#eq-i2}
+
+$$
+\tilde{v} = \frac{(k-1) \sum w_i}{(\sum w_i)^2 - \sum w_i^2},
+$$
+
+Where $\tilde{v}$ is the typical sampling variability. $I^2$ is intepreted as the proportion of total variability due to real heterogeneity (i.e., $\tau^2$)
+
+## $I^2$ [@Higgins2002-fh]^[see [https://www.meta-analysis-workshops.com/download/common-mistakes1.pdf](https://www.meta-analysis-workshops.com/download/common-mistakes1.pdf)]
+
+Note that we can have the same $I^2$ in two completely different meta-analysis. An high $I^2$ does not represent high heterogeneity. Let's assume to have two meta-analysis with $k$ studies and small ($n = 30$) vs large ($n = 500$) sample sizes. 
+
+Let's solve @eq-i2 for $\tau^2$ (using `filor::tau2_from_I2()`) and we found that the same $I^2$ can be obtained with two completely different $\tau^2$ values:
+
+```{r}
+#| echo: true
+#| collapse: true
+n_1 <- 30
+vi_1 <- 1/n_1 + 1/n_1
+tau2_1 <- filor::tau2_from_I2(0.8, vi_1)
+tau2_1
+
+n_2 <- 500
+vi_2 <- 1/n_2 + 1/n_2
+tau2_2 <- filor::tau2_from_I2(0.8, vi_2)
+tau2_2
+```
+
+## $I^2$ [@Higgins2002-fh]
+
+```{r}
+#| echo: true
+#| collapse: true
+n_1 <- 30
+vi_1 <- 1/n_1 + 1/n_1
+tau2_1 <- filor::tau2_from_I2(0.8, vi_1)
+tau2_1
+
+n_2 <- 500
+vi_2 <- 1/n_2 + 1/n_2
+tau2_2 <- filor::tau2_from_I2(0.8, vi_2)
+tau2_2
+```
+
+. . .
+
+In other terms, the $I^2$ can be considered a good index of heterogeneity only when the total variance ($\tilde{v} + \tau^2$) is similar.
+
+## What about $\tilde{v}$?
+
+$\tilde{v}$ is considered the "typical" within-study variability (see [https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate](https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate)). There are different estimators but @eq-tildev [@Higgins2002-fh] is the most common.
+
+$$
+\tilde{v} = \frac{(k-1) \sum w_i}{(\sum w_i)^2 - \sum w_i^2}
+$$ {#eq-tildev}
+
+## What about $\tilde{v}$?
+
+In the hypothetical case where $\sigma^2_1 = \dots = \sigma^2_k$, $\tilde{v}$ is just $\sigma^2$. This fact is commonly used to calculate the statistical power analytically [@Borenstein2009-mo, Chapter 29].
+
+```{r}
+#| echo: true
+vtilde <- function(wi){
+  k <- length(wi)
+  (k - 1) * sum(wi) / (sum(wi)^2 - sum(wi^2))
+}
+
+k <- 20
+
+# same vi
+vi <- rep((1/30 + 1/30), k)
+head(vi)
+vtilde(1/vi)
+
+# heterogeneous vi
+n <- 10 + rpois(k, 30 - 10)
+vi <- sim_vi(k = k, n1 = n)
+vtilde(1/vi)
+```
+
+## What about $\tilde{v}$?
+
+Using simulations we can see that $\tilde{v}$ with heterogenenous variances (i.e., sample sizes in this case) can be approximated by the central tendency of the sample size distribution. Note that we are fixing $\sigma^2 = 1$ thus we are not including uncertainty.
+
+```{r}
+#| code-fold: true
+k <- 100 # number of studies
+n <- 30 # sample size
+
+vti <- rep(NA, 1e5)
+
+for(i in 1:1e5){
+  ni <- rpois(k, n)
+  vi <- 1/ni + 1/ni
+  vti[i] <- vtilde(1/vi)
+}
+
+# vtilde calculated from lambda
+vt <- 1/n + 1/n
+```
+
+```{r}
+#| echo: false
+hist(vti, breaks = 80, col = "dodgerblue2")
+abline(v = vt, lwd = 2)
+text(x = vt + 0.002, y = 3000, label = latex2exp::TeX(sprintf("$\\tilde{v} = %.3f$", vt)), cex = 1.5, pos = 4)
+text(x = vt + 0.002, y = 2400, label = latex2exp::TeX(sprintf("$\\tilde{v}_{n = 30} = %.3f$", 1/30 + 1/30)), cex = 1.5, pos = 4)
+```
+
+## $H^2$
+
+The $H^2$ is an alternative index of heterogeneity. Is calculated as:
+
+$$
+H^2 = \frac{Q}{k - 1}
+$$
+
+We defined $Q$ as the weighted sum of squares representing the total variability. $k - 1$ is the expected value of the $\chi^2$ statistics (i.e., sum of squares) when $\tau^2 = 0$ (or $\lambda = 0$). 
+
+Thus $H^2$ is the ratio between total heterogeneity and sampling variability. Higher $H^2$ is associated with higher heterogeneity **relative** to the sampling variability. $H^2$ is not a measure of absolute heterogeneity.
+
+## $H^2$
+
+When we are fitting a RE model, the $I^2$ and $H^2$ equations are slightly different [@Higgins2002-fh]. See also the `metafor` [source code](https://github.com/cran/metafor/blob/994d26a65455fac90760ad6a004ec1eaca5856b1/R/rma.uni.r#L2459C30-L2459C30).
+
+```{r}
+#| echo: true
+#| collapse: true
+k <- 100
+mu <- 0.5
+tau2 <- 0.1
+n <- 30
+
+dat <- sim_studies(k = k, es = mu, tau2 = tau2, n1 = n)
+fit_re <- rma(yi, vi, data = dat, method = "REML")
+fit_ee <- rma(yi, vi, data = dat, method = "EE")
+
+# H2 with EE model
+
+theta_ee <- fit_ee$b[[1]] # weighted.mean(dat$yi, 1/dat$vi)
+wi <- 1/dat$vi
+Q <- with(dat, sum((1/vi)*(yi - theta_ee)^2))
+c(Q, fit_ee$QE) # same
+
+c(H2 = fit_ee$QE / (fit_ee$k - fit_ee$p), H2_model = fit_ee$H2) # same
+
+# H2 with RE model
+
+vt <- vtilde(1/dat$vi)
+c(H2 = fit_re$tau2 / vt + 1, H2_model = fit_re$H2) # same
+```
+
+## Confidence Intervals
+
+What is reported in the model summary as `ci.lb` and `ci.ub` refers to the 95% confidence interval representing the uncertainty in estimating the effect (or a meta-regression parameter).
+
+Without looking at the equations, let's try to implement this idea using simulations.
+
+- choose $k$, $\tau^2$ and $n$
+- simulate data (several times) accordingly and fit the RE model
+- extract the estimated effect size
+- compare the simulated sampling distribution with the analytical result
+
+## Confidence Intervals
+
+```{r}
+#| echo: true
+#| collapse: true
+#| cache: true
+k <- 30
+n <- 30
+tau2 <- 0.05
+mu <- 0.5
+nsim <- 5e3
+
+# true parameters (see Borenstein, 2009; Chapter 29)
+vt <- 1/n + 1/n
+vs <- (vt + tau2)/ k
+se <- sqrt(vs)
+
+mui <- rep(NA, nsim)
+
+for(i in 1:nsim){
+  dat <- sim_studies(k = k, es = mu, tau2 = tau2, n1 = n)
+  fit <- rma(yi, vi, data = dat)
+  mui[i] <- coef(fit)[1]
+}
+
+# standard error
+c(simulated = sd(mui), analytical = fit$se)
+
+# confidence interval
+rbind(
+  "simulated"  = quantile(mui, c(0.05, 0.975)),
+  "analytical" = c("2.5%" = fit$ci.lb, "97.5%" = fit$ci.ub)
+)
+```
+
+## Confidence Intervals
+
+```{r}
+hist(mui, breaks = 50, freq = FALSE, main = "Sampling Distribution", xlab = latex2exp::TeX("$\\mu_{\\theta}$"))
+curve(dnorm(x, mu, se), add = TRUE, col = "firebrick", lwd = 1.5)
+```
+
+## Confidence Intervals
+
+Now the equation for the 95% confidence interval should be more clear. The standard error is a function of the within study sampling variances (depending mainly on $n$), $\tau^2$ and $k$. As we increase $k$ the standard error tends towards zero. 
+
+$$
+CI = \hat \mu_{\theta} \pm z SE_{\mu_{\theta}}
+$$
+
+$$
+SE_{\mu_{\theta}} = \sqrt{\frac{1}{\sum^{k}_{i = 1}w^{\star}_i}}
+$$
+
+$$
+w^{\star}_i = \frac{1}{\sigma^2_i + \tau^2}
+$$
+
+## Confidence Intervals
+
+We can also see it analytically, there is a huge impact of $k$.
+
+```{r}
+#| code-fold: true
+# true parameters (see Borenstein, 2009; Chapter 29)
+vt <- 1/n + 1/n
+vs <- (vt + tau2)/ k
+se <- sqrt(vs)
+
+k <- c(10, 50, 100, 500, 1000, 5000)
+n <- c(10, 50, 100, 500, 1000, 5000)
+tau2 <- c(0, 0.05, 0.1, 0.2)
+
+dd <- expand.grid(k = k, n = n, tau2 = tau2)
+
+dd$vt <- with(dd, 1/n + 1/n)
+dd$vs <- with(dd, (vt + tau2)/ k)
+dd$se <- sqrt(dd$vs)
+
+dd$k <- as_tex_label(dd$k, "$k = %s$")
+
+ggplot(dd, aes(x = n, y = se, color = factor(tau2))) +
+  geom_line() +
+  facet_wrap(~k, labeller = label_parsed) +
+  labs(color = latex2exp::TeX("\\tau^2")) +
+  xlab("Sample Size (n)") +
+  ylab(latex2exp::TeX("$SE_{\\mu_{\\theta}}$"))
+```
+
+## Prediction intervals (PI)
+
+We could say that the CI is not completely taking into account the between-study heterogeneity ($\tau^2$). After a meta-analysis we would like to know how confident we are in the parameters estimation BUT also **what would be the expected effect running a new experiment tomorrow?**.
+
+The **prediction interval** [@IntHout2016-sz; @Riley2011-hp] is exactly the range of effects that I expect in predicting a new study.
+
+## PI for a sample mean
+
+To understand the concept, let's assume to have a sample $X$ of size $n$ and we estimate the mean $\overline X$. The PI is calculated as^[Notice that the equation, in particular the usage of $t$ vs $z$ depends on assuming $s_x$ to be known or estimated. See [https://online.stat.psu.edu/stat501/lesson/3/3.3](https://online.stat.psu.edu/stat501/lesson/3/3.3), [https://en.wikipedia.org/wiki/Prediction_interval](https://en.wikipedia.org/wiki/Prediction_interval) and [https://www.bryanshalloway.com/2021/03/18/intuition-on-uncertainty-of-predictions-introduction-to-prediction-intervals/](https://www.bryanshalloway.com/2021/03/18/intuition-on-uncertainty-of-predictions-introduction-to-prediction-intervals/)]:
+
+$$
+PI = \overline X \pm t_{\alpha/2} s_x \sqrt{1 + \frac{1}{n}}
+$$
+
+Where $s$ is the sample standard deviation. Basically we are combining the uncertainty in estimating $\overline X$ (i.e, $\frac{s_x}{n}$) with the standard deviation of the data $s_x$. Compare it with the confidence interval containing only $\frac{s_x}{n}$.
+
+## PI in meta-analysis
+
+For meta-analysis the equation^[When a $t$ distribution is assumed, the quantiles are calculated using $k - 2$ degrees of freedom] is conceptually similar but with different quantities.
+
+$$
+PI = \hat \mu_{\theta} \pm z \sqrt{\tau^2 + SE_{\mu_{\theta}}}
+$$
+
+Basically we are combining all the sources of uncertainty. As long as $\tau^2 \neq 0$ the PI is greater than the CI (in the EE model they are the same). Thus even with very precise $\mu_{\theta}$ estimation, large $\tau^2$ leads to uncertain predictions.
+
+## PI in meta-analysis
+
+In R the PI can be calculated using `predict()`. By default the model assume a standard normal distribution thus using $z$ scores. To use the @Riley2011-hp approach ($t$ distribution) the model need to be fitted using `test = "t"`.
+
+```{r}
+#| echo: true
+k <- 100
+dat <- sim_studies(k = k, es = 0.5, tau2 = 0.1, n1 = 30)
+fit_z <- rma(yi, vi, data = dat, test = "z") # test = "z" is the default
+predict(fit_z) # notice pi.ub/pi.lb vs ci.ub/ci.lb
+# manually
+fit_z$b[[1]] + qnorm(c(0.025, 0.975)) * sqrt(fit_z$se^2 + fit_z$tau2)
+
+fit_t <- rma(yi, vi, data = dat, test = "t")
+predict(fit_t) # notice pi.ub/pi.lb vs ci.ub/ci.lb
+# manually
+fit_z$b[[1]] + qt(c(0.025, 0.975), k - 2) * sqrt(fit_t$se^2 + fit_t$tau2)
+```
+
+## References
+
+::: {#refs}
+:::

@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Filippo Gambarota, PhD">
+  <title>Psychometrics4Neuroscience – Meta-analysis Models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/theme/quarto-8af495e58d529a45da6964503ce7e780.css">
+  <link href="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+    <h1 class="title">Meta-analysis Models</h1>
+      <p class="subtitle">Psicometria per le Neuroscienze Cognitive</p>
+        <p class="author">Filippo Gambarota, PhD</p>
+        </section>
+<section>
+<section id="simulation-setup" class="title-slide slide level1 section center">
+<h1>Simulation setup</h1>
+
+</section>
+<section id="notation" class="slide level2 smaller">
+<h2>Notation</h2>
+<p>Meta-analysis notation is a little bit inconsistent in textbooks and papers. We define here some rules to simplify the work.</p>
+<ul>
+<li><span class="math inline">\(k\)</span> is the number of studies</li>
+<li><span class="math inline">\(n_j\)</span> is the sample size of the group <span class="math inline">\(j\)</span> within a study</li>
+<li><span class="math inline">\(y_i\)</span> are the observed effect size included in the meta-analysis</li>
+<li><span class="math inline">\(\sigma_i^2\)</span> are the observed sampling variance of studies and <span class="math inline">\(\epsilon_i\)</span> are the sampling errors</li>
+<li><span class="math inline">\(\theta\)</span> is the equal-effects parameter (see <a href="#/eq-ee1" class="quarto-xref">Equation&nbsp;1</a>)</li>
+<li><span class="math inline">\(\delta_i\)</span> is the random-effect (see <a href="#/eq-re-mod2" class="quarto-xref">Equation&nbsp;4</a>)</li>
+<li><span class="math inline">\(\mu_\theta\)</span> is the average effect of a random-effects model (see <a href="#/eq-re-mod1" class="quarto-xref">Equation&nbsp;3</a>)</li>
+<li><span class="math inline">\(w_i\)</span> are the meta-analysis weights</li>
+<li><span class="math inline">\(\tau^2\)</span> is the heterogeneity (see <a href="#/eq-re-mod2" class="quarto-xref">Equation&nbsp;4</a>)</li>
+<li><span class="math inline">\(\Delta\)</span> is the (generic) population effect size</li>
+<li><span class="math inline">\(s_j^2\)</span> is the variance of the group <span class="math inline">\(j\)</span> within a study</li>
+</ul>
+</section>
+<section id="simulation-setup-1" class="slide level2">
+<h2>Simulation setup</h2>
+<p>Given the introduction to effect sizes, from now we will simulate data using UMD and the individual-level data.</p>
+<p>Basically we are simulating an effect size <span class="math inline">\(D\)</span> coming from the comparison of two independent groups <span class="math inline">\(G_1\)</span> and <span class="math inline">\(G_2\)</span>.</p>
+<p>Each group is composed by <span class="math inline">\(n\)</span> participants measured on a numerical outcome (e.g., reaction times)</p>
+</section>
+<section id="simulation-setup-2" class="slide level2">
+<h2>Simulation setup</h2>
+<p>A more general, clear and realistic approach to simulate data is by generating <span class="math inline">\(k\)</span> studies with same/different sample sizes and (later) true effect sizes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># number of studies</span></span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> n2 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(k, <span class="dv">30</span> <span class="sc">-</span> <span class="dv">10</span>) <span class="co"># sample size from poisson distribution with lambda 40 and minimum 10</span></span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co"># effect size</span></span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>yi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k){</span>
+<span id="cb1-9"><a aria-hidden="true" tabindex="-1"></a>  g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1[i], <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb1-10"><a aria-hidden="true" tabindex="-1"></a>  g2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2[i], D, <span class="dv">1</span>)</span>
+<span id="cb1-11"><a aria-hidden="true" tabindex="-1"></a>  yi[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g2) <span class="sc">-</span> <span class="fu">mean</span>(g1)</span>
+<span id="cb1-12"><a aria-hidden="true" tabindex="-1"></a>  vi[i] <span class="ot">&lt;-</span> <span class="fu">var</span>(g1)<span class="sc">/</span>n1[i] <span class="sc">+</span> <span class="fu">var</span>(g2)<span class="sc">/</span>n2[i]</span>
+<span id="cb1-13"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-15"><a aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>k, yi, vi)</span>
+<span id="cb1-16"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim)</span>
+<span id="cb1-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id        yi         vi</span></span>
+<span id="cb1-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1 0.6103097 0.08922306</span></span>
+<span id="cb1-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2 0.4375167 0.04732073</span></span>
+<span id="cb1-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3 1.0059947 0.04430640</span></span>
+<span id="cb1-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4 0.6666242 0.07048580</span></span>
+<span id="cb1-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  5 0.7943778 0.05421538</span></span>
+<span id="cb1-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  6 0.6924912 0.08382427</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simulation-setup-3" class="slide level2">
+<h2>Simulation setup</h2>
+<p>We can again put everything within a function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>sim_studies <span class="ot">&lt;-</span> <span class="cf">function</span>(k, es, n1, <span class="at">n2 =</span> <span class="cn">NULL</span>){</span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(n1) <span class="sc">==</span> <span class="dv">1</span>) n1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(n1, k)</span>
+<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(n2)) n2 <span class="ot">&lt;-</span> n1</span>
+<span id="cb2-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(es) <span class="sc">==</span> <span class="dv">1</span>) es <span class="ot">&lt;-</span> <span class="fu">rep</span>(es, k)</span>
+<span id="cb2-5"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-6"><a aria-hidden="true" tabindex="-1"></a>  yi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb2-7"><a aria-hidden="true" tabindex="-1"></a>  vi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb2-8"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k){</span>
+<span id="cb2-10"><a aria-hidden="true" tabindex="-1"></a>    g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1[i], <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb2-11"><a aria-hidden="true" tabindex="-1"></a>    g2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2[i], es[i], <span class="dv">1</span>)</span>
+<span id="cb2-12"><a aria-hidden="true" tabindex="-1"></a>    yi[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g2) <span class="sc">-</span> <span class="fu">mean</span>(g1)</span>
+<span id="cb2-13"><a aria-hidden="true" tabindex="-1"></a>    vi[i] <span class="ot">&lt;-</span> <span class="fu">var</span>(g1)<span class="sc">/</span>n1[i] <span class="sc">+</span> <span class="fu">var</span>(g2)<span class="sc">/</span>n2[i]</span>
+<span id="cb2-14"><a aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-15"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-16"><a aria-hidden="true" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>k, yi, vi, <span class="at">n1 =</span> n1, <span class="at">n2 =</span> n2)</span>
+<span id="cb2-17"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-18"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to escalc for using metafor methods</span></span>
+<span id="cb2-19"><a aria-hidden="true" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> metafor<span class="sc">::</span><span class="fu">escalc</span>(<span class="at">yi =</span> yi, <span class="at">vi =</span> vi, <span class="at">data =</span> sim)</span>
+<span id="cb2-20"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-21"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sim)</span>
+<span id="cb2-22"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simulation-setup---disclaimer" class="slide level2">
+<h2>Simulation setup - Disclaimer</h2>
+<p>The proposed simulation approach using a <code>for</code> loop and separated vectors. For the purpose of the workshop this is the best option. In real-world meta-analysis simulations you can choose a more functional approach starting from a simulation grid as <code>data.frame</code> and mapping the simulation functions.</p>
+<p>For some examples see:</p>
+<ul>
+<li><span class="citation" data-cites="Gambarota2023-on">(<a href="#/references" role="doc-biblioref" onclick=""><strong>Gambarota2023-on?</strong></a>)</span></li>
+<li><a href="https://www.jepusto.com/simulating-correlated-smds">www.jepusto.com/simulating-correlated-smds</a></li>
+</ul>
+</section>
+<section id="simulation-setup---disclaimer-1" class="slide level2">
+<h2>Simulation setup - Disclaimer</h2>
+<p>For a more extended overview of the simulation setup we have an entire paper. Supplementary materials (<a href="https://github.com/shared-research/simulating-meta-analysis">github.com/shared-research/simulating-meta-analysis</a>) contains also more examples for complex (multilevel and multivariate models.)</p>
+
+<img data-src="img/gambarota2023.png" class="quarto-figure quarto-figure-center r-stretch"></section></section>
+<section>
+<section id="combining-studies" class="title-slide slide level1 section center">
+<h1>Combining studies</h1>
+
+</section>
+<section id="combining-studies-1" class="slide level2">
+<h2>Combining studies</h2>
+<p>Let’s imagine to have <span class="math inline">\(k = 10\)</span> studies, a <span class="math inline">\(D = 0.5\)</span> and heterogeneous sample sizes in each study.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(k, <span class="at">lambda =</span> <span class="dv">20</span>) </span>
+<span id="cb3-4"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> D, <span class="at">n1 =</span> n)</span>
+<span id="cb3-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span>
+<span id="cb3-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id     yi     vi n1 n2 </span></span>
+<span id="cb3-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1 0.7151 0.0702 33 33 </span></span>
+<span id="cb3-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2 0.2845 0.0553 29 29 </span></span>
+<span id="cb3-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3 0.1060 0.0541 27 27 </span></span>
+<span id="cb3-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4 0.5439 0.0537 32 32 </span></span>
+<span id="cb3-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  5 0.2778 0.0535 33 33 </span></span>
+<span id="cb3-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  6 0.2629 0.0520 29 29</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>What is the best way to combine the studies?</p>
+</div>
+</section>
+<section id="combining-studies-2" class="slide level2">
+<h2>Combining studies</h2>
+<p>We can take the average effect size and considering it as a huge study. This can be considered the best way to combine the effects.</p>
+<p><span class="math display">\[
+\hat{D} = \frac{\sum^{k}_{i = 1} D_i}{k}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat<span class="sc">$</span>yi)</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3939045</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>It is appropriate? What do you think? Are we missing something?</p>
+</div>
+</section>
+<section id="weighting-studies" class="slide level2">
+<h2>Weighting studies</h2>
+<p>We are not considering that some studies, despite providing a similar effect size could give more information. An higher sample size (or lower sampling variance) produce a more reliable estimation.</p>
+<div class="fragment">
+<p>Would you trust more a study with <span class="math inline">\(n = 100\)</span> and <span class="math inline">\(D = 0.5\)</span> or a study with <span class="math inline">\(n = 10\)</span> and <span class="math inline">\(D = 0.5\)</span>? The “meta-analysis” that we did before is completely ignoring this information.</p>
+</div>
+</section>
+<section id="weighting-studies-1" class="slide level2">
+<h2>Weighting studies</h2>
+<p>We need to find a value (called weight <span class="math inline">\(w_i\)</span>) that allows assigning more trust to a study because it provide more information.</p>
+<div class="fragment">
+<p>The simplest weights are just the sample size, but in practice we use the so-called <strong>inverse-variance weighting</strong>. We use the (inverse) of the sampling variance of the effect size to weight each study.</p>
+</div>
+<div class="fragment">
+<p>The basic version of a meta-analysis is just a <strong>weighted average</strong>:</p>
+<p><span class="math display">\[
+\overline D_w = \frac{\sum^k_{i = 1}{w_iD_i}}{\sum^k_{i = 1}{w_i}}
+\]</span></p>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a>wi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>dat<span class="sc">$</span>vi</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(dat<span class="sc">$</span>yi <span class="sc">*</span> wi) <span class="sc">/</span> <span class="fu">sum</span>(wi)</span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3810579</span></span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># weighted.mean(dat$yi, wi)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="weighting-studies-2" class="slide level2">
+<h2>Weighting studies</h2>
+<p>Graphically, the two models can be represented in this way:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a>dw <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(dat<span class="sc">$</span>yi, <span class="dv">1</span><span class="sc">/</span>dat<span class="sc">$</span>vi)</span>
+<span id="cb6-2"><a aria-hidden="true" tabindex="-1"></a>dunw <span class="ot">&lt;-</span> <span class="fu">mean</span>(dat<span class="sc">$</span>yi)</span>
+<span id="cb6-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a aria-hidden="true" tabindex="-1"></a>unw_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> yi, <span class="at">y =</span> <span class="fu">factor</span>(id))) <span class="sc">+</span></span>
+<span id="cb6-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> dunw) <span class="sc">+</span></span>
+<span id="cb6-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$y_i$"</span>)) <span class="sc">+</span></span>
+<span id="cb6-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Study"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> k <span class="sc">+</span> <span class="fl">0.4</span>, <span class="at">label =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">sprintf</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">bar{D} = %.2f$"</span>, dunw))) <span class="sc">+</span></span>
+<span id="cb6-12"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> id, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"n = "</span>, n1)))</span>
+<span id="cb6-13"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a aria-hidden="true" tabindex="-1"></a>w_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x =</span> yi, <span class="at">y =</span> <span class="fu">factor</span>(id))) <span class="sc">+</span></span>
+<span id="cb6-15"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> <span class="dv">1</span><span class="sc">/</span>vi),</span>
+<span id="cb6-16"><a aria-hidden="true" tabindex="-1"></a>             <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-18"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> dw) <span class="sc">+</span></span>
+<span id="cb6-19"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$y_i$"</span>)) <span class="sc">+</span></span>
+<span id="cb6-20"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Study"</span>) <span class="sc">+</span></span>
+<span id="cb6-21"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="dv">15</span>) <span class="sc">+</span></span>
+<span id="cb6-22"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"label"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> k <span class="sc">+</span> <span class="fl">0.4</span>, <span class="at">label =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">sprintf</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">bar{D}_w = %.2f$"</span>, dw))) <span class="sc">+</span></span>
+<span id="cb6-23"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> id, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"n = "</span>, n1)))</span>
+<span id="cb6-24"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a aria-hidden="true" tabindex="-1"></a>unw_plot <span class="sc">+</span> w_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="equal-effects-ee-meta-analysis" class="title-slide slide level1 section center">
+<h1>Equal-effects (EE) meta-analysis</h1>
+
+</section>
+<section id="ee-meta-analysis" class="slide level2">
+<h2>EE meta-analysis</h2>
+<p>What we did in the last example (the weighted mean) is the exactly a meta-analysis model called <strong>equal-effects</strong> (or less precisely fixed-effect). The assumptions are very simple:</p>
+<ul>
+<li>there is a unique, true effect size to estimate <span class="math inline">\(\theta\)</span></li>
+<li>each study is a more or less precise estimate of <span class="math inline">\(\theta\)</span></li>
+<li>there is no TRUE variability among studies. The observed variability is due to studies that are imprecise (i.e., sampling error)</li>
+<li>assuming that each study has a very large sample size, the observed variability is close to zero.</li>
+</ul>
+</section>
+<section id="ee-meta-analysis-formally" class="slide level2">
+<h2>EE meta-analysis, formally</h2>
+<p><span id="eq-ee1"><span class="math display">\[
+y_i = \theta + \epsilon_i
+\qquad(1)\]</span></span></p>
+<p><span id="eq-ee2"><span class="math display">\[
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_i)
+\qquad(2)\]</span></span></p>
+<p>Where <span class="math inline">\(\sigma^2_i\)</span> is the vector of sampling variabilities of <span class="math inline">\(k\)</span> studies. This is a standard linear model but with heterogeneous sampling variances.</p>
+</section>
+<section id="ee-meta-analysis-1" class="slide level2">
+<h2>EE meta-analysis</h2>
+
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="simulating-an-ee-model" class="slide level2">
+<h2>Simulating an EE model</h2>
+<p>What we were doing with the <code>sim_studies()</code> function so far was simulating an EE model. In fact, there were a single <span class="math inline">\(\theta\)</span> parameter and the observed variability was a function of the <code>rnorm()</code> randomness.</p>
+<p>Based on previous assumptions and thinking a little bit, what could be the result of simulating studies with a very large <span class="math inline">\(n\)</span>?</p>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>ns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">1000</span>, <span class="fl">1e4</span>)</span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a>dats <span class="ot">&lt;-</span> <span class="fu">lapply</span>(ns, <span class="cf">function</span>(n) <span class="fu">sim_studies</span>(<span class="dv">10</span>, <span class="at">es =</span> D, <span class="at">n1 =</span> n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="sec-ee-impact-n" class="slide level2">
+<h2>Simulating an EE modelm</h2>
+</section>
+<section id="simulating-an-ee-model-1" class="slide level2">
+<h2>Simulating an EE model</h2>
+<p>Formulating the model as a intercept-only regression (see Equations <a href="#/eq-ee1" class="quarto-xref">Equation&nbsp;1</a> and <a href="#/eq-ee2" class="quarto-xref">Equation&nbsp;2</a>) we can generate data directly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb8-3"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb8-4"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a aria-hidden="true" tabindex="-1"></a>yi <span class="ot">&lt;-</span> D <span class="sc">+</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">/</span>n <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n))</span>
+<span id="cb8-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># or equivalently</span></span>
+<span id="cb8-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># yi &lt;- rnorm(k, D, sqrt(1/n + 1/n))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As we did for the aggregated data approach. Clearly we need to simulate also the <code>vi</code> vector from the appropriate distribution. Given that we simulated data starting from the participant-level the uncertainty of <code>yi</code> and <code>vi</code> is already included.</p>
+</section>
+<section id="fitting-an-ee-model" class="slide level2">
+<h2>Fitting an EE model</h2>
+<p>The model can be fitted using the <code>metafor::rma()</code> function, with <code>method = "EE"</code><sup>1</sup>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb9-2"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb9-3"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(k, <span class="dv">30</span> <span class="sc">-</span> <span class="dv">10</span>)</span>
+<span id="cb9-4"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> theta, <span class="at">n1 =</span> n)</span>
+<span id="cb9-5"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">method =</span> <span class="st">"EE"</span>)</span>
+<span id="cb9-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb9-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Equal-Effects Model (k = 15)</span></span>
+<span id="cb9-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   logLik  deviance       AIC       BIC      AICc   </span></span>
+<span id="cb9-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  -5.3392   22.8721   12.6783   13.3864   12.9860   </span></span>
+<span id="cb9-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   38.79%</span></span>
+<span id="cb9-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  1.63</span></span>
+<span id="cb9-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb9-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 14) = 22.8721, p-val = 0.0624</span></span>
+<span id="cb9-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb9-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval   ci.lb   ci.ub      </span></span>
+<span id="cb9-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.3750  0.0680  5.5111  &lt;.0001  0.2416  0.5084  *** </span></span>
+<span id="cb9-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb9-25"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>There is a confusion about the <em>fixed-effects</em> vs <em>fixed-effect</em> (no <em>s</em>) and <em>equal-effects</em> models. See <a href="https://wviechtb.github.io/metafor/reference/misc-models.html">https://wviechtb.github.io/metafor/reference/misc-models.html</a></p></li></ol></aside></section>
+<section id="interpreting-an-ee-model" class="slide level2">
+<h2>Interpreting an EE model</h2>
+<ul>
+<li>The first section (<code>logLik</code>, <code>deviance</code>, etc.) presents some general model statistics and information criteria</li>
+<li>The <span class="math inline">\(I^2\)</span> and <span class="math inline">\(H^2\)</span> are statistics evaluating the observed heterogeneity (see next slides)</li>
+<li>The <code>Test of Heterogeneity</code> section presents the test of the <span class="math inline">\(Q\)</span> statistics for the observed heterogeneity (see next slides)</li>
+<li>The <code>Model Results</code> section presents the estimation of the <span class="math inline">\(\theta\)</span> parameter along with the standard error and the Wald <span class="math inline">\(z\)</span> test (<span class="math inline">\(H_0: \theta = 0\)</span>)</li>
+</ul>
+<p>The <code>metafor</code> package has a several well documented functions to calculate and plot model results, residuals analysis etc.</p>
+</section>
+<section id="interpreting-an-ee-model-1" class="slide level2">
+<h2>Interpreting an EE model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit) <span class="co"># general plots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="interpreting-an-ee-model-2" class="slide level2">
+<h2>Interpreting an EE Model</h2>
+<p>The main function for plotting model results is the <code>forest()</code> function that produce the forest plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<section id="interpreting-an-ee-model-3" class="slide level2">
+<h2>Interpreting an EE Model</h2>
+<p>We did not introduced the concept of heterogeneity, but the <span class="math inline">\(I^2\)</span>, <span class="math inline">\(H^2\)</span> and <span class="math inline">\(Q\)</span> statistics basically evaluate if the observed heterogeneity should be attributed to <strong>sampling variability</strong> (uncertainty in estimating <span class="math inline">\(\theta\)</span> because we have a limited <span class="math inline">\(k\)</span> and <span class="math inline">\(n\)</span>) or <strong>sampling variability</strong> plus other sources of heterogeneity.</p>
+</section>
+<section id="ee-model-as-a-weighted-average" class="slide level2">
+<h2>EE model as a weighted Average</h2>
+<p>Formally <span class="math inline">\(\theta\)</span> is estimated as <span class="citation" data-cites="Borenstein2009-mo">(see <a href="#/references" role="doc-biblioref" onclick="">Borenstein et al. 2009, 66</a>)</span></p>
+<p><span class="math display">\[
+\hat{\theta} = \frac{\sum^k_{i = 1}{w_iy_i}}{\sum^k_{i = 1}{w_i}}; \;\;\; w_i = \frac{1}{\sigma^2_i}
+\]</span></p>
+<p><span class="math display">\[
+SE_{\theta} = \frac{1}{\sum^k_{i = 1}{w_i}}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>wi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>dat<span class="sc">$</span>vi</span>
+<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>theta_hat <span class="ot">&lt;-</span> <span class="fu">with</span>(dat, <span class="fu">sum</span>(yi <span class="sc">*</span> wi)<span class="sc">/</span><span class="fu">sum</span>(wi))</span>
+<span id="cb12-3"><a aria-hidden="true" tabindex="-1"></a>se_theta_hat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">sum</span>(wi))</span>
+<span id="cb12-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">theta =</span> theta_hat, <span class="at">se =</span> se_theta_hat, <span class="at">z =</span> theta_hat <span class="sc">/</span> se_theta_hat)</span>
+<span id="cb12-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      theta         se          z </span></span>
+<span id="cb12-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.37500999 0.06804653 5.51108181</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="random-effects-re-meta-analysis" class="title-slide slide level1 section center">
+<h1>Random-effects (RE) meta-analysis</h1>
+
+</section>
+<section id="are-the-ee-assumptions-realistic" class="slide level2">
+<h2>Are the EE assumptions realistic?</h2>
+<p>The EE model is appropriate if our studies are somehow <strong>exact replications</strong> of the exact same effect. We are assuming that there is <strong>no real variability</strong>.</p>
+<div class="fragment">
+<p>However, meta-analysis rarely report the results of <span class="math inline">\(k\)</span> exact replicates. It is more common to include <strong>studies answering the same research question</strong> but with different methods, participants, etc.</p>
+</div>
+<div class="fragment">
+<ul>
+<li>people with different ages or other participant-level differences</li>
+<li>different methodology</li>
+<li>…</li>
+</ul>
+</div>
+</section>
+<section id="are-the-ee-assumptions-realistic-1" class="slide level2">
+<h2>Are the EE assumptions realistic?</h2>
+<div class="fragment">
+<p>If we relax the previous assumption we are able to combine studies that are not exact replications.</p>
+</div>
+<div class="fragment">
+<p>Thus the real effect <span class="math inline">\(\theta\)</span> is no longer a single <strong>true</strong> value but can be larger or smaller in some conditions.</p>
+</div>
+<div class="fragment">
+<p>In other terms we are assuming that there could be some variability (i.e., <strong>heterogeneity</strong>) among studies that is independent from the sample size. Even with studies with <span class="math inline">\(\lim_{n\to\infty}\)</span> the observed variability is not zero.</p>
+</div>
+</section>
+<section id="random-effects-model-re" class="slide level2">
+<h2>Random-effects model (RE)</h2>
+<p>We can extend the EE model including another source of variability, <span class="math inline">\(\tau^2\)</span>. <span class="math inline">\(\tau^2\)</span> is the true heterogeneity among studies caused by methdological differences or intrisic variability in the phenomenon.</p>
+<p>Formally we can extend <a href="#/eq-ee1" class="quarto-xref">Equation&nbsp;1</a> as: <span id="eq-re-mod1"><span class="math display">\[
+y_i = \mu_{\theta} + \delta_i + \epsilon_i
+\qquad(3)\]</span></span></p>
+<p><span id="eq-re-mod2"><span class="math display">\[
+\delta_i \sim \mathcal{N}(0, \tau^2)
+\qquad(4)\]</span></span></p>
+<p><span class="math display">\[
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_i)
+\]</span></p>
+<p>Where <span class="math inline">\(\mu_{\theta}\)</span> is the average effect size and <span class="math inline">\(\delta_i\)</span> is the study-specific deviation from the average effect (regulated by <span class="math inline">\(\tau^2\)</span>). Clearly each study specific effect is <span class="math inline">\(\theta_i = \mu_{\theta} + \delta_i\)</span>.</p>
+</section>
+<section id="re-model" class="slide level2">
+<h2>RE model</h2>
+
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:60.0%" class="r-stretch"></section>
+<section id="re-model-estimation" class="slide level2">
+<h2>RE model estimation</h2>
+<p>Given that we extended the EE model equation. Also the estimation of the average effect need to be extended. Basically the RE is still a weighted average but weights need to include also <span class="math inline">\(\tau^2\)</span>.</p>
+<p><span id="eq-re1"><span class="math display">\[
+\overline y = \frac{\sum_{i = 1}^k y_iw^*_i}{\sum_{i = 1}^k w^*_i}
+\qquad(5)\]</span></span></p>
+<p><span id="eq-re2"><span class="math display">\[
+w^*_i = \frac{1}{\sigma^2_i + \tau^2}
+\qquad(6)\]</span></span></p>
+<p>The weights are different compared to the EE model. Extremely precise/imprecise studies will have less impact in the RE model.</p>
+</section>
+<section id="re-vs-ee-model" class="slide level2">
+<h2>RE vs EE model</h2>
+<p>The crucial difference with the EE model is that even with large <span class="math inline">\(n\)</span>, only the <span class="math inline">\(\mu_{\theta} + \delta_i\)</span> are estimated (almost) without error. As long <span class="math inline">\(\tau^2 \neq 0\)</span> there will be variability in the effect sizes.</p>
+
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
+<section id="simulating-a-re-model" class="slide level2">
+<h2>Simulating a RE Model</h2>
+<p>To simulate the RE model we simply need to include <span class="math inline">\(\tau^2\)</span> in the EE model simulation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">15</span> <span class="co"># number of studies</span></span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co"># average effect</span></span>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.1</span> <span class="co"># heterogeneity</span></span>
+<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(k, <span class="dv">30</span> <span class="sc">-</span> <span class="dv">10</span>) <span class="co"># sample size</span></span>
+<span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a>deltai <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2)) <span class="co"># random-effects</span></span>
+<span id="cb13-6"><a aria-hidden="true" tabindex="-1"></a>thetai <span class="ot">&lt;-</span> mu <span class="sc">+</span> deltai <span class="co"># true study effect</span></span>
+<span id="cb13-7"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> thetai, <span class="at">n1 =</span> n)</span>
+<span id="cb13-9"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span>
+<span id="cb13-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id     yi     vi n1 n2 </span></span>
+<span id="cb13-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1 0.3106 0.0669 34 34 </span></span>
+<span id="cb13-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2 0.4379 0.0747 29 29 </span></span>
+<span id="cb13-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3 1.2151 0.0932 25 25 </span></span>
+<span id="cb13-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4 0.2790 0.0791 30 30 </span></span>
+<span id="cb13-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  5 0.0425 0.0780 25 25 </span></span>
+<span id="cb13-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  6 0.3682 0.0578 24 24</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simulating-a-re-model-1" class="slide level2">
+<h2>Simulating a RE model</h2>
+<p>Again, we can put everything within a function expanding the previous <code>sim_studies()</code> by including <span class="math inline">\(\tau^2\)</span>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>sim_studies <span class="ot">&lt;-</span> <span class="cf">function</span>(k, es, <span class="at">tau2 =</span> <span class="dv">0</span>, n1, <span class="at">n2 =</span> <span class="cn">NULL</span>, <span class="at">add =</span> <span class="cn">NULL</span>){</span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(n1) <span class="sc">==</span> <span class="dv">1</span>) n1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(n1, k)</span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(n2)) n2 <span class="ot">&lt;-</span> n1</span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(es) <span class="sc">==</span> <span class="dv">1</span>) es <span class="ot">&lt;-</span> <span class="fu">rep</span>(es, k)</span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-6"><a aria-hidden="true" tabindex="-1"></a>  yi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a>  vi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, k)</span>
+<span id="cb14-8"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># random effects</span></span>
+<span id="cb14-10"><a aria-hidden="true" tabindex="-1"></a>  deltai <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2))</span>
+<span id="cb14-11"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-12"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k){</span>
+<span id="cb14-13"><a aria-hidden="true" tabindex="-1"></a>    g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1[i], <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb14-14"><a aria-hidden="true" tabindex="-1"></a>    g2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n2[i], es[i] <span class="sc">+</span> deltai[i], <span class="dv">1</span>)</span>
+<span id="cb14-15"><a aria-hidden="true" tabindex="-1"></a>    yi[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g2) <span class="sc">-</span> <span class="fu">mean</span>(g1)</span>
+<span id="cb14-16"><a aria-hidden="true" tabindex="-1"></a>    vi[i] <span class="ot">&lt;-</span> <span class="fu">var</span>(g1)<span class="sc">/</span>n1[i] <span class="sc">+</span> <span class="fu">var</span>(g2)<span class="sc">/</span>n2[i]</span>
+<span id="cb14-17"><a aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-18"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-19"><a aria-hidden="true" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span>k, yi, vi, <span class="at">n1 =</span> n1, <span class="at">n2 =</span> n2)</span>
+<span id="cb14-20"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-21"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(add)){</span>
+<span id="cb14-22"><a aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">cbind</span>(sim, add)</span>
+<span id="cb14-23"><a aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-24"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-25"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to escalc for using metafor methods</span></span>
+<span id="cb14-26"><a aria-hidden="true" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> metafor<span class="sc">::</span><span class="fu">escalc</span>(<span class="at">yi =</span> yi, <span class="at">vi =</span> vi, <span class="at">data =</span> sim)</span>
+<span id="cb14-27"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-28"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sim)</span>
+<span id="cb14-29"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="simulating-a-re-model-2" class="slide level2">
+<h2>Simulating a RE model</h2>
+<p>The data are similar to the EE simulation but we have an extra source of heterogeneity.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">qforest</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="simulating-a-re-model-3" class="slide level2">
+<h2>Simulating a RE model</h2>
+<p>To see the actual impact of <span class="math inline">\(\tau^2\)</span> we can follow the same approach of <a href="#/sec-ee-impact-n" class="quarto-xref">Section&nbsp;3.5</a> thus using a large <span class="math inline">\(n\)</span>. The sampling variance <code>vi</code> of each study is basically 0.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># ... other parameters as before</span></span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a>deltai <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2)) <span class="co"># random-effects</span></span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a>thetai <span class="ot">&lt;-</span> mu <span class="sc">+</span> deltai <span class="co"># true study effect</span></span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> thetai, <span class="at">n1 =</span> n)</span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># or equivalently </span></span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># dat &lt;- sim_studies(k = k, es = mu, tau2 = tau2, n1 = n)</span></span>
+<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span>
+<span id="cb16-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id     yi     vi    n1    n2 </span></span>
+<span id="cb16-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1 0.5872 0.0002 10000 10000 </span></span>
+<span id="cb16-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2 0.0946 0.0002 10000 10000 </span></span>
+<span id="cb16-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3 0.5395 0.0002 10000 10000 </span></span>
+<span id="cb16-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4 0.3103 0.0002 10000 10000 </span></span>
+<span id="cb16-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  5 0.5036 0.0002 10000 10000 </span></span>
+<span id="cb16-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  6 0.8013 0.0002 10000 10000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="simulating-a-re-model-4" class="slide level2">
+<h2>Simulating a RE Model</h2>
+<p>Clearly, compared to <a href="#/sec-ee-impact-n" class="quarto-xref">Section&nbsp;3.5</a>, even with large <span class="math inline">\(n\)</span> the variability is not reduced because <span class="math inline">\(\tau^2 \neq 0\)</span>. As <span class="math inline">\(\tau^2\)</span> approach zero the EE and RE models are similar.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">qforest</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<section id="re-model-estimation-1" class="slide level2">
+<h2>RE model estimation</h2>
+<p>Given that we extended the EE model equation. Also the estimation of the average effect need to be extended. Basically the RE is still a weighted average but weights need to include also <span class="math inline">\(\tau^2\)</span>.</p>
+<p><span id="eq-re1"><span class="math display">\[
+\overline y = \frac{\sum_{i = 1}^k y_iw^*_i}{\sum_{i = 1}^k w^*_i}
+\qquad(7)\]</span></span></p>
+<p><span id="eq-re2"><span class="math display">\[
+w^*_i = \frac{1}{\sigma^2_i + \tau^2}
+\qquad(8)\]</span></span></p>
+<p>The weights are different compared to the EE model. Extremely precise/imprecise studies will have less impact in the RE model.</p>
+</section>
+<section id="fitting-a-re-model" class="slide level2">
+<h2>Fitting a RE model</h2>
+<p>In R we can use the <code>metafor::rma()</code> function using the <code>method = "REML"</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">method =</span> <span class="st">"REML"</span>)</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 15; tau^2 estimator: REML)</span></span>
+<span id="cb18-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   logLik  deviance       AIC       BIC      AICc   </span></span>
+<span id="cb18-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.9688   -3.9376    0.0624    1.3405    1.1533   </span></span>
+<span id="cb18-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0440 (SE = 0.0167)</span></span>
+<span id="cb18-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2097</span></span>
+<span id="cb18-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   99.55%</span></span>
+<span id="cb18-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  220.28</span></span>
+<span id="cb18-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb18-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 14) = 3073.8383, p-val &lt; .0001</span></span>
+<span id="cb18-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb18-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval   ci.lb   ci.ub      </span></span>
+<span id="cb18-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.4920  0.0543  9.0650  &lt;.0001  0.3857  0.5984  *** </span></span>
+<span id="cb18-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb18-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="intepreting-the-re-model" class="slide level2">
+<h2>Intepreting the RE model</h2>
+<p>The model output is quite similar to the EE model and also the intepretation is similar.</p>
+<p>The only extra section is <code>tau^2/tau</code> that is the estimation of the between-study heterogeneity.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 15; tau^2 estimator: REML)</span></span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   logLik  deviance       AIC       BIC      AICc   </span></span>
+<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.9688   -3.9376    0.0624    1.3405    1.1533   </span></span>
+<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0440 (SE = 0.0167)</span></span>
+<span id="cb19-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2097</span></span>
+<span id="cb19-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   99.55%</span></span>
+<span id="cb19-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  220.28</span></span>
+<span id="cb19-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb19-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 14) = 3073.8383, p-val &lt; .0001</span></span>
+<span id="cb19-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb19-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval   ci.lb   ci.ub      </span></span>
+<span id="cb19-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.4920  0.0543  9.0650  &lt;.0001  0.3857  0.5984  *** </span></span>
+<span id="cb19-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb19-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimating-tau2" class="slide level2">
+<h2>Estimating <span class="math inline">\(\tau^2\)</span></h2>
+
+<img data-src="img/langan2017.png" class="quarto-figure quarto-figure-center r-stretch" style="width:80.0%"></section>
+<section id="estimating-tau2-1" class="slide level2">
+<h2>Estimating <span class="math inline">\(\tau^2\)</span></h2>
+<p>The <strong>Restricted Maximum Likelihood</strong> (REML) estimator is considered one of the best. We can compare the results using the <code>all_rma()</code> custom function that tests all the estimators<sup>1</sup>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a>fitl <span class="ot">&lt;-</span> <span class="fu">all_rma</span>(fit)</span>
+<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(filor<span class="sc">::</span><span class="fu">compare_rma</span>(<span class="at">fitlist =</span> fitl), <span class="dv">3</span>)</span>
+<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           DL     HE     HS    HSk     SJ     ML   REML     EB     PM    PMM</span></span>
+<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; b      0.492  0.492  0.492  0.492  0.492  0.492  0.492  0.492  0.492  0.492</span></span>
+<span id="cb20-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; se     0.054  0.054  0.052  0.054  0.054  0.052  0.054  0.054  0.054  0.056</span></span>
+<span id="cb20-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; zval   9.080  9.065  9.399  9.080  9.066  9.383  9.065  9.065  9.066  8.848</span></span>
+<span id="cb20-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pval   0.000  0.000  0.000  0.000  0.000  0.000  0.000  0.000  0.000  0.000</span></span>
+<span id="cb20-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ci.lb  0.386  0.386  0.389  0.386  0.386  0.389  0.386  0.386  0.386  0.383</span></span>
+<span id="cb20-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ci.ub  0.598  0.598  0.595  0.598  0.598  0.595  0.598  0.598  0.598  0.601</span></span>
+<span id="cb20-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I2    99.545 99.546 99.512 99.545 99.546 99.514 99.546 99.546 99.546 99.567</span></span>
+<span id="cb20-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau2   0.044  0.044  0.041  0.044  0.044  0.041  0.044  0.044  0.044  0.046</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>The <code>filor::compare_rma()</code> function is similar to the <code>car::compareCoefs()</code> function</p></li></ol></aside></section>
+<section id="intepreting-heterogeneity-tau2" class="slide level2">
+<h2>Intepreting heterogeneity <span class="math inline">\(\tau^2\)</span></h2>
+<p>Looking at <a href="#/eq-re-mod2" class="quarto-xref">Equation&nbsp;4</a>, <span class="math inline">\(\tau^2\)</span> is essentially the variance of the random-effect. This means that we can intepret it as the variability (or the standard deviation) of the true effect size distribution.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a>tau2s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>)</span>
+<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a>tau2s_t <span class="ot">&lt;-</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">sprintf</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">tau^2 = %.2f$"</span>, tau2s))</span>
+<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb21-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">rnorm</span>(<span class="fl">1e4</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2s[<span class="dv">1</span>])), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">xlab =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$y_i$"</span>), <span class="at">main =</span> tau2s_t[<span class="dv">1</span>], <span class="at">probability =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">4.5</span>), <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
+<span id="cb21-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">rnorm</span>(<span class="fl">1e4</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2s[<span class="dv">2</span>])), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">xlab =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$y_i$"</span>), <span class="at">main =</span> tau2s_t[<span class="dv">2</span>], <span class="at">probability =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">4.5</span>), <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
+<span id="cb21-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#hist(rnorm(1e4, 0, sqrt(tau2s[3])), xlim = c(-2, 2), xlab = latex2exp::TeX("$y_i$"), main = tau2s_t[3], probability = TRUE, ylim = c(0, 5))</span></span>
+<span id="cb21-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">rnorm</span>(<span class="fl">1e4</span>, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2s[<span class="dv">4</span>])), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">xlab =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$y_i$"</span>), <span class="at">main =</span> tau2s_t[<span class="dv">4</span>], <span class="at">probability =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">4.5</span>), <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
+<section id="intepreting-tau2" class="slide level2">
+<h2>Intepreting <span class="math inline">\(\tau^2\)</span></h2>
+<p>As in the previus plot we can assume <span class="math inline">\(n = \infty\)</span> and generate true effects from <a href="#/eq-re-mod2" class="quarto-xref">Equation&nbsp;4</a>. In this way we understand the impact of assuming (or estimating) a certain <span class="math inline">\(\tau^2\)</span>.</p>
+<p>For example, a <span class="math inline">\(\tau = 0.2\)</span> and a <span class="math inline">\(\mu_{\theta} = 0.5\)</span>, 50% of the true effects ranged between:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>yis <span class="ot">&lt;-</span> D <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fl">1e5</span>, <span class="dv">0</span>, <span class="fl">0.2</span>)</span>
+<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(yis, <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">0.25</span>))</span>
+<span id="cb22-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       75%       25% </span></span>
+<span id="cb22-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.6337458 0.3656373</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-q-statistics" class="slide level2">
+<h2>The <span class="math inline">\(Q\)</span> Statistics<sup>1</sup></h2>
+<p>The Q statistics is used to make inference on the heterogeneity. Can be considered as a weighted sum of squares:</p>
+<p><span class="math display">\[
+Q = \sum^k_{i = 1}w_i(y_i - \hat \mu)^2
+\]</span></p>
+<p>Where <span class="math inline">\(\hat \mu\)</span> is EE estimation (regardless if <span class="math inline">\(\tau^2 \neq 0\)</span>) and <span class="math inline">\(w_i\)</span> are the inverse-variance weights. Note that in the case of <span class="math inline">\(w_1 = w_2 ... = w_i\)</span>, Q is just a standard sum of squares (or deviance).</p>
+<aside><ol class="aside-footnotes"><li id="fn3"><p>See <span class="citation" data-cites="Harrer2021-go">Harrer et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span> (Chapter 5) and <span class="citation" data-cites="Hedges2019-ry">Hedges and Schauer (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span> for an overview about the Q statistics</p></li></ol></aside></section>
+<section id="the-q-statistics-1" class="slide level2">
+<h2>The <span class="math inline">\(Q\)</span> Statistics</h2>
+<ul>
+<li>Given that we are summing up squared distances, they should be approximately <span class="math inline">\(\chi^2\)</span> with <span class="math inline">\(df = k - 1\)</span>. In case of no heterogeneity (<span class="math inline">\(\tau^2 = 0\)</span>) the observed variability is only caused by sampling error and the expectd value of the <span class="math inline">\(\chi^2\)</span> is just the degrees of freedom (<span class="math inline">\(df = k - 1\)</span>).</li>
+<li>In case of <span class="math inline">\(\tau^2 \neq 0\)</span>, the expected value is <span class="math inline">\(k - 1 + \lambda\)</span> where <span class="math inline">\(\lambda\)</span> is a non-centrality parameter.</li>
+<li>In other terms, if the expected value of <span class="math inline">\(Q\)</span> exceed the expected value assuming no heterogeneity, we have evidence that <span class="math inline">\(\tau^2 \neq 0\)</span>.</li>
+</ul>
+</section>
+<section id="the-q-statistics-2" class="slide level2">
+<h2>The <span class="math inline">\(Q\)</span> Statistics</h2>
+<p>Let’s try a more practical approach. We simulate a lot of meta-analysis with and without heterogeneity and we check the Q statistics.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a>get_Q <span class="ot">&lt;-</span> <span class="cf">function</span>(yi, vi){</span>
+<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a>  wi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>vi</span>
+<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a>  theta_ee <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(yi, wi)</span>
+<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(wi<span class="sc">*</span>(yi <span class="sc">-</span> theta_ee)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb23-9"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb23-10"><a aria-hidden="true" tabindex="-1"></a>nsim <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb23-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a aria-hidden="true" tabindex="-1"></a>Qs_tau2_0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, nsim)</span>
+<span id="cb23-13"><a aria-hidden="true" tabindex="-1"></a>Qs_tau2 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, nsim)</span>
+<span id="cb23-14"><a aria-hidden="true" tabindex="-1"></a>res2_tau2_0 <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, nsim)</span>
+<span id="cb23-15"><a aria-hidden="true" tabindex="-1"></a>res2_tau2 <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"list"</span>, nsim)</span>
+<span id="cb23-16"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsim){</span>
+<span id="cb23-18"><a aria-hidden="true" tabindex="-1"></a>  dat_tau2_0 <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> <span class="dv">30</span>, <span class="at">es =</span> <span class="fl">0.5</span>, <span class="at">tau2 =</span> <span class="dv">0</span>, <span class="at">n1 =</span> n)</span>
+<span id="cb23-19"><a aria-hidden="true" tabindex="-1"></a>  dat_tau2 <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> <span class="dv">30</span>, <span class="at">es =</span> <span class="fl">0.5</span>, <span class="at">tau2 =</span> tau2, <span class="at">n1 =</span> n)</span>
+<span id="cb23-20"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-21"><a aria-hidden="true" tabindex="-1"></a>  theta_ee_tau2_0 <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(dat_tau2_0<span class="sc">$</span>yi, <span class="dv">1</span><span class="sc">/</span>dat_tau2_0<span class="sc">$</span>vi)</span>
+<span id="cb23-22"><a aria-hidden="true" tabindex="-1"></a>  theta_ee <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(dat_tau2<span class="sc">$</span>yi, <span class="dv">1</span><span class="sc">/</span>dat_tau2<span class="sc">$</span>vi)</span>
+<span id="cb23-23"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-24"><a aria-hidden="true" tabindex="-1"></a>  res2_tau2_0[[i]] <span class="ot">&lt;-</span> dat_tau2_0<span class="sc">$</span>yi <span class="sc">-</span> theta_ee_tau2_0</span>
+<span id="cb23-25"><a aria-hidden="true" tabindex="-1"></a>  res2_tau2[[i]] <span class="ot">&lt;-</span> dat_tau2<span class="sc">$</span>yi <span class="sc">-</span> theta_ee</span>
+<span id="cb23-26"><a aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-27"><a aria-hidden="true" tabindex="-1"></a>  Qs_tau2_0[i] <span class="ot">&lt;-</span> <span class="fu">get_Q</span>(dat_tau2_0<span class="sc">$</span>yi, dat_tau2_0<span class="sc">$</span>vi)</span>
+<span id="cb23-28"><a aria-hidden="true" tabindex="-1"></a>  Qs_tau2[i] <span class="ot">&lt;-</span> <span class="fu">get_Q</span>(dat_tau2<span class="sc">$</span>yi, dat_tau2<span class="sc">$</span>vi)</span>
+<span id="cb23-29"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
+<section id="the-q-statistics-3" class="slide level2">
+<h2>The <span class="math inline">\(Q\)</span> Statistics</h2>
+<p>Let’s try a more practical approach. We simulate a lot of meta-analysis with and without heterogeneity and we check the Q statistics.</p>
+<div class="fragment">
+<ul>
+<li>clearly, in the presence of heterogeneity, the expected value of the Q statistics is higher (due to <span class="math inline">\(\lambda \neq 0\)</span>) and also residuals are larger (the <span class="math inline">\(\chi^2\)</span> is just a sum of squared weighted residuals)</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>we can calculate a p-value for deviation from the <span class="math inline">\(\tau^2 = 0\)</span> case as evidence agaist the absence of heterogeneity</li>
+</ul>
+</div>
+</section>
+<section id="i2-higgins2002-fh" class="slide level2">
+<h2><span class="math inline">\(I^2\)</span> <span class="citation" data-cites="Higgins2002-fh">(<a href="#/references" role="doc-biblioref" onclick="">Higgins and Thompson 2002</a>)</span></h2>
+<p>We have two sources of variability in a random-effects meta-analysis, the sampling variability <span class="math inline">\(\sigma_i^2\)</span> and true heterogeneity <span class="math inline">\(\tau^2\)</span>. We can use the <span class="math inline">\(I^2\)</span> to express the interplay between the two. <span id="eq-i2"><span class="math display">\[
+I^2 = 100\% \times \frac{\hat{\tau}^2}{\hat{\tau}^2 + \tilde{v}}
+\qquad(9)\]</span></span></p>
+<p><span class="math display">\[
+\tilde{v} = \frac{(k-1) \sum w_i}{(\sum w_i)^2 - \sum w_i^2},
+\]</span></p>
+<p>Where <span class="math inline">\(\tilde{v}\)</span> is the typical sampling variability. <span class="math inline">\(I^2\)</span> is intepreted as the proportion of total variability due to real heterogeneity (i.e., <span class="math inline">\(\tau^2\)</span>)</p>
+</section>
+<section id="i2-higgins2002-fh-1" class="slide level2">
+<h2><span class="math inline">\(I^2\)</span> <span class="citation" data-cites="Higgins2002-fh">(<a href="#/references" role="doc-biblioref" onclick="">Higgins and Thompson 2002</a>)</span><sup>1</sup></h2>
+<p>Note that we can have the same <span class="math inline">\(I^2\)</span> in two completely different meta-analysis. An high <span class="math inline">\(I^2\)</span> does not represent high heterogeneity. Let’s assume to have two meta-analysis with <span class="math inline">\(k\)</span> studies and small (<span class="math inline">\(n = 30\)</span>) vs large (<span class="math inline">\(n = 500\)</span>) sample sizes.</p>
+<p>Let’s solve <a href="#/eq-i2" class="quarto-xref">Equation&nbsp;9</a> for <span class="math inline">\(\tau^2\)</span> (using <code>filor::tau2_from_I2()</code>) and we found that the same <span class="math inline">\(I^2\)</span> can be obtained with two completely different <span class="math inline">\(\tau^2\)</span> values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>n_1 <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>vi_1 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n_1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_1</span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>tau2_1 <span class="ot">&lt;-</span> filor<span class="sc">::</span><span class="fu">tau2_from_I2</span>(<span class="fl">0.8</span>, vi_1)</span>
+<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a>tau2_1</span>
+<span id="cb24-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2666667</span></span>
+<span id="cb24-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a aria-hidden="true" tabindex="-1"></a>n_2 <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb24-8"><a aria-hidden="true" tabindex="-1"></a>vi_2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n_2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_2</span>
+<span id="cb24-9"><a aria-hidden="true" tabindex="-1"></a>tau2_2 <span class="ot">&lt;-</span> filor<span class="sc">::</span><span class="fu">tau2_from_I2</span>(<span class="fl">0.8</span>, vi_2)</span>
+<span id="cb24-10"><a aria-hidden="true" tabindex="-1"></a>tau2_2</span>
+<span id="cb24-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.016</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn4"><p>see <a href="https://www.meta-analysis-workshops.com/download/common-mistakes1.pdf">https://www.meta-analysis-workshops.com/download/common-mistakes1.pdf</a></p></li></ol></aside></section>
+<section id="i2-higgins2002-fh-2" class="slide level2">
+<h2><span class="math inline">\(I^2\)</span> <span class="citation" data-cites="Higgins2002-fh">(<a href="#/references" role="doc-biblioref" onclick="">Higgins and Thompson 2002</a>)</span></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-hidden="true" tabindex="-1"></a>n_1 <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb25-2"><a aria-hidden="true" tabindex="-1"></a>vi_1 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n_1 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_1</span>
+<span id="cb25-3"><a aria-hidden="true" tabindex="-1"></a>tau2_1 <span class="ot">&lt;-</span> filor<span class="sc">::</span><span class="fu">tau2_from_I2</span>(<span class="fl">0.8</span>, vi_1)</span>
+<span id="cb25-4"><a aria-hidden="true" tabindex="-1"></a>tau2_1</span>
+<span id="cb25-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2666667</span></span>
+<span id="cb25-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a aria-hidden="true" tabindex="-1"></a>n_2 <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb25-8"><a aria-hidden="true" tabindex="-1"></a>vi_2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n_2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n_2</span>
+<span id="cb25-9"><a aria-hidden="true" tabindex="-1"></a>tau2_2 <span class="ot">&lt;-</span> filor<span class="sc">::</span><span class="fu">tau2_from_I2</span>(<span class="fl">0.8</span>, vi_2)</span>
+<span id="cb25-10"><a aria-hidden="true" tabindex="-1"></a>tau2_2</span>
+<span id="cb25-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.016</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>In other terms, the <span class="math inline">\(I^2\)</span> can be considered a good index of heterogeneity only when the total variance (<span class="math inline">\(\tilde{v} + \tau^2\)</span>) is similar.</p>
+</div>
+</section>
+<section id="what-about-tildev" class="slide level2">
+<h2>What about <span class="math inline">\(\tilde{v}\)</span>?</h2>
+<p><span class="math inline">\(\tilde{v}\)</span> is considered the “typical” within-study variability (see <a href="https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate">https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate</a>). There are different estimators but <a href="#/eq-tildev" class="quarto-xref">Equation&nbsp;10</a> is the most common.</p>
+<p><span id="eq-tildev"><span class="math display">\[
+\tilde{v} = \frac{(k-1) \sum w_i}{(\sum w_i)^2 - \sum w_i^2}
+\qquad(10)\]</span></span></p>
+</section>
+<section id="what-about-tildev-1" class="slide level2">
+<h2>What about <span class="math inline">\(\tilde{v}\)</span>?</h2>
+<p>In the hypothetical case where <span class="math inline">\(\sigma^2_1 = \dots = \sigma^2_k\)</span>, <span class="math inline">\(\tilde{v}\)</span> is just <span class="math inline">\(\sigma^2\)</span>. This fact is commonly used to calculate the statistical power analytically <span class="citation" data-cites="Borenstein2009-mo">(<a href="#/references" role="doc-biblioref" onclick="">Borenstein et al. 2009, chap. 29</a>)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a>vtilde <span class="ot">&lt;-</span> <span class="cf">function</span>(wi){</span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">length</span>(wi)</span>
+<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a>  (k <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">sum</span>(wi) <span class="sc">/</span> (<span class="fu">sum</span>(wi)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> <span class="fu">sum</span>(wi<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb26-7"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a aria-hidden="true" tabindex="-1"></a><span class="co"># same vi</span></span>
+<span id="cb26-9"><a aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">rep</span>((<span class="dv">1</span><span class="sc">/</span><span class="dv">30</span> <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">30</span>), k)</span>
+<span id="cb26-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(vi)</span>
+<span id="cb26-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.06666667 0.06666667 0.06666667 0.06666667 0.06666667 0.06666667</span></span>
+<span id="cb26-12"><a aria-hidden="true" tabindex="-1"></a><span class="fu">vtilde</span>(<span class="dv">1</span><span class="sc">/</span>vi)</span>
+<span id="cb26-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.06666667</span></span>
+<span id="cb26-14"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a aria-hidden="true" tabindex="-1"></a><span class="co"># heterogeneous vi</span></span>
+<span id="cb26-16"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(k, <span class="dv">30</span> <span class="sc">-</span> <span class="dv">10</span>)</span>
+<span id="cb26-17"><a aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> <span class="fu">sim_vi</span>(<span class="at">k =</span> k, <span class="at">n1 =</span> n)</span>
+<span id="cb26-18"><a aria-hidden="true" tabindex="-1"></a><span class="fu">vtilde</span>(<span class="dv">1</span><span class="sc">/</span>vi)</span>
+<span id="cb26-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.06736152</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-about-tildev-2" class="slide level2">
+<h2>What about <span class="math inline">\(\tilde{v}\)</span>?</h2>
+<p>Using simulations we can see that <span class="math inline">\(\tilde{v}\)</span> with heterogenenous variances (i.e., sample sizes in this case) can be approximated by the central tendency of the sample size distribution. Note that we are fixing <span class="math inline">\(\sigma^2 = 1\)</span> thus we are not including uncertainty.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="co"># number of studies</span></span>
+<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="co"># sample size</span></span>
+<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a>vti <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fl">1e5</span>)</span>
+<span id="cb27-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fl">1e5</span>){</span>
+<span id="cb27-7"><a aria-hidden="true" tabindex="-1"></a>  ni <span class="ot">&lt;-</span> <span class="fu">rpois</span>(k, n)</span>
+<span id="cb27-8"><a aria-hidden="true" tabindex="-1"></a>  vi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>ni <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>ni</span>
+<span id="cb27-9"><a aria-hidden="true" tabindex="-1"></a>  vti[i] <span class="ot">&lt;-</span> <span class="fu">vtilde</span>(<span class="dv">1</span><span class="sc">/</span>vi)</span>
+<span id="cb27-10"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a aria-hidden="true" tabindex="-1"></a><span class="co"># vtilde calculated from lambda</span></span>
+<span id="cb27-13"><a aria-hidden="true" tabindex="-1"></a>vt <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
+<section id="h2" class="slide level2">
+<h2><span class="math inline">\(H^2\)</span></h2>
+<p>The <span class="math inline">\(H^2\)</span> is an alternative index of heterogeneity. Is calculated as:</p>
+<p><span class="math display">\[
+H^2 = \frac{Q}{k - 1}
+\]</span></p>
+<p>We defined <span class="math inline">\(Q\)</span> as the weighted sum of squares representing the total variability. <span class="math inline">\(k - 1\)</span> is the expected value of the <span class="math inline">\(\chi^2\)</span> statistics (i.e., sum of squares) when <span class="math inline">\(\tau^2 = 0\)</span> (or <span class="math inline">\(\lambda = 0\)</span>).</p>
+<p>Thus <span class="math inline">\(H^2\)</span> is the ratio between total heterogeneity and sampling variability. Higher <span class="math inline">\(H^2\)</span> is associated with higher heterogeneity <strong>relative</strong> to the sampling variability. <span class="math inline">\(H^2\)</span> is not a measure of absolute heterogeneity.</p>
+</section>
+<section id="h2-1" class="slide level2">
+<h2><span class="math inline">\(H^2\)</span></h2>
+<p>When we are fitting a RE model, the <span class="math inline">\(I^2\)</span> and <span class="math inline">\(H^2\)</span> equations are slightly different <span class="citation" data-cites="Higgins2002-fh">(<a href="#/references" role="doc-biblioref" onclick="">Higgins and Thompson 2002</a>)</span>. See also the <code>metafor</code> <a href="https://github.com/cran/metafor/blob/994d26a65455fac90760ad6a004ec1eaca5856b1/R/rma.uni.r#L2459C30-L2459C30">source code</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb28-3"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb28-4"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb28-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> mu, <span class="at">tau2 =</span> tau2, <span class="at">n1 =</span> n)</span>
+<span id="cb28-7"><a aria-hidden="true" tabindex="-1"></a>fit_re <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">method =</span> <span class="st">"REML"</span>)</span>
+<span id="cb28-8"><a aria-hidden="true" tabindex="-1"></a>fit_ee <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">method =</span> <span class="st">"EE"</span>)</span>
+<span id="cb28-9"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a aria-hidden="true" tabindex="-1"></a><span class="co"># H2 with EE model</span></span>
+<span id="cb28-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a aria-hidden="true" tabindex="-1"></a>theta_ee <span class="ot">&lt;-</span> fit_ee<span class="sc">$</span>b[[<span class="dv">1</span>]] <span class="co"># weighted.mean(dat$yi, 1/dat$vi)</span></span>
+<span id="cb28-13"><a aria-hidden="true" tabindex="-1"></a>wi <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>dat<span class="sc">$</span>vi</span>
+<span id="cb28-14"><a aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">with</span>(dat, <span class="fu">sum</span>((<span class="dv">1</span><span class="sc">/</span>vi)<span class="sc">*</span>(yi <span class="sc">-</span> theta_ee)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb28-15"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(Q, fit_ee<span class="sc">$</span>QE) <span class="co"># same</span></span>
+<span id="cb28-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 182.4965 182.4965</span></span>
+<span id="cb28-17"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">H2 =</span> fit_ee<span class="sc">$</span>QE <span class="sc">/</span> (fit_ee<span class="sc">$</span>k <span class="sc">-</span> fit_ee<span class="sc">$</span>p), <span class="at">H2_model =</span> fit_ee<span class="sc">$</span>H2) <span class="co"># same</span></span>
+<span id="cb28-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       H2 H2_model </span></span>
+<span id="cb28-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.843399 1.843399</span></span>
+<span id="cb28-21"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-22"><a aria-hidden="true" tabindex="-1"></a><span class="co"># H2 with RE model</span></span>
+<span id="cb28-23"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-24"><a aria-hidden="true" tabindex="-1"></a>vt <span class="ot">&lt;-</span> <span class="fu">vtilde</span>(<span class="dv">1</span><span class="sc">/</span>dat<span class="sc">$</span>vi)</span>
+<span id="cb28-25"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">H2 =</span> fit_re<span class="sc">$</span>tau2 <span class="sc">/</span> vt <span class="sc">+</span> <span class="dv">1</span>, <span class="at">H2_model =</span> fit_re<span class="sc">$</span>H2) <span class="co"># same</span></span>
+<span id="cb28-26"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       H2 H2_model </span></span>
+<span id="cb28-27"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.845298 1.845298</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="confidence-intervals" class="slide level2">
+<h2>Confidence Intervals</h2>
+<p>What is reported in the model summary as <code>ci.lb</code> and <code>ci.ub</code> refers to the 95% confidence interval representing the uncertainty in estimating the effect (or a meta-regression parameter).</p>
+<p>Without looking at the equations, let’s try to implement this idea using simulations.</p>
+<ul>
+<li>choose <span class="math inline">\(k\)</span>, <span class="math inline">\(\tau^2\)</span> and <span class="math inline">\(n\)</span></li>
+<li>simulate data (several times) accordingly and fit the RE model</li>
+<li>extract the estimated effect size</li>
+<li>compare the simulated sampling distribution with the analytical result</li>
+</ul>
+</section>
+<section id="confidence-intervals-1" class="slide level2">
+<h2>Confidence Intervals</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb29-2"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb29-3"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb29-4"><a aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb29-5"><a aria-hidden="true" tabindex="-1"></a>nsim <span class="ot">&lt;-</span> <span class="fl">5e3</span></span>
+<span id="cb29-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># true parameters (see Borenstein, 2009; Chapter 29)</span></span>
+<span id="cb29-8"><a aria-hidden="true" tabindex="-1"></a>vt <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n</span>
+<span id="cb29-9"><a aria-hidden="true" tabindex="-1"></a>vs <span class="ot">&lt;-</span> (vt <span class="sc">+</span> tau2)<span class="sc">/</span> k</span>
+<span id="cb29-10"><a aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(vs)</span>
+<span id="cb29-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a aria-hidden="true" tabindex="-1"></a>mui <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, nsim)</span>
+<span id="cb29-13"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsim){</span>
+<span id="cb29-15"><a aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> mu, <span class="at">tau2 =</span> tau2, <span class="at">n1 =</span> n)</span>
+<span id="cb29-16"><a aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat)</span>
+<span id="cb29-17"><a aria-hidden="true" tabindex="-1"></a>  mui[i] <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)[<span class="dv">1</span>]</span>
+<span id="cb29-18"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-19"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a aria-hidden="true" tabindex="-1"></a><span class="co"># standard error</span></span>
+<span id="cb29-21"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">simulated =</span> <span class="fu">sd</span>(mui), <span class="at">analytical =</span> fit<span class="sc">$</span>se)</span>
+<span id="cb29-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  simulated analytical </span></span>
+<span id="cb29-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.06284351 0.06136665</span></span>
+<span id="cb29-24"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-25"><a aria-hidden="true" tabindex="-1"></a><span class="co"># confidence interval</span></span>
+<span id="cb29-26"><a aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(</span>
+<span id="cb29-27"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"simulated"</span>  <span class="ot">=</span> <span class="fu">quantile</span>(mui, <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.975</span>)),</span>
+<span id="cb29-28"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"analytical"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"2.5%"</span> <span class="ot">=</span> fit<span class="sc">$</span>ci.lb, <span class="st">"97.5%"</span> <span class="ot">=</span> fit<span class="sc">$</span>ci.ub)</span>
+<span id="cb29-29"><a aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-30"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   5%     97.5%</span></span>
+<span id="cb29-31"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; simulated  0.3949926 0.6219499</span></span>
+<span id="cb29-32"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; analytical 0.3073924 0.5479453</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="confidence-intervals-2" class="slide level2">
+<h2>Confidence Intervals</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(mui, <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">main =</span> <span class="st">"Sampling Distribution"</span>, <span class="at">xlab =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">mu_{</span><span class="sc">\\</span><span class="st">theta}$"</span>))</span>
+<span id="cb30-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, mu, se), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"firebrick"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-36-1.png" width="960" class="r-stretch"></section>
+<section id="confidence-intervals-3" class="slide level2">
+<h2>Confidence Intervals</h2>
+<p>Now the equation for the 95% confidence interval should be more clear. The standard error is a function of the within study sampling variances (depending mainly on <span class="math inline">\(n\)</span>), <span class="math inline">\(\tau^2\)</span> and <span class="math inline">\(k\)</span>. As we increase <span class="math inline">\(k\)</span> the standard error tends towards zero.</p>
+<p><span class="math display">\[
+CI = \hat \mu_{\theta} \pm z SE_{\mu_{\theta}}
+\]</span></p>
+<p><span class="math display">\[
+SE_{\mu_{\theta}} = \sqrt{\frac{1}{\sum^{k}_{i = 1}w^{\star}_i}}
+\]</span></p>
+<p><span class="math display">\[
+w^{\star}_i = \frac{1}{\sigma^2_i + \tau^2}
+\]</span></p>
+</section>
+<section id="confidence-intervals-4" class="slide level2">
+<h2>Confidence Intervals</h2>
+<p>We can also see it analytically, there is a huge impact of <span class="math inline">\(k\)</span>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># true parameters (see Borenstein, 2009; Chapter 29)</span></span>
+<span id="cb31-2"><a aria-hidden="true" tabindex="-1"></a>vt <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>n <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n</span>
+<span id="cb31-3"><a aria-hidden="true" tabindex="-1"></a>vs <span class="ot">&lt;-</span> (vt <span class="sc">+</span> tau2)<span class="sc">/</span> k</span>
+<span id="cb31-4"><a aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(vs)</span>
+<span id="cb31-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">5000</span>)</span>
+<span id="cb31-7"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">5000</span>)</span>
+<span id="cb31-8"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>)</span>
+<span id="cb31-9"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">k =</span> k, <span class="at">n =</span> n, <span class="at">tau2 =</span> tau2)</span>
+<span id="cb31-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>vt <span class="ot">&lt;-</span> <span class="fu">with</span>(dd, <span class="dv">1</span><span class="sc">/</span>n <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>n)</span>
+<span id="cb31-13"><a aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>vs <span class="ot">&lt;-</span> <span class="fu">with</span>(dd, (vt <span class="sc">+</span> tau2)<span class="sc">/</span> k)</span>
+<span id="cb31-14"><a aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(dd<span class="sc">$</span>vs)</span>
+<span id="cb31-15"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-16"><a aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>k <span class="ot">&lt;-</span> <span class="fu">as_tex_label</span>(dd<span class="sc">$</span>k, <span class="st">"$k = %s$"</span>)</span>
+<span id="cb31-17"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> se, <span class="at">color =</span> <span class="fu">factor</span>(tau2))) <span class="sc">+</span></span>
+<span id="cb31-19"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb31-20"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>k, <span class="at">labeller =</span> label_parsed) <span class="sc">+</span></span>
+<span id="cb31-21"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">tau^2"</span>)) <span class="sc">+</span></span>
+<span id="cb31-22"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Sample Size (n)"</span>) <span class="sc">+</span></span>
+<span id="cb31-23"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$SE_{</span><span class="sc">\\</span><span class="st">mu_{</span><span class="sc">\\</span><span class="st">theta}}$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="meta-analysis-models_files/figure-revealjs/unnamed-chunk-37-1.png" width="960" class="r-stretch"></section>
+<section id="prediction-intervals-pi" class="slide level2">
+<h2>Prediction intervals (PI)</h2>
+<p>We could say that the CI is not completely taking into account the between-study heterogeneity (<span class="math inline">\(\tau^2\)</span>). After a meta-analysis we would like to know how confident we are in the parameters estimation BUT also <strong>what would be the expected effect running a new experiment tomorrow?</strong>.</p>
+<p>The <strong>prediction interval</strong> <span class="citation" data-cites="IntHout2016-sz Riley2011-hp">(<a href="#/references" role="doc-biblioref" onclick="">IntHout et al. 2016</a>; <a href="#/references" role="doc-biblioref" onclick="">Riley, Higgins, and Deeks 2011</a>)</span> is exactly the range of effects that I expect in predicting a new study.</p>
+</section>
+<section id="pi-for-a-sample-mean" class="slide level2">
+<h2>PI for a sample mean</h2>
+<p>To understand the concept, let’s assume to have a sample <span class="math inline">\(X\)</span> of size <span class="math inline">\(n\)</span> and we estimate the mean <span class="math inline">\(\overline X\)</span>. The PI is calculated as<sup>1</sup>:</p>
+<p><span class="math display">\[
+PI = \overline X \pm t_{\alpha/2} s_x \sqrt{1 + \frac{1}{n}}
+\]</span></p>
+<p>Where <span class="math inline">\(s\)</span> is the sample standard deviation. Basically we are combining the uncertainty in estimating <span class="math inline">\(\overline X\)</span> (i.e, <span class="math inline">\(\frac{s_x}{n}\)</span>) with the standard deviation of the data <span class="math inline">\(s_x\)</span>. Compare it with the confidence interval containing only <span class="math inline">\(\frac{s_x}{n}\)</span>.</p>
+<aside><ol class="aside-footnotes"><li id="fn5"><p>Notice that the equation, in particular the usage of <span class="math inline">\(t\)</span> vs <span class="math inline">\(z\)</span> depends on assuming <span class="math inline">\(s_x\)</span> to be known or estimated. See <a href="https://online.stat.psu.edu/stat501/lesson/3/3.3">https://online.stat.psu.edu/stat501/lesson/3/3.3</a>, <a href="https://en.wikipedia.org/wiki/Prediction_interval">https://en.wikipedia.org/wiki/Prediction_interval</a> and <a href="https://www.bryanshalloway.com/2021/03/18/intuition-on-uncertainty-of-predictions-introduction-to-prediction-intervals/">https://www.bryanshalloway.com/2021/03/18/intuition-on-uncertainty-of-predictions-introduction-to-prediction-intervals/</a></p></li></ol></aside></section>
+<section id="pi-in-meta-analysis" class="slide level2">
+<h2>PI in meta-analysis</h2>
+<p>For meta-analysis the equation<sup>1</sup> is conceptually similar but with different quantities.</p>
+<p><span class="math display">\[
+PI = \hat \mu_{\theta} \pm z \sqrt{\tau^2 + SE_{\mu_{\theta}}}
+\]</span></p>
+<p>Basically we are combining all the sources of uncertainty. As long as <span class="math inline">\(\tau^2 \neq 0\)</span> the PI is greater than the CI (in the EE model they are the same). Thus even with very precise <span class="math inline">\(\mu_{\theta}\)</span> estimation, large <span class="math inline">\(\tau^2\)</span> leads to uncertain predictions.</p>
+<aside><ol class="aside-footnotes"><li id="fn6"><p>When a <span class="math inline">\(t\)</span> distribution is assumed, the quantiles are calculated using <span class="math inline">\(k - 2\)</span> degrees of freedom</p></li></ol></aside></section>
+<section id="pi-in-meta-analysis-1" class="slide level2">
+<h2>PI in meta-analysis</h2>
+<p>In R the PI can be calculated using <code>predict()</code>. By default the model assume a standard normal distribution thus using <span class="math inline">\(z\)</span> scores. To use the <span class="citation" data-cites="Riley2011-hp">Riley, Higgins, and Deeks (<a href="#/references" role="doc-biblioref" onclick="">2011</a>)</span> approach (<span class="math inline">\(t\)</span> distribution) the model need to be fitted using <code>test = "t"</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb32-2"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="at">k =</span> k, <span class="at">es =</span> <span class="fl">0.5</span>, <span class="at">tau2 =</span> <span class="fl">0.1</span>, <span class="at">n1 =</span> <span class="dv">30</span>)</span>
+<span id="cb32-3"><a aria-hidden="true" tabindex="-1"></a>fit_z <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">test =</span> <span class="st">"z"</span>) <span class="co"># test = "z" is the default</span></span>
+<span id="cb32-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit_z) <span class="co"># notice pi.ub/pi.lb vs ci.ub/ci.lb</span></span>
+<span id="cb32-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb32-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    pred     se  ci.lb  ci.ub   pi.lb  pi.ub </span></span>
+<span id="cb32-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.4923 0.0397 0.4145 0.5702 -0.1090 1.0937</span></span>
+<span id="cb32-8"><a aria-hidden="true" tabindex="-1"></a><span class="co"># manually</span></span>
+<span id="cb32-9"><a aria-hidden="true" tabindex="-1"></a>fit_z<span class="sc">$</span>b[[<span class="dv">1</span>]] <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)) <span class="sc">*</span> <span class="fu">sqrt</span>(fit_z<span class="sc">$</span>se<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> fit_z<span class="sc">$</span>tau2)</span>
+<span id="cb32-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.1090419  1.0936602</span></span>
+<span id="cb32-11"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a aria-hidden="true" tabindex="-1"></a>fit_t <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat, <span class="at">test =</span> <span class="st">"t"</span>)</span>
+<span id="cb32-13"><a aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit_t) <span class="co"># notice pi.ub/pi.lb vs ci.ub/ci.lb</span></span>
+<span id="cb32-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb32-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    pred     se  ci.lb  ci.ub   pi.lb  pi.ub </span></span>
+<span id="cb32-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.4923 0.0397 0.4135 0.5711 -0.1165 1.1011</span></span>
+<span id="cb32-17"><a aria-hidden="true" tabindex="-1"></a><span class="co"># manually</span></span>
+<span id="cb32-18"><a aria-hidden="true" tabindex="-1"></a>fit_z<span class="sc">$</span>b[[<span class="dv">1</span>]] <span class="sc">+</span> <span class="fu">qt</span>(<span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), k <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="fu">sqrt</span>(fit_t<span class="sc">$</span>se<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> fit_t<span class="sc">$</span>tau2)</span>
+<span id="cb32-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.116560  1.101178</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Borenstein2009-mo" class="csl-entry" role="listitem">
+Borenstein, Michael, Larry V Hedges, Julian P T Higgins, and Hannah R Rothstein. 2009. <span>“Introduction to <span>Meta-Analysis</span>.”</span> <a href="https://doi.org/10.1002/9780470743386">https://doi.org/10.1002/9780470743386</a>.
+</div>
+<div id="ref-Harrer2021-go" class="csl-entry" role="listitem">
+Harrer, Mathias, Pim Cuijpers, Toshi Furukawa, and David Ebert. 2021. <em>Doing Meta-Analysis with r: A Hands-on Guide</em>. 1st ed. London, England: CRC Press.
+</div>
+<div id="ref-Hedges2019-ry" class="csl-entry" role="listitem">
+Hedges, Larry V, and Jacob M Schauer. 2019. <span>“Statistical Analyses for Studying Replication: Meta-Analytic Perspectives.”</span> <em>Psychological Methods</em> 24 (October): 557–70. <a href="https://doi.org/10.1037/met0000189">https://doi.org/10.1037/met0000189</a>.
+</div>
+<div id="ref-Higgins2002-fh" class="csl-entry" role="listitem">
+Higgins, Julian P T, and Simon G Thompson. 2002. <span>“Quantifying Heterogeneity in a Meta-Analysis.”</span> <em>Statistics in Medicine</em> 21 (June): 1539–58. <a href="https://doi.org/10.1002/sim.1186">https://doi.org/10.1002/sim.1186</a>.
+</div>
+<div id="ref-IntHout2016-sz" class="csl-entry" role="listitem">
+IntHout, Joanna, John P A Ioannidis, Maroeska M Rovers, and Jelle J Goeman. 2016. <span>“Plea for Routinely Presenting Prediction Intervals in Meta-Analysis.”</span> <em>BMJ Open</em> 6 (July): e010247. <a href="https://doi.org/10.1136/bmjopen-2015-010247">https://doi.org/10.1136/bmjopen-2015-010247</a>.
+</div>
+<div id="ref-Riley2011-hp" class="csl-entry" role="listitem">
+Riley, Richard D, Julian P T Higgins, and Jonathan J Deeks. 2011. <span>“Interpretation of Random Effects Meta-Analyses.”</span> <em>BMJ</em> 342 (February): d549. <a href="https://doi.org/10.1136/bmj.d549">https://doi.org/10.1136/bmj.d549</a>.
+</div>
+</div>
+
+
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

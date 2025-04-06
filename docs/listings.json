@@ -1,11 +1,17 @@
 [
   {
-    "listing": "/materials.html",
+    "listing": "/slides.html",
     "items": [
-      "/materials/baseR-vs-tidyverse.html",
-      "/materials/functional-programming-examples.html",
-      "/materials/glmer/glmer.html",
-      "/materials/signal-detection-theory.html"
+      "/slides/00-course-intro/00-course-intro.html",
+      "/slides/01-psychological-research/01-psychological-research.html",
+      "/slides/03-modern-r/03-modern-r.html",
+      "/slides/04-quarto/04-quarto.html",
+      "/slides/05-git-github/05-git-github.html",
+      "/slides/06-meta-analysis/02-intro-meta-analysis/intro-meta-analysis.html",
+      "/slides/06-meta-analysis/03-meta-analysis-models/meta-analysis-models.html",
+      "/slides/06-meta-analysis/04-meta-regression/meta-regression.html",
+      "/slides/06-meta-analysis/06-power-analysis/power-analysis.html",
+      "/slides/06-meta-analysis/05-publication-bias/publication-bias.html"
     ]
   },
   {
@@ -19,13 +25,12 @@
     ]
   },
   {
-    "listing": "/slides.html",
+    "listing": "/materials.html",
     "items": [
-      "/slides/00-course-intro/00-course-intro.html",
-      "/slides/01-psychological-research/01-psychological-research.html",
-      "/slides/03-modern-r/03-modern-r.html",
-      "/slides/04-quarto/04-quarto.html",
-      "/slides/05-git-github/05-git-github.html"
+      "/materials/baseR-vs-tidyverse.html",
+      "/materials/functional-programming-examples.html",
+      "/materials/glmer/glmer.html",
+      "/materials/signal-detection-theory.html"
     ]
   }
 ]

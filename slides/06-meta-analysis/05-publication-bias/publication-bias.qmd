@@ -1,0 +1,685 @@
+---
+title: "Publication Bias"
+execute: 
+  echo: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# packages
+library(tidyverse)
+library(patchwork)
+library(metafor)
+library(here)
+devtools::load_all()
+
+# ggplot theme
+theme_set(mtheme())
+
+# objects
+imgs <- readRDS(here("slides", "06-meta-analysis", "03-meta-analysis-models", "objects", "r-imgs.rds"))
+```
+
+```{r}
+#| label: functions
+#| include: false
+funs <- read_all_funs()
+```
+
+# Publication Bias (PB) {.section}
+
+# What do you think about PB? What do you know? Causes? Remedies?  {.question .smaller}
+
+## Publication Bias (PB)
+
+The PB is a very critical **most problematic aspects** of meta-analysis. Essentially **the probability of publishing a paper** (~and thus including into the meta-analysis) [is not the same regardless of the result]{.imp}.
+
+```{r}
+#| echo: false
+par(mfrow = c(1,2))
+pval <- seq(0, 1, 0.01)
+
+plot(pval, dbeta(pval, 1, 1), 
+     type = "l", 
+     xlab = "P Value", 
+     ylab = "Probability of Publishing",
+     yaxt = "n",
+     main = "No Publication Bias")
+
+plot(pval, dbeta(pval, 1, 20), 
+     type = "l", 
+     xlab = "P Value", 
+     ylab = "Probability of Publishing",
+     yaxt = "n",
+     main = "Publication Bias")
+```
+
+## Publication Bias Disclaimer!
+
+**We cannot (completely) solve the PB using statistical tools**. The PB is a problem related to the publishing process and publishing incentives
+
+. . .
+
+- **pre-registrations**, **multi-lab studies**, etc. can (almost) completely solve the problem filling the literature with unbiased studies
+
+. . .
+
+- there are **statistical tools to detect, estimate and correct** for the publication bias. As every statistical method, they are influenced by statistical assumptions, number of studies and sample size, heterogeneity, etc.
+
+## Publication Bias (PB) - The Big Picture^[Thanks to the Wolfgang Viechtbauer's course [https://www.wvbauer.com/doku.php/course_ma](https://www.wvbauer.com/doku.php/course_ma)]
+
+```{r}
+#| echo: false
+knitr::include_graphics("img/big-picture.svg")
+```
+
+## PB under an EE model
+
+The easiest way to understand the PB is by simulating what happen without the PB. Let's simulate a lot of studies (under a EE model) keeping all the results without selection (the ideal world).
+
+```{r}
+#| echo: true
+set.seed(2023)
+k <- 1e3
+n <- round(runif(k, 10, 100))
+theta <- 0.3
+dat <- sim_studies(k = k, es = theta, tau2 = 0, n1 = n)
+dat <- summary(dat)
+# compute 1 tail pvalue
+dat$pval1 <- 1 - pnorm(dat$zi)
+ht(dat)
+```
+
+## PB under an EE model
+
+```{r}
+par(mfrow = c(1, 3))
+hist(dat$yi, breaks = 50, col = "dodgerblue", main = "Effect Size")
+plot(dat$yi, dat$pval1, pch = 19, col = ifelse(dat$pval1 <= 0.05, scales::alpha("firebrick", 0.5), scales::alpha("black", 0.5)),
+     main = "P value (one tail) ~ Effect size")
+abline(h = 0.05)
+plot(dat$yi, dat$pval, pch = 19, col = ifelse(dat$pval <= 0.05, scales::alpha("firebrick", 0.5), scales::alpha("black", 0.5)),
+     main = "P value (two tails) ~ Effect size")
+abline(h = 0.05)
+```
+
+## PB under an EE model
+
+Then, let's assume that our publishing system is very strict (extreme). You can publish only if $p \leq 0.05$ on the expected direction. Then the true population of effect sizes will be truncated. Essentially we are assuming that $P(1|p \leq 0.05) = 1$ and $P(1|p \leq 0.05) = 0$.
+
+```{r}
+#| echo: true
+#| collapse: true
+
+# selecting
+sign <- dat$pval1 <= 0.05 & dat$zi > 0
+dat_pb <- dat[sign, ]
+dat_un <- dat[sample(1:nrow(dat), sum(sign)), ]
+
+# fitting EE model for the full vs selected (ignore k differences)
+fit <- rma(yi, vi, method = "EE", data = dat_un)
+fit_pb <- rma(yi, vi, method = "EE", data = dat_pb)
+```
+
+## PB under an EE model
+
+Then, let's assume that our publishing system is very strict (extreme). You can publish only if $p \leq 0.05$ on the expected direction. Then the true population of effect sizes will be truncated. Essentially we are assuming that $P(1|p \leq 0.05) = 1$ and $P(1|p \leq 0.05) = 0$.
+
+```{r}
+round(compare_rma(fit, fit_pb), 3)
+```
+
+## PB under an EE model
+
+The situation is even worse when we simulate a null effect. This strict selection results in committing type-1 error:
+
+```{r}
+set.seed(2023)
+k <- 1e3
+n <- round(runif(k, 10, 100))
+dat0 <- sim_studies(k = k, es = 0, tau2 = 0, n1 = n)
+dat0 <- summary(dat0)
+# compute 1 tail pvalue
+dat0$pval1 <- 1 - pnorm(dat0$zi)
+# selecting
+sign <- dat0$pval1 <= 0.05 & dat0$zi > 0
+dat_pb0 <- dat0[sign, ]
+dat_un0 <- dat0[sample(1:nrow(dat0), sum(sign)), ]
+
+# fitting EE model for the full vs selected (ignore k differences)
+fit0 <- rma(yi, vi, method = "EE", data = dat_un0)
+fit_pb0 <- rma(yi, vi, method = "EE", data = dat_pb0)
+round(compare_rma(fit0, fit_pb0), 3)
+```
+
+## PB under an EE model
+
+Assuming to pick a very precise ($n = 1000$) and a very unprecise ($n = 20$) study, which one is more likely to have an effect size close to the true value?
+
+. . .
+
+The precise study has a lower $\epsilon_i$ thus is closer to $\theta$. This relationship create a very insightful visual representation.
+
+. . .
+
+What could be the shape of the plot when plotting the precision (e.g., the sample size or the inverse of the variance) as a function of the effect size?
+
+## PB under an EE model
+
+```{r}
+#|code-fold: true
+plot(dat$yi, sqrt(dat$vi), ylim=rev(range(dat$vi)), pch = 19, col = scales::alpha("black", 0.5), cex = 1.5)
+abline(v = theta, lwd = 3, col = "firebrick")
+```
+
+## Publication Bias (PB) - Funnel Plot
+
+We created a **funnel plot**. This is a **visual tool** to check the presence of asymmetry that could be caused by publication bias. If meta-analysis assumptions are respected, and there is no publication bias:
+
+- effects should be normally distributed around the average effect
+- more precise studies should be closer to the average effect
+- less precise studies could be equally distributed around the average effect
+
+## Publication Bias (PB) - Funnel Plot
+
+The plot assume the typical funnel shape and there are not missing spots on the at the bottom. The presence of missing spots is a potential index of publication bias.
+
+```{r}
+#| code-fold: true
+
+fit <- rma(yi, vi, method = "EE", data = dat)
+dat$pb <- dat$pval <= 0.05
+
+with(dat[dat$pb, ],
+     plot(yi, sei,
+          ylim = rev(range(dat$sei)),
+          xlab = latex2exp::TeX("$y_i$"),
+          ylab = latex2exp::TeX("$\\sqrt{\\sigma_i^2}$"),
+          xlim = range(dat$yi),
+          pch = 19,
+          col = scales::alpha("firebrick", 0.5))
+)
+
+with(dat[!dat$pb, ],
+     points(yi, sei, col = scales::alpha("black", 0.5), pch = 19)
+)
+
+abline(v = fit$b[[1]], col = "black", lwd = 1.2)
+```
+
+## Publication Bias (PB) - Funnel Plot
+
+The plot assume the typical funnel shape and there are not missing spots on the at the bottom. The presence of missing spots is a potential index of publication bias.
+
+```{r}
+#| echo: false
+with(dat[dat$pb, ],
+     plot(yi, sei,
+          ylim = rev(range(dat$sei)),
+          xlab = latex2exp::TeX("$y_i$"),
+          ylab = latex2exp::TeX("$\\sqrt{\\sigma_i^2}$"),
+          xlim = range(dat$yi),
+          pch = 19,
+          col = scales::alpha("firebrick", 0.5))
+)
+
+abline(v = fit$b[[1]], col = "black", lwd = 1.2)
+```
+
+## Robustness to PB - Fail-safe N
+
+The Fail-safe N [@Rosenthal1979-yx] idea is very simple. Given a meta-analysis with a significant result (i.e., $p \leq \alpha$). How many null studies (i.e., $\hat \theta = 0$) do I need to obtain $p > \alpha$?
+
+```{r}
+#| echo: true
+metafor::fsn(yi, vi, data = dat)
+```
+
+## Robustness to PB - Fail-safe N
+
+There are several criticism to the Fail-safe N procedure:
+
+. . .
+
+- is not actually *detecting* the PB but suggesting the required PB size to remove the effect. A very large N suggest that even with PB, it is unlikely that the results could be completely changed by actually reporting null studies
+
+. . .
+
+- @Orwin1983-vu proposed a new method calculating the number of studies required to reduce the effect size to a given target
+
+. . .
+
+- @Rosenberg2005-ie proposed a method similar to Rosenthal [-@Rosenthal1979-yx] but combining the (weighted) effect sizes and not the p-values.
+
+
+## Detecting PB - Egger Regression
+
+A basic method to test the funnel plot asymmetry is using an the **Egger regression test**. Basically we calculate the relationship between $y_i$ and $\sqrt{\sigma^2_i}$. In the absence of asimmetry, the line slope should be not different from 0.
+
+We can use the `metafor::regtest()` function:
+
+```{r}
+#| echo: true
+egger <- regtest(fit)
+egger
+```
+
+## Publication Bias (PB) - Egger Regression
+
+```{r}
+#| echo: false
+egger_pb <- regtest(update(fit, data = dat[dat$pb, ]))
+
+par(mfrow = c(1, 2))
+
+with(dat,
+     plot(yi, sei,
+          ylim = rev(range(dat$sei)),
+          xlab = latex2exp::TeX("$y_i$"),
+          ylab = latex2exp::TeX("$\\sqrt{\\sigma_i^2}$"),
+          xlim = range(dat$yi),
+          pch = 19,
+          main = "No Publication Bias",
+          col = scales::alpha("firebrick", 0.5))
+)
+
+se <- seq(0,1.8,length=100)
+lines(coef(egger$fit)[1] + coef(egger$fit)[2]*se, se, lwd=3)
+
+with(dat[dat$pb, ],
+     plot(yi, sei,
+          ylim = rev(range(dat$sei)),
+          xlab = latex2exp::TeX("$y_i$"),
+          ylab = latex2exp::TeX("$\\sqrt{\\sigma_i^2}$"),
+          xlim = range(dat$yi),
+          pch = 19,
+          main = "Publication Bias",
+          col = scales::alpha("firebrick", 0.5))
+)
+
+se <- seq(0,1.8,length=100)
+lines(coef(egger_pb$fit)[1] + coef(egger_pb$fit)[2]*se, se, lwd=3)
+```
+
+This is a standard (meta) regression thus the number of studies, the precision of each study and heterogeneity influence the reliability (power, type-1 error rate, etc.) of the procedure.
+
+## Correcting PB - Trim and Fill
+
+The Trim and Fill method [@Duval2000-ym] is used to impute the hypothetical missing studies according to the funnel plot and recomputing the meta-analysis effect. Shi and Lin [@Shi2019-pj] provide an updated overview of the method with some criticisms.
+
+. . .
+
+```{r}
+#| echo: true
+set.seed(2023)
+k <- 100 # we increased k to better show the effect
+theta <- 0.5
+tau2 <- 0.1
+n <- runif(k, 10, 100)
+dat <- sim_studies(k, theta, tau2, n)
+dat <- summary(dat)
+datpb <- dat[dat$pval <= 0.1 & dat$zi > 0, ]
+fit <- rma(yi, vi, data = datpb, method = "REML")
+```
+
+## Correcting PB - Trim and Fill
+
+Now we can use the `metafor::trimfill()` function:
+
+```{r}
+taf <- metafor::trimfill(fit)
+taf
+```
+
+The trim-and-fill estimates that `r taf$k0` are missing. The new effect size after including the studies is reduced and closer to the simulated value (but in this case still significant).
+
+## Correcting PB - Trim and Fill
+
+We can also visualize the funnel plot highligting the points that are included by the method.
+
+```{r}
+#| eval: false
+funnel(taf)
+```
+
+```{r}
+#| code-fold: true
+funnel(taf)
+egg <- regtest(fit)
+egg_npb <- regtest(taf)
+se <- seq(0,1.8,length=100)
+lines(coef(egg$fit)[1] + coef(egg$fit)[2]*se, se, lwd=3, col = "black")
+lines(coef(egg_npb$fit)[1] + coef(egg_npb$fit)[2]*se, se, lwd=3, col = "firebrick")
+legend("topleft", legend = c("Original", "Corrected"), fill = c("black", "firebrick"))
+```
+
+## Why the funnel plot can be misleading?
+
+This funnel plot show an evident asymmetry on the left side. Is there evidence of publication bias? What do you think?
+
+```{r}
+set.seed(2024)
+k <- 50
+n1 <- round(runif(k, 10, 200))
+n2 <- round(runif(k, 10, 50))
+dat1 <- sim_studies(k, 0, 0, n1, add = list(x = 0))
+dat2 <- sim_studies(k, 0.5, 0.05, n2, add = list(x = 1))
+dat <- rbind(dat1, dat2)
+fit <- rma(yi, vi, dat = dat)
+funnel(fit)
+```
+
+## Why the funnel plot can be misleading?
+
+The data are of course simulated and this is the code. What do you think now?
+
+```{r}
+#| eval: false
+#| echo: true
+set.seed(2024)
+k <- 50
+n1 <- round(runif(k, 10, 200))
+n2 <- round(runif(k, 10, 50))
+dat1 <- sim_studies(k, 0, 0, n1, add = list(x = 0))
+dat2 <- sim_studies(k, 0.5, 0.05, n2, add = list(x = 1))
+dat <- rbind(dat1, dat2)
+fit <- rma(yi, vi, dat = dat)
+funnel(fit)
+```
+
+## Why the funnel plot can be misleading?
+
+In fact, these are two **unbiased** population of effect sizes. Extra source of heterogeneity could create asymmetry not related to PB.
+
+```{r}
+par(mfrow = c(1, 2))
+funnel(fit)
+funnel(fit, col = dat$x + 1)
+```
+
+## Why the funnel plot can be misleading?
+
+Also the methods to detect/correct for PB are committing a false alarm:
+
+```{r}
+#| echo: true
+#| collapse: true
+regtest(fit)
+```
+
+## Why the funnel plot can be misleading?
+
+Also the methods to detect/correct for PB are committing a false alarm:
+
+```{r}
+#| echo: true
+#| collapse: true
+trimfill(fit)
+```
+
+## Why the funnel plot can be misleading?
+
+The `regtest` can be applied also with moderators. The idea should be to take into account the moderators effects and then check for asymmetry.
+
+```{r}
+#| echo: true
+fitm <- rma(yi, vi, mods = ~x, data = dat)
+regtest(fitm)
+```
+
+## Why the funnel plot can be misleading?
+
+In fact, the funnel plot on the raw dataset and on residuals looks quite different because the asymmetry was caused by the moderator.
+
+```{r}
+#| code-fold: true
+dat$ri <- residuals(fitm)
+fitr <- rma(ri, vi, data = dat)
+par(mfrow = c(1, 2))
+plot_regtest(fit, main = "Full model")
+plot_regtest(fitr, main = "Residuals")
+```
+
+## Correcting PB - Selection Models (SM)
+
+SM are more than a tool for correcting for the PB. SM are formal models of PB that can help us understanding and simulating the PB.
+
+The SM are composed by two parts:
+
+1. **Effect size model**: the unbiased data generation process. In our case basically the `sim_studies()` function.
+2. **Selection model**: the assumed process generating the biased selection of effect sizes
+
+**Selection models** can be based on the p-value (e.g., *p-curve* or *p-uniform*) and/or the effect size and variance (*Copas* model). We will see only models based on the p-value.
+
+## Correcting PB - Selection Models (SM)
+
+Formally, the random-effect meta-analysis probability density function (PDF) can be written as [e.g., @Citkowicz2017-ox]:
+
+$$
+f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\phi\left(\frac{y_i-\Delta_i}{\sqrt{\sigma_i^2+\tau^2}}\right)}{\int_{-\infty}^{\infty}  \phi\left(\frac{Y_i-\Delta_i}{\sqrt{\sigma_i^2+\tau^2}}\right) d y_i}
+$$
+
+Without going into details, this is the PDF without any selection process (i.e., the **effect sizes model**).
+
+## Correcting PB - Selection Models (SM)
+
+If we have a function linking the p-value with the probability of publishing (a **weight function**) $w(p_i)$ we can include it in the previous PDF, creating a weighted PDF.
+
+$$
+f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\right) \phi\left(\frac{y_i-\Delta_i}{\sqrt{\sigma_i^2+\tau^2}}\right)}{\int_{-\infty}^{\infty} \mathrm{w}\left(p_i\right) \phi\left(\frac{Y_i-\Delta_i}{\sqrt{\sigma_i^2+\tau^2}}\right)d y_i}
+$$
+
+Essentially, this new model take into account the selection process (the **weight function**) to estimate a new meta-analysis. In case of no selection (all weigths are the same) the model is the standard random-effects meta-analysis.
+
+## SM - Weigth function
+
+The weigth function is a simple function that links the p-value with the probability of publishing. The simple example at the beginning (publishing only significant p-values) is a step weigth function.
+
+```{r}
+#| collapse: true
+p <- c(0, 0.05, 0.05, 1)
+w <- c(1, 1, 0, 0)
+
+plot(p, w, type = "l", xlab = "p value", ylab = "Probability of Publishing")
+```
+
+## SM - Weigth function
+
+We can add more steps to express a more complex selection process:
+
+```{r}
+#| collapse: true
+p <- c(0.001, 0.01, 0.05, 0.1, 0.8, 1)
+w <- c(1, 1, 0.9, 0.5, 0.1, 0.1)
+plot(p, w, type = "s", xlab = "p value", ylab = "Probability of Publishing")
+```
+
+## SM - Weigth function
+
+Or we can draw a smooth function assuming certain parameters:
+
+```{r}
+wbeta <- function(p, a = 1, b = 1) p^(a - 1) * (1 - p)^(b - 1)
+pval <- seq(0, 1, 0.01)
+
+plot(pval, wbeta(pval, 1, 1), type = "l", ylim = c(0, 1), col = 1, lwd = 2,
+     xlab = "p value", ylab = "Probability of Publishing")
+lines(pval, wbeta(pval, 1, 2), col = 2, lwd = 2)
+lines(pval, wbeta(pval, 1, 5), col = 3, lwd = 2)
+lines(pval, wbeta(pval, 1, 50), col = 4, lwd = 2)
+```
+
+## SM - Weigth function
+
+Whatever the function, the SM estimate the parameters of the function and the meta-analysis parameters taking into account the weigths. 
+
+Clearly, in the presence of no bias the two models (with and without weights) are the same while with PB the estimation is different, probably reducing the effect size.
+
+If the SM is correct (not possible in reality), the SM estimate the true effect even in the presence of bias. This is the strenght and elegance of the SM.
+
+## SM - Weigth functions
+
+There are several weight functions:
+
+- the step model
+- the negative-exponential model
+- the beta model
+- ...
+
+For an overview see the `metafor` documentation https://wviechtb.github.io/metafor/reference/selmodel.html
+
+## SM - Step model
+
+The step model approximate the selection process with thresholds $\alpha$ and the associated weight $w(p_i)$. For example:
+
+```{r}
+#| collapse: true
+steps <- c(0.005, 0.01, 0.05, 0.10, 0.25, 0.35, 0.50, 0.65, 0.75, 0.90, 0.95, 0.99, 0.995, 1)
+moderate_pb <- c(1, 0.99, 0.95, 0.80, 0.75, 0.65, 0.60, 0.55, 0.50, 0.50, 0.50, 0.50, 0.50, 0.50)
+severe_pb <- c(1, 0.99, 0.90, 0.75, 0.60, 0.50, 0.40, 0.35, 0.30, 0.25, 0.10, 0.10, 0.10, 0.10)
+
+par(mfrow = c(1, 2))
+plot(steps, moderate_pb, type = "s", xlab = "p value", ylab = "Probability of Selection", main = "Moderate PB", ylim = c(0, 1))
+abline(v = steps, col = "grey")
+plot(steps, severe_pb, type = "s", xlab = "p value", ylab = "Probability of Selection", main = "Severe PB", ylim = c(0, 1))
+abline(v = steps, col = "grey")
+```
+
+## SM - Negative-Exponential
+
+The Negative-Exponential model is very simple and intuitive. The weight function is $e^{-\delta p_i}$ thus the single parameter $\delta$ is the amount of bias. When $\delta = 0$ there is no bias.
+
+```{r}
+wnegexp <- function(p, delta){
+  exp((-delta)*p)
+}
+```
+
+```{r}
+#| collapse: true
+
+curve(wnegexp(x, 0), ylim = c(0, 1), col = 1, lwd = 2, xlab = "p value", ylab = "Probability of Selection")
+curve(wnegexp(x, 1), add = TRUE, col = 2, lwd = 2)
+curve(wnegexp(x, 5), add = TRUE, col = 3, lwd = 2)
+curve(wnegexp(x, 30), add = TRUE, col = 4, lwd = 2)
+
+legend("topright", legend = latex2exp::TeX(sprintf("$\\delta = %s$", c(1, 2, 3, 4))), fill = 1:4)
+```
+
+## Simulating data with PB
+
+The strategy to simulate biased data is to sample from the `sim_studies()` function but to keep the studies using a probabilistic sampling based on the weight function.
+
+```{r}
+#| echo: true
+set.seed(2024)
+
+k <- 500 # high number to check the results
+es <- 0 # H0 true
+tau2 <- 0.1
+delta <- 5
+dat <- vector(mode = "list", k)
+
+i <- 1
+while(i <= k){
+  # generate data
+  n <- runif(1, 10, 100)
+  d <- summary(sim_studies(1, es, tau2, n))
+  # get one-tail p-value
+  pi <- 1 - pnorm(d$zi)
+  # get wi
+  wpi <- wnegexp(pi, delta)
+  keep <- rbinom(1, 1, wpi) == 1
+  if(keep){
+    dat[[i]] <- d
+    i <- i + 1
+  }
+}
+
+dat <- do.call(rbind, dat)
+fit <- rma(yi, vi, data = dat)
+```
+
+## Simulating data with PB
+
+Let's see some plots:
+
+```{r}
+#| code-fold: true
+par(mfrow = c(1, 3))
+hist(dat$yi, breaks = 50, col = "dodgerblue")
+hist(1 - pnorm(dat$zi), breaks = 50, col = "dodgerblue")
+plot(dat$yi, dat$sei, ylim = c(rev(range(dat$sei)[2]), 0), xlim = c(-1, 2))
+```
+
+## Simulating data with PB
+
+Let's see the model result:
+
+```{r}
+#| eval: false
+fit <- rma(yi, vi, data = dat)
+```
+
+```{r}
+#| include: false
+fit
+```
+
+## Simulating data with PB
+
+Let's see the Egger regression test and the trim-and-fill procedure:
+
+```{r}
+#| collapse: true
+#| echo: true
+regtest(fit)
+trimfill(fit)
+```
+
+## Simulating data with PB
+
+The two methods are detecting the PB but not correcting it appropriately. Let's see the SM using a `negexp` method:
+
+```{r}
+#| echo: true
+sel <- selmodel(fit, type = "negexp", alternative = "greater")
+sel
+```
+
+## Simulating data with PB
+
+We can also plot the results:
+
+```{r}
+#| echo: true
+plot(sel)
+```
+
+## PB Sensitivity analysis
+
+- The SM is correctly detecting, estimating and correcting the PB. But we simulated a pretty strong bias with $k = 500$ studies. In reality meta-analyses have few studies.
+- @Vevea2005-xc proposed to fix the weight function parameters to certain values representing different degree of selection and check how the model changes.
+- If the model parameters are affected after taking into account the SM, this could be considered as an index of PB.
+- This approach is really interesting in general but especially when $k$ is too small for estimating the SM
+- see `?selmodel` for information about performing sensitivity analysis with pre-specified weight functions
+
+## More on SM and Publication Bias
+
+- The SM documentation of `metafor::selmodel()` [https://wviechtb.github.io/metafor/reference/selmodel.html](https://www.youtube.com/watch?v=ucmOCuyCk-c)
+- Wolfgang Viechtbauer overview of PB [https://www.youtube.com/watch?v=ucmOCuyCk-c](https://www.youtube.com/watch?v=ucmOCuyCk-c)
+- @Harrer2021-go - Doing Meta-analysis in R - [Chapter 9](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/pub-bias.html)
+- @McShane2016-bk for a nice introduction about publication bias and SM
+- Another good overview by @Jin2015-ik
+- See also @Guan2016-kn, @Maier2023-js and @Bartos2022-im for Bayesian approaches to PB
+
+## References
+
+::: {#refs}
+:::

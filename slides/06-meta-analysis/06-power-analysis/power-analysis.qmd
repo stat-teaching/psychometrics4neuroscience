@@ -1,0 +1,638 @@
+---
+title: "Power analysis"
+execute: 
+  echo: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# packages
+library(tidyverse)
+library(patchwork)
+library(metafor)
+library(here)
+devtools::load_all()
+
+# ggplot theme
+theme_set(mtheme())
+
+# objects
+imgs <- readRDS(here("slides", "06-meta-analysis", "03-meta-analysis-models", "objects", "r-imgs.rds"))
+```
+
+```{r}
+#| label: functions
+#| include: false
+funs <- read_all_funs()
+```
+
+# Statistical Power {.section}
+
+## Power in a nutshell^[Thanks to https://rpsychologist.com/creating-a-typical-textbook-illustration-of-statistical-power-using-either-ggplot-or-base-graphics]
+
+The stastistical power is defined as the probability of correctly rejecting the null hypothesis $H_0$.
+
+```{r}
+#| echo: false
+library(grid) # need for arrow()
+m1 <- 0  # mu H0
+sd1 <- 1.5 # sigma H0
+m2 <- 3.5 # mu HA
+sd2 <- 1.5 # sigma HA
+
+z_crit <- qnorm(1-(0.05/2), m1, sd1)
+
+# set length of tails
+min1 <- m1-sd1*4
+max1 <- m1+sd1*4
+min2 <- m2-sd2*4
+max2 <- m2+sd2*4          
+# create x sequence
+x <- seq(min(min1,min2), max(max1, max2), .01)
+# generate normal dist #1
+y1 <- dnorm(x, m1, sd1)
+# put in data frame
+df1 <- data.frame("x" = x, "y" = y1)
+# generate normal dist #2
+y2 <- dnorm(x, m2, sd2)
+# put in data frame
+df2 <- data.frame("x" = x, "y" = y2)
+
+# Alpha polygon
+y.poly <- pmin(y1,y2)
+poly1 <- data.frame(x=x, y=y.poly)
+poly1 <- poly1[poly1$x >= z_crit, ] 
+poly1<-rbind(poly1, c(z_crit, 0))  # add lower-left corner
+
+# Beta polygon
+poly2 <- df2
+poly2 <- poly2[poly2$x <= z_crit,] 
+poly2<-rbind(poly2, c(z_crit, 0))  # add lower-left corner
+
+# power polygon; 1-beta
+poly3 <- df2
+poly3 <- poly3[poly3$x >= z_crit,] 
+poly3 <-rbind(poly3, c(z_crit, 0))  # add lower-left corner
+
+# combine polygons. 
+poly1$id <- 3 # alpha, give it the highest number to make it the top layer
+poly2$id <- 2 # beta
+poly3$id <- 1 # power; 1 - beta
+poly <- rbind(poly1, poly2, poly3)
+poly$id <- factor(poly$id,  labels=c("power","beta","alpha"))
+
+# plot with ggplot2
+ggplot(poly, aes(x,y, fill=id, group=id)) +
+  geom_polygon(show_guide=F, alpha=I(8/10)) +
+  # add line for treatment group
+  geom_line(data=df1, aes(x,y, color="H0", group=NULL, fill=NULL), size=1.5, show_guide=F) + 
+  # add line for treatment group. These lines could be combined into one dataframe.
+  geom_line(data=df2, aes(color="HA", group=NULL, fill=NULL),size=1.5, show_guide=F) +
+  # add vlines for z_crit
+  geom_vline(xintercept = z_crit, size=1, linetype="dashed") +
+  # change colors 
+  scale_color_manual("Group", 
+                     values= c("HA" = "#981e0b","H0" = "black")) +
+  scale_fill_manual("test", values= c("alpha" = "#0d6374","beta" = "#be805e","power"="#7cecee")) +
+  # beta arrow
+  annotate("segment", x=0.1, y=0.045, xend=1.3, yend=0.01, arrow = arrow(length = unit(0.3, "cm")), size=1) +
+  annotate("text", label="beta", x=0, y=0.05, parse=T, size=8) +
+  # alpha arrow
+  annotate("segment", x=4, y=0.043, xend=3.4, yend=0.01, arrow = arrow(length = unit(0.3, "cm")), size=1) +
+  annotate("text", label="frac(alpha,2)", x=4.2, y=0.05, parse=T, size=8) +
+  # power arrow
+  annotate("segment", x=6, y=0.2, xend=4.5, yend=0.15, arrow = arrow(length = unit(0.3, "cm")), size=1) +
+  annotate("text", label="1-beta", x=6.1, y=0.21, parse=T, size=8) +
+  # H_0 title
+  annotate("text", label="H[0]", x=m1, y=0.28, parse=T, size=8) +
+  # H_a title
+  annotate("text", label="H[1]", x=m2, y=0.28, parse=T, size=8) +
+  # remove some elements
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(size=22))
+```
+
+## Power in a nutshell
+
+For simple designs such as t-test, ANOVA, etc. the power can be computed analytically. For example, let's find the power of detecting an effect size of $d = 0.5$ with $n1 = n2 = 30$.
+
+```{r}
+#| collapse: true
+#| echo: true
+d <- 0.5
+alpha <- 0.05
+n1 <- n2 <- 30
+sp <- 1
+
+# Calculate non-centrality parameter (delta)
+delta <- d * sqrt(n1 * n2 / (n1 + n2))
+
+# Calculate degrees of freedom
+df <- n1 + n2 - 2
+
+# Calculate critical t-value
+critical_t <- qt(1 - alpha / 2, df)
+
+# Calculate non-central t-distribution value
+non_central_t <- delta / sp
+
+# Calculate power
+1 - pt(critical_t - non_central_t, df)
+```
+
+## Power in a nutshell
+
+The same can be done using the `pwr` package:
+
+```{r}
+#| collapse: true
+#| echo: true
+power <- pwr::pwr.t.test(n = n1, d = 0.5)
+power
+```
+
+## Power in a nutshell
+
+```{r}
+plot(power)
+```
+
+## Power by simulations
+
+Sometimes the analytical solution is not available or we can estimate the power for complex scenarios (missing data, unequal variances, etc.). The general workflow is:
+
+1. Generate data under the parametric assumptions
+2. Fit the appropriate model
+3. Extract the relevant metric (e.g., p-value)
+4. Repeat 1-3 several times (1000, 10000 or more)
+5. Summarise the results
+
+For example, the power is the number of p-values lower than $\alpha$ over the total number of simulations.
+
+## Power by simulations
+
+Let's see the previous example using simulations:
+
+```{r}
+#| collapse: true
+#| echo: true
+nsim <- 5000
+p <- rep(NA, nsim)
+for(i in 1:nsim){
+    g1 <- rnorm(n1, 0, 1)
+    g2 <- rnorm(n2, d, 1)
+    p[i] <- t.test(g1, g2)$p.value
+}
+mean(p <= alpha)
+```
+
+The estimated value is pretty close to the analytical value.
+
+## What about meta-analysis
+
+Also for meta-analysis we have the two approaches analytical and simulation-based.
+
+- The analytical approach for (intercept-only) random-effects and equal-effects model can be found on @Borenstein2009-mo (Chapter 29). See also @Valentine2010-aj and @Hedges2001-ra
+- @Jackson2017-dv proposed a similar but improved approach
+
+## Analytical approach
+
+For the analytical approach we need to make some assumptions:
+
+- $\tau^2$ and $\mu_{\theta}$ (or $\theta$) are estimated without errors
+- The $\sigma^2_i$ (thus the sample size) of each $k$ study is the same
+
+Under these assumptions the power is:
+
+$$
+(1 - \Phi(c_{\alpha} - \lambda)) + \Phi(-c_{\alpha} - \lambda)
+$$
+
+Where $c_{\alpha}$ is the critical $z$ value and $\lambda$ is the observed statistics.
+
+## Analytical approach - EE model
+
+For an EE model the only source of variability is the sampling variability, thus $\lambda$:
+
+$$
+\lambda_{EE} = \frac{\theta}{\sqrt{\sigma^2_{\theta}}}
+$$
+
+And recalling previous assuptions where $\sigma^2_1 = \dots = \sigma^2_k$:
+
+$$
+\sigma^2_{\theta} = \frac{\sigma^2}{k}
+$$
+
+## Analytical approach - EE model
+
+For example, a meta-analysis of $k = 15$ studies where each study have a sample size of $n1 = n2 = 20$ (assuming again unstandardized mean difference as effect size):
+
+```{r}
+#| echo: true
+k <- 10
+theta <- 0.3
+n1 <- n2 <- 25
+vt <- 1/n1 + 1/n2
+vtheta <- vt/k
+lambda <- theta/sqrt(vtheta)
+zcrit <- abs(qnorm(0.05/2))
+(1 - pnorm(zcrit - lambda)) + pnorm(-zcrit - lambda)
+```
+
+Be careful that the EE model is assuming $\tau^2 = 0$ thus is like having a huge study with $k \times n_1$ participants per group.
+
+## Analytical approach - RE model
+
+For the RE model we just need to include $\tau^2$ in the $\lambda$ calculation, thus:
+
+$$
+\sigma^{2\star}_{\theta} = \frac{\sigma^2 + \tau^2}{k}
+$$
+
+The other calculations are the same as the EE model.
+
+## Analytical approach - RE model
+
+```{r}
+#| echo: true
+k <- 10
+mu <- 0.3
+tau2 <- 0.1
+n1 <- n2 <- 25
+vt <- 1/n1 + 1/n2
+vtheta <- (vt + tau2)/k
+lambda <- mu/sqrt(vtheta)
+zcrit <- abs(qnorm(0.05/2))
+(1 - pnorm(zcrit - lambda)) + pnorm(-zcrit - lambda)
+```
+
+The power is reduced because we are considering another source of heterogeneity. Clearly the maximal power of $k$ studies is achieved when $\tau^2 = 0$. Hypothetically we can increase the power either increasing $k$ (the number of studies) or reducing $\sigma^2_k$ (increasing the number of participants in each study).
+
+## Analytical approach - Power curves
+
+The most informative approach is plotting the power curves for different values of $\tau^2$, $\sigma^2_k$ and $\theta$ (or $\mu_{\theta}$).
+
+You can use the `power_meta()` function:
+
+```r
+power_meta <- function(es, k, tau2 = 0, n1, n2 = NULL, alpha = 0.05){
+  if(is.null(n2)) n2 <- n1
+  zc <- qnorm(1 - alpha/2)
+  vt <- 1/n1 + 1/n2
+  ves <- (vt + tau2)/k
+  lambda <- es/sqrt(ves)
+  (1 - pnorm(zc - lambda)) + pnorm(-zc - lambda)
+}
+```
+
+## Analytical approach - Power curves
+
+```{r}
+#| code-fold: true
+#| echo: true
+k <- c(5, 10, 30, 50, 100)
+es <- c(0.1, 0.3)
+tau2 <- c(0, 0.05, 0.1, 0.2)
+n <- c(10, 30, 50, 100, 1000)
+
+power <- expand_grid(es, k, tau2, n1 = n)
+power$power <- power_meta(power$es, power$k, power$tau2, power$n1)
+
+power$es <- factor(power$es, labels = latex2exp::TeX(sprintf("$\\mu_{\\theta} = %s$", es)))
+power$tau2 <- factor(power$tau2, labels = latex2exp::TeX(sprintf("$\\tau^2 = %s$", tau2)))
+
+ggplot(power, aes(x = factor(k), y = power, color = factor(n1))) +
+  geom_point() +
+  geom_line(aes(group = factor(n1))) +
+  facet_grid(es~tau2, labeller = label_parsed) +
+  xlab("Number of Studies (k)") +
+  ylab("Power") +
+  labs(
+    color = latex2exp::TeX("$n_1 = n_2$")
+  )
+```
+
+## Analytical approach - Power curves
+
+With the analytical approach we can (quickly) do interesting stuff. For example, we fix the total $N = n_1 + n_2$ for a series of $k$ and check the power.
+
+```{r}
+#| code-fold: true
+#| echo: true
+# average meta k = 20, n = 30
+kavg <- 20
+navg <- 30
+N <- kavg * (navg*2)
+es <- 0.3
+tau2 <- c(0, 0.05, 0.1, 0.2)
+k <- seq(10, 100, 10)
+n1 <- n2 <- round((N/k)/ 2)
+
+sim <- data.frame(es, k, n1, n2)
+sim <- expand_grid(sim, tau2 = tau2)
+sim$power <- power_meta(sim$es, sim$k, sim$tau2, sim$n1, sim$n2)
+sim$N <- with(sim, k * (n1 + n2))
+
+ggplot(sim, aes(x = k, y = power, color = factor(tau2))) +
+  geom_line() +
+  ggtitle(latex2exp::TeX("Total N ($n_1 + n_2$) = 1200")) +
+  labs(x = "Number of Studies (k)",
+       y = "Power",
+       color = latex2exp::TeX("$\\tau^2$"))
+```
+
+As long as $\tau^2 \neq 0$ we need more studies (even if the total sample size is the same).
+
+## Simulation-based power
+
+With simulations we can fix or relax the previous assumptions. For example, let's compute the power for an EE model:
+
+```{r}
+#| collapse: true
+#| echo: true
+k <- 10
+es <- 0.3
+tau2 <- 0
+n1 <- n2 <- rep(25, k)
+nsim <- 1000 # more is better
+pval <- rep(NA, nsim)
+
+for(i in 1:nsim){
+  dat <- sim_studies(k, es, tau2, n1, n2)
+  fit <- rma(yi, vi, data = dat, method = "EE")
+  pval[i] <- fit$pval
+}
+
+mean(pval <= 0.05)
+```
+
+The value is similar to the analytical simulation. But we can improve it e.g. generating heterogeneous sample sizes.
+
+## Simulation-based power curve
+
+By repeating the previous approach for a series of parameters we can easily draw a power curve:
+
+```{r}
+#| echo: true
+#| cache: true
+k <- c(5, 10, 50, 100)
+es <- 0.1
+tau2 <- c(0, 0.05, 0.1, 0.2)
+nsim <- 1000
+
+grid <- expand_grid(k, es, tau2)
+power <- rep(NA, nrow(grid))
+
+for(i in 1:nrow(grid)){
+  pval <- rep(NA, nsim)
+  for(j in 1:nsim){
+    n <- rpois(grid$k[i], 40)
+    dat <- sim_studies(grid$k[i], grid$es[i], grid$tau2[i], n)
+    fit <- rma(yi, vi, data = dat)
+    pval[j] <- fit$pval
+  }
+  power[i] <- mean(pval <= 0.05)
+}
+grid$power <- power
+```
+
+## Simulation-based power curve
+
+```{r}
+#| code-fold: true
+#| echo: true
+ggplot(grid, aes(x = factor(k), y = power, color = factor(tau2))) +
+  geom_point() +
+  geom_line(aes(group = factor(tau2))) +
+  labs(
+    y = "Power",
+    x = "Number of studies (k)",
+    color = latex2exp::TeX("$\\tau^2$")
+  )
+
+```
+
+## Power analysis for meta-regression
+
+The power for a meta-regression can be easily computed by simulating the moderator effect. For example, let's simulate the effect of a binary predictor $x$.
+
+```{r}
+#| echo: true
+#| collapse: true
+k <- seq(10, 100, 10)
+b0 <- 0.2 # average of group 1
+b1 <- 0.1 # difference between group 1 and 2
+tau2r <- 0.2 # residual tau2
+nsim <- 1000
+power <- rep(NA, length(k))
+
+for(i in 1:length(k)){
+  es <- b0 + b1 * rep(0:1, each = k[i]/2)
+  pval <- rep(NA, nsim)
+  for(j in 1:nsim){
+    n <- round(runif(k[i], 10, 100))
+    dat <- sim_studies(k[i], es, tau2r, n)
+    fit <- rma(yi, vi, data = dat)
+    pval[j] <- fit$pval
+  }
+  power[i] <- mean(pval <= 0.05)
+}
+```
+
+## Power analysis for meta-regression
+
+Then we can plot the results:
+
+```{r}
+#| code-fold: true
+#| echo: true
+power <- data.frame(k = k, power = power)
+ggplot(power, aes(x = k, y = power)) +
+  geom_line()
+```
+
+# Multilab Studies {.section}
+
+## Multilab studies
+
+Multilab studies can be seen as a meta-analysis that is planned (a *prospective* meta-analysis) compared to standard *retrospective* meta-analysis.
+
+The statistical approach is (roughly) the same with the difference that we have control both on $k$ (the number of experimental units) and $n$ the sample size within each unit.
+
+In multilab studies we have also the raw data (i.e., participant-level data) thus we can do more complex multilevel modeling.
+
+## Meta-analysis as multilevel model
+
+Assuming that we have $k$ studies with raw data available there is no need to aggregate, calculate the effect size and variances and then use an EE or RE model.
+
+```{r}
+#| collapse: true
+#| echo: true
+k <- 50
+es <- 0.4
+tau2 <- 0.1
+n <- round(runif(k, 10, 100))
+dat <- vector(mode = "list", k)
+thetai <- rnorm(k, 0, sqrt(tau2))
+
+for(i in 1:k){
+  g1 <- rnorm(n[i], 0, 1)
+  g2 <- rnorm(n[i], es + thetai[i], 1)
+  d <- data.frame(id = 1:(n[i]*2), unit = i, y = c(g1, g2), group = rep(c(0, 1), each = n[i]))
+  dat[[i]] <- d
+}
+
+dat <- do.call(rbind, dat)
+ht(dat)
+```
+
+## Meta-analysis as multilevel model
+
+This is a simple **multilevel model** (pupils within classrooms or trials within participants). We can fit the model using `lme4::lmer()`:
+
+```{r}
+#| echo: true
+#| collapse: true
+#| code-fold: false
+library(lme4)
+fit_lme <- lmer(y ~ group + (1|unit), data = dat)
+summary(fit_lme)
+```
+
+## Meta-analysis as multilevel model
+
+Let's do the same as a meta-analysis. Firstly we compute the effect sizes for each unit:
+
+```{r}
+#| collapse: true
+#| echo: true
+#| message: false
+#| warning: false
+#| 
+datagg <- dat |> 
+  group_by(unit, group) |> 
+  summarise(m = mean(y),
+            sd = sd(y),
+            n = n()) |> 
+  pivot_wider(names_from = group, values_from = c(m, sd, n), names_sep = "")
+
+datagg <- escalc("MD", m1i = m1, m2i = m0, sd1i = sd1, sd2i = sd0, n1i = n1, n2i = n0, data = datagg)
+```
+
+## Meta-analysis as multilevel model
+
+```{r}
+ht(datagg)
+```
+
+## Meta-analysis as multilevel model
+
+Then we can fit the model:
+
+```{r}
+#| echo: true
+fit_rma <- rma(yi, vi, data = datagg)
+fit_rma
+```
+
+## Meta-analysis as multilevel modeling
+
+Actually the results are very similar where the standard deviation of the intercepts of the `lme4` model is $\approx \tau$ and the `group` effect is the intercept of the `rma` model.
+
+```{r}
+#| echo: true
+data.frame(
+  b = c(fixef(fit_lme)[2], fit_rma$b),
+  se = c(summary(fit_lme)$coefficients[2, 2], fit_rma$se),
+  tau2 = c(as.numeric(VarCorr(fit_lme)[[1]]), fit_rma$tau2),
+  model = c("lme4", "metafor")
+)
+```
+
+Actually the two model are not exactly the same, especially when using only the aggregated data. See https://www.metafor-project.org/doku.php/tips:rma_vs_lm_lme_lmer.
+
+## Meta-analysis as multilevel modeling
+
+To note, aggregating data and then computing a standard (non-weighted) model (sometimes this is done with trial-level data) is wrong and should be avoided. Using meta-analysis is clear that aggregating without taking into account the cluster (e.g., study or subject) precision is misleading.
+
+```{r}
+#| echo: true
+dataggl <- datagg |> 
+  select(unit, m0, m1) |>
+  pivot_longer(c(m0, m1), values_to = "y", names_to = "group")
+
+summary(lmer(y ~ group + (1|unit), data = dataggl))
+```
+
+## Mulitlab sample size vs unit
+
+When planning a multilab study there is an important decision between **increasing the sample size within each unit** (more effort for each lab) or **recruiting more units** with less participants per unit (more effort for the organization).
+
+We could have the situation where the number of units $k$ is fixed and we can only increase the sample size.
+
+We can also simulate scenarios where some units collect all data while others did not complete the data collection.
+
+## Fixed $k$, increasing $n$
+
+Let's assume that the maximum number of labs is $10$. How many participants are required assuming a certain amount of heterogeneity?
+
+```{r}
+#| collapse: true
+#| echo: true
+es <- 0.2
+k <- 10
+n1 <- n2 <- seq(10, 500, 10)
+tau2 <- c(0.01, 0.05, 0.1, 0.2)
+sim <- expand_grid(k, es, tau2, n1)
+sim$n2 <- sim$n1
+sim$vt <- with(sim, 1/n1 + 1/n2)
+sim$I2 <- round(with(sim, tau2 / (tau2 + vt)) * 100, 3)
+sim$power <- power_meta(sim$es, sim$k, sim$tau2, sim$n1, sim$n2)
+
+ht(sim)
+```
+
+## Fixed $k$, increasing $n$
+
+With a fixed $k$, we could reach a plateau even increasing $n$. This depends also on $\mu_{\theta}$ and $\tau^2$.
+```{r}
+ggplot(sim, aes(x = n1, y = power, color = factor(tau2))) +
+  geom_line() +
+  labs(
+    y = "Power",
+    x = "N per group",
+    color = latex2exp::TeX("$\\tau^2$")
+  )
+```
+
+## Multilab replication studies
+
+A special type of multilab studies are the replication projects. There are some paper discussing how to view replication studies as meta-analyses and how to plan them.
+
+- @Hedges2021-of
+- @Schauer2022-mj
+- @Schauer2020-tw
+- @Schauer2021-ja
+- @Schauer2023-yn
+- @Hedges2019-ry
+
+## References
+
+::: {#refs}
+:::
