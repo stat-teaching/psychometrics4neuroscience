@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.37">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1322888c997fad56b0b4d776d35cf542.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -132,20 +132,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">slides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides-gpt.html"> 
-<span class="menu-text">slides-gpt</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../materials.html"> 
 <span class="menu-text">materials</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../scripts-lectures.html"> 
 <span class="menu-text">scripts-lectures</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../examples.html"> 
-<span class="menu-text">examples</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -159,8 +151,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#face-processing" id="toc-face-processing" class="nav-link active" data-scroll-target="#face-processing">Face processing</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -190,7 +188,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Preprocessing of the facial expression dataset (<a href="https://osf.io/download/tph5f/">https://osf.io/download/tph5f/z</a>).</p>
+<section id="face-processing" class="level2">
+<h2 class="anchored" data-anchor-id="face-processing">Face processing</h2>
+<p><span class="citation" data-cites="Shimizu2024-xl">@Shimizu2024-xl</span> analyzed the impact of the type and intensity of the facial expression on the detection accuracy.</p>
+<blockquote class="blockquote">
+<p>This study examined the relationship between the intensity of emotional expressions in facial stimuli and receivers’ decoding accuracy for six basic emotions: anger, disgust, fear, happiness, sadness, and surprise. A laboratory experiment was conducted using the forced‐choice method, in which the intensity of each stimulus was manipulated at every 10% interval using the morphing technique. To explore whether a linear relationship would be observed when the intensity was finely manipulated at 10% intervals, a hierarchical multiple regression analysis was performed. The mean percentage of correct responses for each stimulus was the dependent variable, and the linear, quadratic, and cubic terms of the stimulus intensity were the independent variables. The results showed that the linear model was not adopted as the final model for all facial expressions; that is, the effect of the squared term of intensity was significant for anger, disgust, fear, and sadness, while the effect of the cubic term of intensity was significant for happiness and surprise. Our findings indicate that a higher intensity of emotional expression does not yield higher decoding accuracy.</p>
+</blockquote>
+<p>Data are available on <a href="https://osf.io/zhtbj/">OSF</a></p>
+<p>Script di pre-processing:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
@@ -271,6 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

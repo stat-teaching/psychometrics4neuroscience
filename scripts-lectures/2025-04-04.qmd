@@ -1,0 +1,113 @@
+---
+title: "2025-04-04"
+format: html
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(lme4)
+library(glmmTMB)
+library(lmerTest)
+
+# fittare un modello specificato con formula per ogni id (|cluster)
+# model = lm/glm (o altro)
+# args = altri argomenti dentro la funzione (e.g., family = )
+# ad esempio, per stimare l'effetto di x1 + x2 per ogni cluster
+# y ~ x1 + x2 | cluster
+
+fit_by_cluster <- function(formula, data, model = NULL, args = NULL){
+    if(is.null(model)){
+        model <- lm
+    }
+    
+    parts <- lme4:::modelFormula(formula)
+    groups <- as.character(parts$groups)
+    datal <- split(data, data[[groups]])
+    
+    args$formula <- parts$model
+    
+    lapply(datal, function(x){
+        do.call(model, args = c(args, list(data = x)))
+    })
+}
+
+
+dat <- readRDS(here("data/emoint.rds"))
+dat <- filter(dat, emotion_lbl != "neutral")
+dat$intensity0 <- (dat$intensity/10) - 1
+
+fit1 <- glmer(acc ~ intensity0 + (intensity0|id),
+             data = dat, 
+             family = binomial(link = "logit"))
+
+fit10 <- glmer(acc ~ 1 + (1|id),
+              data = dat, 
+              family = binomial(link = "logit"))
+
+summary(fit1)
+
+coeff <- coefficients(fit1)$id
+hist(exp(coeff$intensity0))
+hist(coeff$intensity0)
+
+plot(fitted(fit1), residuals(fit1, type = "response"))
+
+# influence(fit1) # ci mette molto
+
+dat_agg <- dat |> 
+    group_by(id, intensity0) |> 
+    summarise(nc = sum(acc),
+              nf = n() - nc,
+              p = nc / n(),
+              n = n())
+
+# aggregated vs binary model
+
+fit2 <- glmer(cbind(nc, nf) ~ intensity0 + (intensity0|id),
+             data = dat_agg,
+             family = binomial(link = "logit"))
+
+fit20 <- glmer(cbind(nc, nf) ~ 1 + (1|id),
+              data = dat_agg,
+              family = binomial(link = "logit"))
+
+car::compareCoefs(fit1, fit2)
+
+anova(fit20, fit2)
+
+anova(fit10, fit1)
+
+# nella forma binomial, i residui sono leggermente meglio
+
+plot(fitted(fit2), residuals(fit2, type = "response"))
+
+
+# vediamo la variabilità nelle interazioni
+
+ff <- fit_by_cluster(acc ~ emotion_lbl * intensity0 | id,
+               data = dat,
+               model = glm,
+               args = list(family = binomial))
+
+ff |> 
+    lapply(broom::tidy) |> 
+    bind_rows(.id = "id") |> 
+    filter(grepl(":", term)) |> 
+    filter(abs(estimate) < 5) |> 
+    ggplot(aes(x = estimate, y = id)) +
+    geom_point() +
+    facet_wrap(~term) 
+
+to_remove <- ff |> 
+    lapply(broom::tidy) |> 
+    bind_rows(.id = "id") |> 
+    filter(grepl(":", term)) |> 
+    filter(abs(estimate) > 5) |> 
+    pull(id) |> 
+    unique()
+```
+
+Abbiamo inoltre visto alcuni esempi di Simpson's Paradox (non nella sua forma più estrema) e come centrare le variabili in modo da separare l'effetto tra i cluster e dentro i cluster:
+
+- Esempio con esperimento simulato di sensibilità al contrasto [qmd](2025-04-04_extra/2025-04-04_esempio-simpson-paradox.qmd)

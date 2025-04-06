@@ -4,10 +4,8 @@
       "materials"
     ],
     "scripts-lectures.qmd": [
-      "scripts-lectures"
-    ],
-    "slides-gpt.qmd": [
-      "slides-gpt"
+      "scripts-lectures/*.qmd",
+      "!*_extra/"
     ],
     "slides.qmd": [
       "slides"

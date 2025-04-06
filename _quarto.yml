@@ -14,14 +14,10 @@ website:
         text: home
       - href: slides.qmd
         text: slides
-      - href: slides-gpt.qmd
-        text: slides-gpt
       - href: materials.qmd
         text: materials
       - href: scripts-lectures.qmd
         text: scripts-lectures
-      - href: examples.qmd
-        text: examples
     tools:
       - icon: github
         href: https://github.com/stat-teaching/psychometrics4neuroscience

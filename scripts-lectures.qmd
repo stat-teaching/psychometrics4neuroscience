@@ -1,7 +1,9 @@
 ---
 listing:
-  contents: scripts-lectures
+  contents:
+      - "scripts-lectures/*.qmd"
+      - "!*_extra/"
   type: table
-  sort: filename
+  sort: "filename desc"
   fields: [title]
 ---

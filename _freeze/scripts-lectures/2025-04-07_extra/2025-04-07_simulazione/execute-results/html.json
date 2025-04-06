@@ -1,0 +1,17 @@
+{
+  "hash": "363e068612a04588c6c996d8b36b0c51",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: 2025-04-04\nexecute:\n    echo: false\n---\n\n\n\n\n# Simulazione\n\nProviamo a simulare un mixed-model per un esperimento. L'obiettivo è simulare un dataset realistico dove $k$ soggetti fanno massimo $n = 240$ trials. Il numero di trials non è lo stesso per soggetto. Il modo di campionare i trial potete deciderlo.\n\nL'esperimento si basa sulla seguente teoria:\n\n> Stimoli rilevanti evoluzionisticamente sono elaborati in modo più efficiente rispetto a stimoli meno rilevanti.\n\nUn'ipotesi legata a questo è che ci siano delle categorie (ad esempio i volti) che rispetto ad altre hanno una maggiore rilevanza evoluzionistica. A sua volta, dentro questa categoria, ci sono stimoli con più o meno rilevanza.\n\nIn questo caso si stanno testando i tempi di reazione in laboratorio in risposta a 3 categorie di stimoli:\n\n- volti di persone adulte\n- volti di bambini\n- forme geometriche\n\nL'ipotesi è che i tempi di reazione siano sistematicamente inferiori per i volti rispetto alle forme geometriche e per i volti di bambini rispetto a quelli adulti.\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](2025-04-07_simulazione_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n\n\n\n\nPer la simulazione è necessario impostare tutti i parametri del modello. Il numero di trials totale è 80 per condizione ma in modo casuale alcuni trial vengono eliminati perchè considerati non validi. La percentuale di dati rimossi da ogni soggetto è sempre inferiore al 30% ma varia da soggetto a soggetto.\n\nPer gli effetti fissi, la differenza tra forme geometriche e volti adulti è considerata un effetto grande e in termini di Cohen's $d$ (andate a cercare cosa significa) si intende $d = 0.7$. Invece la differenza tra adulti e bambini è un effetto medio $d = 0.4$.\n\nAi ricercatori però interessano due contrasti in particolare:\n\n- forme geometriche vs media di volti adulti e bambini\n- adulti vs bambini\n\nImpostate una simulazione per generare un dataset realistico che rispetta le regole generali introdotte prima e anche il tipo di variabile. I tempi sono positivi e generalmente asimmetrici.\n\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](2025-04-07_simulazione_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n:::\n\n\n\n\nFate un piccolo report in Quarto o R Markdown dove definite i parametri, codice e qualche grafico di come vengono i dati.\n\nQualche consiglio:\n\n- non importa i valori effettivi dei tempi ma riuscire a mappare i dati rispettando i vincoli di effetto grande e medio\n- partite dal modello che fareste in questo caso\n- bisogna trasformare i parametri della distribuzione in qualche modo per fissare queste medie di tempi\n- attenzione a `lme4`, non sempre funziona benissimo :)\n",
+    "supporting": [
+      "2025-04-07_simulazione_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

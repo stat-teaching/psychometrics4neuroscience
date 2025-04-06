@@ -1,6 +1,0 @@
-author: Filippo Gambarota, PhD
-subtitle: Psicometria per le Neuroscienze Cognitive </br> *GPT summaries of R4DS Books*
-bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
-format: minimal-revealjs
-execute: 
-  echo: true

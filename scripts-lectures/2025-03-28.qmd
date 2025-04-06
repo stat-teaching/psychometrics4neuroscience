@@ -2,7 +2,15 @@
 title: 2025-03-28
 ---
 
-Preprocessing of the facial expression dataset ([https://osf.io/download/tph5f/z](https://osf.io/download/tph5f/)).
+## Face processing
+
+@Shimizu2024-xl analyzed the impact of the type and intensity of the facial expression on the detection accuracy.
+
+> This study examined the relationship between the intensity of emotional expressions in facial stimuli and receivers' decoding accuracy for six basic emotions: anger, disgust, fear, happiness, sadness, and surprise. A laboratory experiment was conducted using the forced‐choice method, in which the intensity of each stimulus was manipulated at every 10% interval using the morphing technique. To explore whether a linear relationship would be observed when the intensity was finely manipulated at 10% intervals, a hierarchical multiple regression analysis was performed. The mean percentage of correct responses for each stimulus was the dependent variable, and the linear, quadratic, and cubic terms of the stimulus intensity were the independent variables. The results showed that the linear model was not adopted as the final model for all facial expressions; that is, the effect of the squared term of intensity was significant for anger, disgust, fear, and sadness, while the effect of the cubic term of intensity was significant for happiness and surprise. Our findings indicate that a higher intensity of emotional expression does not yield higher decoding accuracy.
+
+Data are available on [OSF](https://osf.io/zhtbj/)
+
+Script di pre-processing:
 
 ```{r}
 library(tidyverse)

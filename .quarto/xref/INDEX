@@ -73,5 +73,20 @@
   },
   "scripts-lectures/2025-04-01.qmd": {
     "2025-04-01.html": "8e6cfc08"
+  },
+  "materials/glmer/glmer.qmd": {
+    "glmer.html": "676b5fd4"
+  },
+  "scripts-lectures/2025-04-04.qmd": {
+    "2025-04-04.html": "e07cc4ff"
+  },
+  "scripts-lectures/2025-04-04_extra/2025-04-04_esempio-simpson-paradox.qmd": {
+    "2025-04-04_esempio-simpson-paradox.html": "86f947bb"
+  },
+  "scripts-lectures/2025-04-07.qmd": {
+    "2025-04-07.html": "83c8f88a"
+  },
+  "scripts-lectures/2025-04-07_extra/2025-04-07_simulazione.qmd": {
+    "2025-04-07_simulazione.html": "bda40242"
   }
 }

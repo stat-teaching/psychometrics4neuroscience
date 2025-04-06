@@ -1,0 +1,8 @@
+---
+title: "2025-04-07"
+format: html
+---
+
+## Assignment
+
+Per oggi facciamo una simulazione, descritta in questo [documento](2025-04-07_extra/2025-04-07_simulazione.qmd)
