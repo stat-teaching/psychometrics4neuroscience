@@ -455,5 +455,15 @@ Per tutti gli esempi ho simulato i dati usando due funzioni custom:
 filor::print_fun(c(funs$sim_sdt, funs$sdt))
 ```
 
+## Esempio con dati veri
 
+Partendo da questo tutorial [https://vuorre.com/posts/sdt-regression/index.html](https://vuorre.com/posts/sdt-regression/index.html) usiamo il dataset `data/sdt-example.rds`.
 
+```{r}
+dat <- readRDS(here("data", "sdt-example.rds"))
+head(dat)
+```
+
+- per ogni soggetto calcoliamo i parametri di SDT (Hit, FA, etc.)
+- calcoliamo manualmente $d'$ e criterio con il pacchetto `psycho::dprime()`
+- fittiamo un modello probit multilivello per stimare i parametri e confrontiamoli

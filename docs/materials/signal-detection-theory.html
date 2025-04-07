@@ -192,6 +192,7 @@ window.Quarto = {
   <li><a href="#probit-link-3" id="toc-probit-link-3" class="nav-link" data-scroll-target="#probit-link-3">Probit link</a></li>
   <li><a href="#probit-link-4" id="toc-probit-link-4" class="nav-link" data-scroll-target="#probit-link-4">Probit link</a></li>
   <li><a href="#signal-detection-theory" id="toc-signal-detection-theory" class="nav-link" data-scroll-target="#signal-detection-theory">Signal Detection Theory</a></li>
+  <li><a href="#esempio-con-dati-veri" id="toc-esempio-con-dati-veri" class="nav-link" data-scroll-target="#esempio-con-dati-veri">Esempio con dati veri</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -419,11 +420,11 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>  say_signal is_signal
 1          0         0
-2          0         1
+2          1         1
 3          0         0
-4          0         1
-5          1         0
-6          1         1</code></pre>
+4          1         1
+5          0         0
+6          0         1</code></pre>
 </div>
 </div>
 <p>Dove <code>is_signal</code> indica se la radiografia contiene il segnale o no e <code>say_signal</code> indica la risposta del soggetto.</p>
@@ -433,28 +434,28 @@ window.Quarto = {
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>cl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$hit
-[1] 13
-
-$miss
 [1] 12
 
+$miss
+[1] 13
+
 $fa
-[1] 5
+[1] 4
 
 $cr
-[1] 20
+[1] 21
 
 $phit
-[1] 0.52
-
-$pfa
-[1] 0.2
-
-$pmiss
 [1] 0.48
 
+$pfa
+[1] 0.16
+
+$pmiss
+[1] 0.52
+
 $pcr
-[1] 0.8
+[1] 0.84
 
 $c
 [1] NA</code></pre>
@@ -465,12 +466,12 @@ $c
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dprime</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(cl<span class="sc">$</span>phit) <span class="sc">-</span> <span class="fu">qnorm</span>(cl<span class="sc">$</span>pfa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8917748</code></pre>
+<pre><code>[1] 0.9443043</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criterio</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>(<span class="fu">qnorm</span>(cl<span class="sc">$</span>phit) <span class="sc">+</span> <span class="fu">qnorm</span>(cl<span class="sc">$</span>pfa)) <span class="sc">/</span> <span class="dv">2</span> <span class="co"># - perchè per convenzione c negativo = liberale, c positivo = conservatore</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.3957338</code></pre>
+<pre><code>[1] 0.5223057</code></pre>
 </div>
 </div>
 <p>Gli stessi parametri possono essere stimati con un <code>glm</code> binomiale con link function <code>probit</code>. Infatti il criterio è il punto di mezzo tra signal e noise mentre il <span class="math inline">\(d'\)</span> non è altro che la distanza tra le due distribuzioni (di segnale e rumore).</p>
@@ -489,18 +490,18 @@ glm(formula = say_signal01 ~ is_signal, family = binomial(link = "probit"),
 
 Coefficients:
             Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)  0.05015    0.25078   0.200    0.841  
-is_signal0  -0.89177    0.38019  -2.346    0.019 *
+(Intercept) -0.05015    0.25078  -0.200    0.841  
+is_signal0  -0.94430    0.39204  -2.409    0.016 *
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 65.342  on 49  degrees of freedom
-Residual deviance: 59.637  on 48  degrees of freedom
-AIC: 63.637
+    Null deviance: 62.687  on 49  degrees of freedom
+Residual deviance: 56.601  on 48  degrees of freedom
+AIC: 60.601
 
-Number of Fisher Scoring iterations: 4</code></pre>
+Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 </div>
 <p>L’intercetta è la probabilità (in <span class="math inline">\(z\)</span> scores) di rispondere Si quando il segnale è 0 (catch). Quindi è la probabilità di fare falsi allarmi.</p>
@@ -520,19 +521,19 @@ glm(formula = say_signal01 ~ is_signal, family = binomial(link = "probit"),
     data = dat, contrasts = list(is_signal = contr.sum(2)/2))
 
 Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)  
-(Intercept)  -0.3957     0.1901  -2.082   0.0374 *
-is_signal1    0.8918     0.3802   2.346   0.0190 *
+            Estimate Std. Error z value Pr(&gt;|z|)   
+(Intercept)  -0.5223     0.1960  -2.665  0.00771 **
+is_signal1    0.9443     0.3920   2.409  0.01601 * 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 65.342  on 49  degrees of freedom
-Residual deviance: 59.637  on 48  degrees of freedom
-AIC: 63.637
+    Null deviance: 62.687  on 49  degrees of freedom
+Residual deviance: 56.601  on 48  degrees of freedom
+AIC: 60.601
 
-Number of Fisher Scoring iterations: 4</code></pre>
+Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 </div>
 <p>Attenzione che per come è parametrizzato, il criterio ha il segno opposto rispetto a quello convenzionale.</p>
@@ -540,12 +541,12 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>  say_signal is_signal          x cond
-1          1         0 -0.1394558  low
-2          1         1  0.9247223  low
-3          1         0  0.4679482  low
-4          1         1  2.5450425  low
-5          0         0 -0.6927086  low
-6          1         1 -0.3094458  low</code></pre>
+1          0         0 -1.0198272  low
+2          1         1  1.3471905  low
+3          1         0  0.6164624  low
+4          1         1  0.4093837  low
+5          0         0 -1.1217480  low
+6          1         1  0.3081716  low</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -581,17 +582,17 @@ Number of Fisher Scoring iterations: 4</code></pre>
   "probit"), data = dat, contrasts = list(is_signal = -contr.sum(2)/2))
 
                    Model 1 Model 2 Model 3
-(Intercept)        -0.4798  0.5210  0.5210
-SE                  0.0195  0.0197  0.0197
+(Intercept)        -0.5246  0.4992  0.4992
+SE                  0.0197  0.0197  0.0197
                                           
-is_signal1          0.9837  1.0139  1.0139
-SE                  0.0390  0.0395  0.0395
+is_signal1          1.0031  1.0405  1.0405
+SE                  0.0395  0.0394  0.0394
                                           
-condlow                            -1.0008
-SE                                  0.0278
+condlow                            -1.0238
+SE                                  0.0279
                                           
-is_signal1:condlow                 -0.0301
-SE                                  0.0555
+is_signal1:condlow                 -0.0374
+SE                                  0.0558
                                           </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
@@ -620,12 +621,12 @@ Fit: glm(formula = say_signal ~ is_signal * cond, family = binomial(link = "prob
 
 Linear Hypotheses:
                                      Estimate Std. Error z value Pr(&gt;|z|)    
--(Intercept) == 0                    -0.52097    0.01975 -26.379   &lt;1e-05 ***
--(Intercept) + condlow == 0          -1.52176    0.04405 -34.546   &lt;1e-05 ***
-is_signal1 == 0                       1.01386    0.03950  25.668   &lt;1e-05 ***
-is_signal1 + is_signal1:condlow == 0  0.98373    0.03900  25.223   &lt;1e-05 ***
-condlow == 0                         -1.00080    0.02775 -36.059   &lt;1e-05 ***
-is_signal1:condlow == 0              -0.03012    0.05551  -0.543    0.964    
+-(Intercept) == 0                    -0.49919    0.01971 -25.325   &lt;1e-05 ***
+-(Intercept) + condlow == 0          -1.52300    0.04409 -34.544   &lt;1e-05 ***
+is_signal1 == 0                       1.04048    0.03942  26.394   &lt;1e-05 ***
+is_signal1 + is_signal1:condlow == 0  1.00313    0.03948  25.406   &lt;1e-05 ***
+condlow == 0                         -1.02381    0.02790 -36.699   &lt;1e-05 ***
+is_signal1:condlow == 0              -0.03735    0.05579  -0.669    0.928    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)</code></pre>
@@ -691,6 +692,30 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 <span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">pcr =</span> cr <span class="sc">/</span> (cr <span class="sc">+</span> fa),</span>
 <span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">c =</span> c)</span>
 <span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="esempio-con-dati-veri" class="level2">
+<h2 class="anchored" data-anchor-id="esempio-con-dati-veri">Esempio con dati veri</h2>
+<p>Partendo da questo tutorial <a href="https://vuorre.com/posts/sdt-regression/index.html">https://vuorre.com/posts/sdt-regression/index.html</a> usiamo il dataset <code>data/sdt-example.rds</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"sdt-example.rds"</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  pid   trial stimulus response
+  &lt;fct&gt; &lt;int&gt; &lt;fct&gt;    &lt;fct&gt;   
+1 1         1 Old      New     
+2 1         2 Old      New     
+3 1         3 Old      New     
+4 1         4 Old      New     
+5 1         5 Old      New     
+6 1         6 Old      New     </code></pre>
+</div>
+</div>
+<ul>
+<li>per ogni soggetto calcoliamo i parametri di SDT (Hit, FA, etc.)</li>
+<li>calcoliamo manualmente <span class="math inline">\(d'\)</span> e criterio con il pacchetto <code>psycho::dprime()</code></li>
+<li>fittiamo un modello probit multilivello per stimare i parametri e confrontiamoli</li>
+</ul>
 
 
 </section>
