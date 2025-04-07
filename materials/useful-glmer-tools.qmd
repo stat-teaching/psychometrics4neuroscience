@@ -1,0 +1,74 @@
+---
+title: "Useful GLMER tools"
+format: html
+---
+
+## Equations from models
+
+```{r}
+library(lme4)
+library(equatiomatic)
+```
+
+```{r}
+fit_lme4 <- lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+equatiomatic::extract_eq(fit_lme4)
+```
+
+## Plotting effects
+
+```{r}
+library(effects)
+plot(allEffects(fit_lme4))
+```
+
+```{r}
+library(ggeffects)
+library(ggplot2)
+
+plot(ggeffect(fit_lme4)) +
+    ggtitle("Amazing Title")
+```
+
+## Marginal effects
+
+```{r}
+library(emmeans)
+
+fit <- lm(Sepal.Length ~ Petal.Width * Species, data = iris)
+emmeans(fit, ~ Species)
+
+# comparisons
+emmeans(fit, pairwise ~ Species)
+
+# comparison fixing Petal.Width
+emmeans(fit, pairwise ~ Species, at = list(Petal.Width = 1))
+
+# comparison of slopes
+
+emtrends(fit, ~ Species, var = "Petal.Width")
+emtrends(fit, pairwise ~ Species, var = "Petal.Width")
+
+# factorial designs
+warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+emmeans (warp.lm,  pairwise ~ wool | tension)
+```
+
+Also the [`marginaleffects`](https://marginaleffects.com/) package is amazing.
+
+## Tables
+
+```{r}
+library(sjPlot)
+
+tab_model(fit)
+tab_model(fit_lme4)
+```
+
+```{r}
+library(gtsummary)
+
+gtsummary::tbl_regression(fit_lme4)
+```
+
+See also [http://cran.r-project.org/web/packages/jtools/vignettes/summ.html](http://cran.r-project.org/web/packages/jtools/vignettes/summ.html)

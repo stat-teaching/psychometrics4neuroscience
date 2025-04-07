@@ -109,5 +109,8 @@
   },
   "slides/06-meta-analysis/06-power-analysis/power-analysis.qmd": {
     "power-analysis.html": "f47a79e6"
+  },
+  "materials/useful-glmer-tools.qmd": {
+    "useful-glmer-tools.html": "d8fe00f8"
   }
 }
