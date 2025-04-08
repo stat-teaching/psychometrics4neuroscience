@@ -1,0 +1,125 @@
+---
+title: "2025-04-08"
+format: html
+---
+
+Simuliamo dati fissando una certa correlazione pre-post come ICC:
+
+```{r}
+library(lme4)
+
+n <- 1e4
+r <- 0.7 # icc = r
+b0 <- 0
+b1 <- 0.3
+sb0 <- sqrt(r)
+s <- sqrt(1 - sb0^2)
+
+dat <- data.frame(
+    x = rep(0:1, each = n),
+    id = rep(1:n, 2)
+)
+
+b0i <- rnorm(n, 0, sb0)
+dat$y <- rnorm(n*2, with(dat, b0 + b0i[id] + b1 * x), s)
+
+fit <- lmer(y ~ x + (1|id), data = dat)
+summary(fit)
+
+sb0^2 / (sb0^2 + s^2)
+
+summary(fit)
+performance::icc(fit)
+```
+
+Simuliamo random-intercepts e slopes con anche l'effetto di una covariata al livello del soggetto.
+
+```{r}
+n <- 10
+nt <- 10
+
+age <- round(runif(n, 20, 30))
+
+dat <- expand.grid(
+    id = 1:n,
+    trial = 1:nt,
+    x = c(0, 1)
+)
+
+dat$age <- age[dat$id]
+
+b0 <- 0.1
+b1 <- 0.5
+b2 <- 0.1
+sb0 <- 0.2
+sb1 <- 0.1
+s <- 1
+
+rb0b1 <- 0.5
+
+R <- rb0b1 + diag(1 - rb0b1, 2)
+S <- diag(c(sb0, sb1)) %*% R %*% diag(c(sb0, sb1))
+
+Z <- MASS::mvrnorm(n, c(0, 0), S)
+
+b0i <- Z[, 1]
+b1i <- Z[, 2]
+
+dat$age0 <- dat$age - mean(dat$age)
+dat$lp <- b0 + b0i[dat$id] + (b1 + b1i[dat$id]) * dat$x + b2 * dat$age0
+dat$y <- rnorm(nrow(dat), dat$lp, s)
+fit <- lmer(y ~ x + age + (x|id), dat = dat)
+
+summary(fit)
+
+performance::r2(fit)
+library(ggplot2)
+
+dat |> 
+    ggplot(aes(x = age, y = y)) +
+    geom_point(aes(color = factor(x)))
+```
+
+Simuliamo un modello logit:
+
+```{r}
+n <- 100
+nt <- 1e3
+b0 <- qlogis(0.01)
+b1 <- 10
+sb0 <- 1
+
+# plogis(qlogis(0.01) + rnorm(1e4, 0, sb0)) |> 
+#     hist()
+
+
+dd <- expand.grid(
+    id = 1:n,
+    nt = 1:nt
+)
+
+dd$x <- runif(nrow(dd), 0, 1)
+b0i <- rnorm(n, 0, sb0)
+
+dd$lp <-  + b1 * dd$x
+dd$p <- plogis(dd$lp)
+
+# dd |> 
+#     ggplot(aes(x = x, y = p, group = id)) +
+#     geom_line()
+
+dd$y <- rbinom(nrow(dd), 1, dd$p)
+
+library(lme4)
+
+fit <- glmer(y ~ x + (1|id),
+             data = dd, 
+             family = binomial())
+
+performance::icc(fit)
+summary(fit)
+
+# intraclass correlation con varianza della logistica come costante
+0.8821 / (0.8821 + pi^2/3)
+```
+

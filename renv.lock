@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.4.3",
+    "Version": "4.4.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -173,7 +173,7 @@
     },
     "RcppArmadillo": {
       "Package": "RcppArmadillo",
-      "Version": "14.2.3-1",
+      "Version": "14.4.1-1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -183,7 +183,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "2f7cc7eceee4174dea52264aae41144b"
+      "Hash": "d2db71ca6fcb649bdc599391d0687b48"
     },
     "RcppEigen": {
       "Package": "RcppEigen",
@@ -262,7 +262,7 @@
     },
     "TMB": {
       "Package": "TMB",
-      "Version": "1.9.15",
+      "Version": "1.9.17",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -274,7 +274,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "a9c26d0c76fdcde77410b88197efa7bf"
+      "Hash": "9c2b92259dda42fc0d3221eb3828a879"
     },
     "V8": {
       "Package": "V8",
@@ -1133,7 +1133,7 @@
     },
     "emmeans": {
       "Package": "emmeans",
-      "Version": "1.10.1",
+      "Version": "1.11.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1146,7 +1146,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "4445298c65c50bcb7d33b687e69bb0bd"
+      "Hash": "80fa277f6bb5d98d0889fa33930f0b56"
     },
     "equatiomatic": {
       "Package": "equatiomatic",
@@ -1166,14 +1166,14 @@
     },
     "estimability": {
       "Package": "estimability",
-      "Version": "1.5",
+      "Version": "1.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "stats"
       ],
-      "Hash": "0d5f495f1edc281fca2510d8dabcba0f"
+      "Hash": "21ec52af13afbcab1cb317567b639b0a"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -2444,7 +2444,7 @@
     },
     "nnet": {
       "Package": "nnet",
-      "Version": "7.3-20",
+      "Version": "7.3-19",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -2452,7 +2452,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "c955edf99ff24a32e96bd0a22645af60"
+      "Hash": "2c797b46eea7fb58ede195bc0b1f1138"
     },
     "numDeriv": {
       "Package": "numDeriv",
