@@ -208,7 +208,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Per la simulazione è necessario impostare tutti i parametri del modello. Il numero di trials totale è 80 per condizione ma in modo casuale alcuni trial vengono eliminati perchè considerati non validi. La percentuale di dati rimossi da ogni soggetto è sempre inferiore al 30% ma varia da soggetto a soggetto.</p>
-<p>Per gli effetti fissi, la differenza tra forme geometriche e volti adulti è considerata un effetto grande e in termini di Cohen’s <span class="math inline">\(d\)</span> (andate a cercare cosa significa) si intende <span class="math inline">\(d = 0.7\)</span>. Invece la differenza tra adulti e bambini è un effetto medio <span class="math inline">\(d = 0.4\)</span>.</p>
+<p>Le medie per ogni condizione sono indicate nel grafico. Il grado di skewness nei dati è di 0.5. Per quanto riguarda gli effetti random, scegliete la struttura random che preferite. Al minimo, mettete le intercette random con un valore che vi sembra plausibile.</p>
 <p>Ai ricercatori però interessano due contrasti in particolare:</p>
 <ul>
 <li>forme geometriche vs media di volti adulti e bambini</li>
@@ -227,9 +227,9 @@ window.Quarto = {
 <p>Fate un piccolo report in Quarto o R Markdown dove definite i parametri, codice e qualche grafico di come vengono i dati.</p>
 <p>Qualche consiglio:</p>
 <ul>
-<li>non importa i valori effettivi dei tempi ma riuscire a mappare i dati rispettando i vincoli di effetto grande e medio</li>
 <li>partite dal modello che fareste in questo caso</li>
 <li>bisogna trasformare i parametri della distribuzione in qualche modo per fissare queste medie di tempi</li>
+<li>la deviazione standard non è un parametro fisso, partite dalla skewness</li>
 <li>attenzione a <code>lme4</code>, non sempre funziona benissimo :)</li>
 </ul>
 

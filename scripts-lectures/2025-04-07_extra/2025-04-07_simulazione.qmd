@@ -36,7 +36,7 @@ dd |>
 
 Per la simulazione è necessario impostare tutti i parametri del modello. Il numero di trials totale è 80 per condizione ma in modo casuale alcuni trial vengono eliminati perchè considerati non validi. La percentuale di dati rimossi da ogni soggetto è sempre inferiore al 30% ma varia da soggetto a soggetto.
 
-Per gli effetti fissi, la differenza tra forme geometriche e volti adulti è considerata un effetto grande e in termini di Cohen's $d$ (andate a cercare cosa significa) si intende $d = 0.7$. Invece la differenza tra adulti e bambini è un effetto medio $d = 0.4$.
+Le medie per ogni condizione sono indicate nel grafico. Il grado di skewness nei dati è di 0.5. Per quanto riguarda gli effetti random, scegliete la struttura random che preferite. Al minimo, mettete le intercette random con un valore che vi sembra plausibile.
 
 Ai ricercatori però interessano due contrasti in particolare:
 
@@ -53,7 +53,7 @@ Fate un piccolo report in Quarto o R Markdown dove definite i parametri, codice 
 
 Qualche consiglio:
 
-- non importa i valori effettivi dei tempi ma riuscire a mappare i dati rispettando i vincoli di effetto grande e medio
 - partite dal modello che fareste in questo caso
 - bisogna trasformare i parametri della distribuzione in qualche modo per fissare queste medie di tempi
+- la deviazione standard non è un parametro fisso, partite dalla skewness
 - attenzione a `lme4`, non sempre funziona benissimo :)

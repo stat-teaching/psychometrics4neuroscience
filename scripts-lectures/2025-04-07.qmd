@@ -10,3 +10,162 @@ Facciamo un'approfondimento su un'applicazione interessante del modello probit a
 ## Assignment
 
 Per oggi facciamo una simulazione, descritta in questo [documento](2025-04-07_extra/2025-04-07_simulazione.qmd)
+
+## Simulazioni
+
+Abbiamo visto alcune strategie di simulazione, in particolare per calcolare la potenza statistica. Ad esempio nel caso di un t-test assumendo due popolazioni a varianza uguale ($\sigma = 1$) e differenza tra le medie $d = 0.3$ abbiamo:
+
+```{r}
+n <- 30 # per gruppo
+d <- 0.3 # effect size
+s <- 1 # pooled standard deviation
+df <- n * 2 - 2 # degrees of freedom
+alpha <- 0.05
+
+nu <- d * sqrt((n * n) / (n + n)) # observed t-value (or non-centrality parameter)
+tc <- qt(1 - alpha/2, df) # critical t-value
+
+1 - pt(tc, df, nu) + pt(-tc, df, nu) # potenza
+
+pwr::pwr.t.test(n, d)
+```
+In alternativa usando le simulazioni:
+
+```{r}
+nsim <- 1e3
+p <- rep(NA, nsim)
+
+for(i in 1:length(p)){
+    g0 <- rnorm(n, 0, 1)
+    g1 <- rnorm(n, d, 1)
+    p[i] <- t.test(g1, g0)$p.value
+}
+
+mean(p <= alpha)
+```
+
+Lo stesso lo possiamo vedere come modello lineare:
+
+```{r}
+N <- n * 2
+b0 <- 0 # intercetta, media gruppo 0
+b1 <- d # slope, differenza tra i due gruppi
+s <- 1  # standard deviation residua
+
+dat <- data.frame(
+    x = rep(0:1, each = n)
+)
+
+dat$y <- rnorm(N, b0 + b1 * dat$x, s)
+
+fit <- lm(y ~ x, data = dat)
+summary(fit)
+```
+
+In questo caso il parametro di effect size è:
+
+```{r}
+b1 / s # differenza tra gruppi diviso per standard deviation residua
+coef(fit)[2] / sigma(fit)
+data.frame(effectsize::cohens_d(y ~ x, data = dat))
+```
+
+Ovviamente anche la potenza sarà lo stesso.
+
+Nel caso di un disegno pre-post, le osservazioni dello stesso soggetto sono correlate. Per simulare dei dati correlati posso usare il pacchetto `MASS::mvrnorm()` oppure con la formula di un mixed-model.
+
+```{r}
+r <- 0.7
+R <- r + diag(1 - r, 2) # matrice di correlazione
+X <- MASS::mvrnorm(n, c(0, d), R)
+apply(X, 2, mean)
+apply(X, 2, sd)
+cor(X)
+```
+
+Per quanto riguarda il mixed-model il parametro cruciale è la deviazione standard delle intercette. Possiamo partire dall'Intraclass Correlation Coefficient (ICC) che determina la correlazione tra osservazioni dentro un cluster.
+
+$$
+\mbox{ICC} = \rho_{pre-post}
+$$
+$$
+\mbox{ICC} = \frac{\sigma^2_{\beta_0}}{\sigma^2_{\beta_0} + \sigma^2_{\epsilon}} \\
+$$
+Se assumiamo che la varianza totale sia uno, allora:
+
+$$
+\sigma^2_{\beta_0{_i}} + \sigma^2_{\epsilon} = 1
+$$
+
+$$
+\mbox{ICC} = \sigma^2_{\beta_0{_i}}
+$$
+```{r}
+library(lme4)
+
+r <- 0.7 # icc = r
+b0 <- 0
+b1 <- d
+sb0 <- sqrt(r)
+s <- sqrt(1 - sb0^2)
+
+dat <- data.frame(
+    x = rep(0:1, each = n),
+    id = rep(1:n, 2)
+)
+
+b0i <- rnorm(n, 0, sb0)
+dat$y <- rnorm(N, with(dat, b0 + b0i[id] + b1 * x), s)
+
+fit <- lmer(y ~ x + (1|id), data = dat)
+summary(fit)
+
+performance::icc(fit)
+```
+
+## ICC
+
+Nei mixed-models è utile capire ed utilizzare l'ICC. Simuliamo dati pre-post con diversi gradi di intraclass correlation (simuliamo più osservazioni di pre-post così è più chiaro il pattern):
+
+```{r}
+
+library(ggplot2)
+library(tidyverse)
+
+icc <- c(0, 0.5, 0.8)
+n <- 10
+nt <- 100
+b0 <- 0
+b1 <- 0
+
+sb0 <- sqrt(icc)
+s <- sqrt(1 - sb0^2)
+
+dat <- expand.grid(
+    id = 1:n,
+    x = c(0, 1),
+    nt = 1:nt
+)
+
+y <- vector(mode = "list", length = length(icc))
+
+for(i in 1:length(y)){
+    b0i <- rnorm(n, 0, sb0[i])
+    y[[i]] <- rnorm(nrow(dat), with(dat, b0 + b0i[id] + b1 * x), s[i])
+}
+
+names(y) <- paste0("y_icc", icc)
+dat <- cbind(dat, y)
+
+dat |> 
+    pivot_longer(starts_with("y"),
+                 names_to = "icc",
+                 values_to = "y") |> 
+    mutate(icc = parse_number(icc)) |> 
+    ggplot(aes(x = factor(id), y = y)) +
+    geom_boxplot() +
+    facet_wrap(~icc) +
+    xlab("Cluster")
+```
+
+
