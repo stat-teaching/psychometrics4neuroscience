@@ -6,8 +6,8 @@
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.37">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
 
   <meta name="author" content="Filippo Gambarota, PhD">
   <title>Psychometrics4Neuroscience – Introduction to Meta-Analysis</title>
@@ -271,17 +271,17 @@
 <h2>Unstandardized effect sizes</h2>
 <p>The basic idea of an effect size is just using the raw measure. For example studies using reaction times we can calculate the difference between two conditions as <span class="math inline">\(\overline X_1 - \overline X_2\)</span>:</p>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-1-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="unstandardized-effect-sizes-1" class="slide level2">
 <h2>Unstandardized effect sizes</h2>
 <p>But another study (with the same research question) could use another measure, e.g., accuracy. We can still (not the best strategy but) compute the difference between the group means.</p>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="unstandardized-effect-sizes-2" class="slide level2">
 <h2>Unstandardized effect sizes</h2>
 <p>Clearly we cannot directly compare the two effects but we need to standardize the measure.</p>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="standardized-effect-sizes" class="slide level2">
 <h2>Standardized effect sizes</h2>
 <p>To compare results from different studies, we should use a common metric. Frequently meta-analysts use <em>standardized</em> effect sizes. For example the Pearson correlation or the Cohen’s <span class="math inline">\(d\)</span>.</p>
@@ -298,7 +298,7 @@ s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
 <section id="standardized-effect-sizes-1" class="slide level2">
 <h2>Standardized effect sizes</h2>
 <p>The advantage of standardized effect size is that regardless the original variable, the interpretation and the scale is the same. For example the pearson correlation ranges between -1 and 1 and the Cohen’s <span class="math inline">\(d\)</span> between <span class="math inline">\(- \infty\)</span> and <span class="math inline">\(\infty\)</span> and is interpreted as how many standard deviations the two groups/conditions differs.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
@@ -318,7 +318,7 @@ s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
 </details>
 
 </div>
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="standardized-vs-unstandardized" class="slide level2">
 <h2>Standardized vs unstandardized</h2>
 <p>The main difference is (usually) the absence of a effect-size-variance relationship for unstandardized effects. For example, the variance of the difference between two groups is:</p>
@@ -333,7 +333,10 @@ V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 <section id="standardized-vs-unstandardized-1" class="slide level2">
 <h2>Standardized vs unstandardized</h2>
 <p>In this <a href="https://www.jepusto.com/alternative-formulas-for-the-smd/">amazing blog post</a> James Pustejovsky explained where the equations comes from. Basically, the <span class="math inline">\(\frac{n_1 + n_2}{n_1 n_2}\)</span> term is the same as the <span class="math inline">\(\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}\)</span> while the extra <span class="math inline">\(\frac{d^2}{2(n_1 + n_2)}\)</span> is for the non-centrality induced by the standardized difference.</p>
-<div class="cell">
+</section>
+<section id="standardized-vs-unstandardized-2" class="slide level2">
+<h2>Standardized vs unstandardized</h2>
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>)</span>
@@ -352,7 +355,7 @@ V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 </details>
 
 </div>
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="sec-effsize-se" class="slide level2">
 <h2>Effect size sampling variability</h2>
 <p>Crucially, we can calculate also the <strong>sampling variability</strong> of each effect size. The <strong>sampling variability</strong> is the precision of estimated value.</p>
@@ -360,13 +363,13 @@ V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 <p><span class="math display">\[
 V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 \]</span></p>
-<p>Each effect size has a specific formula for the sampling variability. The sample size is usually the most important information. Studies with high sample size have low sampling variability.</p>
+<p>Each effect size has a specific formula for the sampling variability. The sample size is usually the most important information. Studies with higher sample size have lower sampling variability.</p>
 </section>
 <section id="effect-size-sampling-variability" class="slide level2">
 <h2>Effect size sampling variability</h2>
 <p>As the sample size grows and tends to infinity, the sampling variability approach zero.</p>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="unstandardized-effect-sizes-3" class="slide level2">
 <h2>Unstandardized effect sizes</h2>
 <p>For the examples and plots I’m going to use simulated data. We simulate <em>unstandardized</em> effect sizes (UMD) because the computations are easier and the estimator is unbiased <span class="citation" data-cites="Viechtbauer2005-zt">(e.g., <a href="#/references" role="doc-biblioref" onclick="">Viechtbauer 2005</a>)</span></p>
@@ -388,7 +391,7 @@ SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
 <section id="simulating-a-single-study---umd" class="slide level2">
 <h2>Simulating a single study - UMD</h2>
 <p>To simulate a single study using a UMD we need to generate data according to the appropriate model. Here we have a difference between two groups. We can assume that the two groups comes from a normal distribution where group 1 <span class="math inline">\(g_1 \sim \mathcal{N}(0, 1)\)</span> and group 2 <span class="math inline">\(g_2 \sim \mathcal{N}(D, 1)\)</span> where <span class="math inline">\(D\)</span> is the effect size. Then using Equations <a href="#/eq-var-umd" class="quarto-xref">2</a>, <a href="#/eq-umd" class="quarto-xref">3</a> we can estimate the effect size and the variance.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># effect size</span></span>
 <span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="co"># sample size</span></span>
 <span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
@@ -396,17 +399,17 @@ SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
 <span id="cb3-5"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># effect size</span></span>
 <span id="cb3-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(g2) <span class="sc">-</span> <span class="fu">mean</span>(g1)</span>
-<span id="cb3-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.144216</span></span>
+<span id="cb3-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7525521</span></span>
 <span id="cb3-9"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-10"><a aria-hidden="true" tabindex="-1"></a><span class="co"># variance</span></span>
 <span id="cb3-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(g1)<span class="sc">/</span>n <span class="sc">+</span> <span class="fu">var</span>(g2)<span class="sc">/</span>n</span>
-<span id="cb3-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0315313</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.04732674</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-a-single-study---umd-1" class="slide level2">
 <h2>Simulating a single study - UMD</h2>
 <p>For simplicity we can wrap everything within a function:</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># default sd = 1</span></span>
 <span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a>sim_umd <span class="ot">&lt;-</span> <span class="cf">function</span>(n1, <span class="at">n2 =</span> <span class="cn">NULL</span>, D, <span class="at">sd =</span> <span class="dv">1</span>){</span>
 <span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(n2)) n2 <span class="ot">&lt;-</span> n1 <span class="co"># same to n1 if null </span></span>
@@ -419,27 +422,27 @@ SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
 <span id="cb4-10"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sim_umd</span>(<span class="dv">100</span>, <span class="at">D =</span> <span class="fl">0.5</span>)</span>
 <span id="cb4-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          yi         vi</span></span>
-<span id="cb4-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.6376571 0.02012379</span></span>
+<span id="cb4-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.5779448 0.01802745</span></span>
 <span id="cb4-14"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sim_umd</span>(<span class="dv">50</span>, <span class="at">D =</span> <span class="fl">0.1</span>)</span>
-<span id="cb4-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          yi         vi</span></span>
-<span id="cb4-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.1772148 0.04050279</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           yi         vi</span></span>
+<span id="cb4-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.01265824 0.04348705</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-a-single-study---umd-2" class="slide level2">
 <h2>Simulating a single study - UMD</h2>
 <p>We can also generate a large number of studies and check the distribution of effect size and sampling variances. Note that the real <span class="math inline">\(D = 1\)</span> and the real variance <span class="math inline">\(V_D = 1/50 + 1/50 = 0.04\)</span></p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a>studies <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">sim_umd</span>(<span class="at">n1 =</span> <span class="dv">50</span>, <span class="at">D =</span> <span class="dv">1</span>), <span class="at">simplify =</span> <span class="cn">FALSE</span>) <span class="co"># simplify = FALSE return a list</span></span>
 <span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a>studies <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, studies) <span class="co"># to dataframe</span></span>
 <span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(studies)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;          yi         vi
-#&gt; 1 1.0488889 0.04290375
-#&gt; 2 0.7017515 0.04135473
-#&gt; 3 0.8809495 0.05384598
-#&gt; 4 0.4453040 0.04024610
-#&gt; 5 1.3543517 0.02965272
-#&gt; 6 1.1371326 0.05374094</code></pre>
+#&gt; 1 1.0297445 0.03928089
+#&gt; 2 0.8790549 0.03991526
+#&gt; 3 1.0135863 0.04407775
+#&gt; 4 1.1086738 0.03915357
+#&gt; 5 1.2811220 0.04387874
+#&gt; 6 1.1326733 0.02765962</code></pre>
 </div>
 </div>
 </section>
@@ -447,11 +450,11 @@ SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
 <h2>Simulating a single study - UMD</h2>
 <p>Then we can plot the sampling distributions:</p>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-10-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="simulating-a-single-study---smd" class="slide level2">
 <h2>Simulating a single study - SMD</h2>
 <p>The idea is the same when simulating a SDM but we need extra steps. Let’s adjust the previous function:</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>sim_smd <span class="ot">&lt;-</span> <span class="cf">function</span>(n1, <span class="at">n2 =</span> <span class="cn">NULL</span>, D){</span>
 <span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(n2)) n2 <span class="ot">&lt;-</span> n1 <span class="co"># same to n1 if null </span></span>
 <span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a>  g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
@@ -484,7 +487,7 @@ V_{r} = \frac{(1 - r^2)^2}{n - 1}
 <section id="simulating-a-single-study---pearson-rho-1" class="slide level2">
 <h2>Simulating a single study - Pearson <span class="math inline">\(\rho\)</span></h2>
 <p>There is a huge dependency between <span class="math inline">\(r\)</span> and it’s sampling variance (similar to the Cohen’s <span class="math inline">\(d\)</span>):</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
@@ -495,7 +498,7 @@ V_{r} = \frac{(1 - r^2)^2}{n - 1}
 </details>
 
 </div>
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-12-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="simulating-a-single-study---pearson-rho-2" class="slide level2">
 <h2>Simulating a single study - Pearson <span class="math inline">\(\rho\)</span></h2>
 <p>For this reason the so-called Fisher’s <span class="math inline">\(z\)</span> transformation is used to stabilize the relationship.</p>
@@ -510,7 +513,7 @@ V_z = \frac{1}{n - 3}
 <section id="simulating-a-single-study---pearson-rho-3" class="slide level2">
 <h2>Simulating a single study - Pearson <span class="math inline">\(\rho\)</span></h2>
 <p>This is the relationship between <span class="math inline">\(r\)</span> and <span class="math inline">\(z\)</span>:</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
@@ -522,11 +525,11 @@ V_z = \frac{1}{n - 3}
 </details>
 
 </div>
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="simulating-a-single-study---pearson-rho-4" class="slide level2">
 <h2>Simulating a single study - Pearson <span class="math inline">\(\rho\)</span></h2>
 <p>To simulate a study using correlations we can use the <code>MASS::mvrnorm()</code> function that can generate correlated data from a multivariate normal distribution.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>sim_r <span class="ot">&lt;-</span> <span class="cf">function</span>(n, r){</span>
 <span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> r <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">-</span> r, <span class="at">nrow =</span> <span class="dv">2</span>) <span class="co"># 2 x 2 correlation matrix</span></span>
 <span id="cb10-3"><a aria-hidden="true" tabindex="-1"></a>  X <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n, <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">Sigma =</span> R) <span class="co"># the means are not relevant here</span></span>
@@ -540,25 +543,25 @@ V_z = \frac{1}{n - 3}
 </section>
 <section id="simulating-a-single-study---pearson-rho-5" class="slide level2">
 <h2>Simulating a single study - Pearson <span class="math inline">\(\rho\)</span></h2>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sim_r</span>(<span class="dv">100</span>, <span class="fl">0.5</span>)</span>
 <span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          yi         vi         r          vr</span></span>
-<span id="cb11-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.5423733 0.01030928 0.4947824 0.005760733</span></span>
+<span id="cb11-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.4011993 0.01030928 0.3809746 0.007381644</span></span>
 <span id="cb11-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sim_r</span>(<span class="dv">50</span>, <span class="fl">0.8</span>)</span>
 <span id="cb11-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         yi        vi         r          vr</span></span>
-<span id="cb11-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1.112524 0.0212766 0.8049527 0.002529387</span></span>
+<span id="cb11-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1.102976 0.0212766 0.8015655 0.002608184</span></span>
 <span id="cb11-7"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-8"><a aria-hidden="true" tabindex="-1"></a><span class="co"># also here the sampling distributions</span></span>
 <span id="cb11-9"><a aria-hidden="true" tabindex="-1"></a>studies <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">sim_r</span>(<span class="dv">50</span>, <span class="fl">0.7</span>), <span class="at">simplify =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb11-10"><a aria-hidden="true" tabindex="-1"></a>studies <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, studies)</span>
 <span id="cb11-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(studies)</span>
-<span id="cb11-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        yi               vi                r                vr           </span></span>
-<span id="cb11-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :0.4038   Min.   :0.02128   Min.   :0.3832   Min.   :0.0009468  </span></span>
-<span id="cb11-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:0.7722   1st Qu.:0.02128   1st Qu.:0.6482   1st Qu.:0.0039246  </span></span>
-<span id="cb11-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :0.8672   Median :0.02128   Median :0.6999   Median :0.0053101  </span></span>
-<span id="cb11-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :0.8686   Mean   :0.02128   Mean   :0.6929   Mean   :0.0056097  </span></span>
-<span id="cb11-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:0.9714   3rd Qu.:0.02128   3rd Qu.:0.7493   3rd Qu.:0.0068618  </span></span>
-<span id="cb11-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :1.4020   Max.   :0.02128   Max.   :0.8858   Max.   :0.0148543</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        yi               vi                r                vr          </span></span>
+<span id="cb11-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :0.4892   Min.   :0.02128   Min.   :0.4536   Min.   :0.001323  </span></span>
+<span id="cb11-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:0.7616   1st Qu.:0.02128   1st Qu.:0.6420   1st Qu.:0.004001  </span></span>
+<span id="cb11-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :0.8629   Median :0.02128   Median :0.6978   Median :0.005373  </span></span>
+<span id="cb11-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :0.8648   Mean   :0.02128   Mean   :0.6913   Mean   :0.005654  </span></span>
+<span id="cb11-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:0.9650   3rd Qu.:0.02128   3rd Qu.:0.7465   3rd Qu.:0.007051  </span></span>
+<span id="cb11-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :1.3065   Max.   :0.02128   Max.   :0.8634   Max.   :0.012875</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="more-on-effect-sizes" class="slide level2">
@@ -571,8 +574,8 @@ V_z = \frac{1}{n - 3}
 <li><a href="https://matthewbjane.quarto.pub/guide-to-effect-sizes-and-confidence-intervals">Guide to effect sizes</a>: a modern and complete overview of effect sizes</li>
 </ul>
 </section>
-<section id="simulating-from-sampling-distributions-extra" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
+<section id="simulating-from-sampling-distributions" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
 <p>The previous simulation examples are participant-level simulations. In fact we simulated <span class="math inline">\(n\)</span> observations then we aggregated calculating the effect sizes.</p>
 <div class="fragment">
 <p>This is the most flexible and general data simulation strategy but is computationally not efficient.</p>
@@ -581,8 +584,8 @@ V_z = \frac{1}{n - 3}
 <p>Another strategy individuate the exact effect size sampling distribution. Then we can sample directly from it. The downside is that we need to derive (or find) the equation.</p>
 </div>
 </section>
-<section id="simulating-from-sampling-distributions-extra-1" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
+<section id="simulating-from-sampling-distributions-1" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
 <p>For example, when generating UMD we can simulate from the sampling distribution presented in <a href="#/sec-umd-sampling-distribution" class="quarto-xref">Section&nbsp;2.4</a>.</p>
 <p><span class="math display">\[
 y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
@@ -591,8 +594,8 @@ y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
 \]</span></p>
 <p>In this way we can sample <span class="math inline">\(k\)</span> effects and sampling variances directly from the sampling distributions. Without generating data and then aggregate.</p>
 </section>
-<section id="simulating-from-sampling-distributions-extra-2" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
+<section id="simulating-from-sampling-distributions-2" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
 <p>We can again put everything within a function:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>sim_k_umd <span class="ot">&lt;-</span> <span class="cf">function</span>(k, D, n1, <span class="at">n2 =</span> <span class="cn">NULL</span>){</span>
 <span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(n2)) n2 <span class="ot">&lt;-</span> n1</span>
@@ -601,27 +604,27 @@ y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
 <span id="cb12-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(yi, vi)</span>
 <span id="cb12-6"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="simulating-from-sampling-distributions-extra-3" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
-<div class="cell">
+<section id="simulating-from-sampling-distributions-3" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sim_k_umd</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">D =</span> <span class="fl">0.5</span>, <span class="at">n1 =</span> <span class="dv">50</span>)</span>
 <span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           yi         vi</span></span>
-<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0.7055197 0.03634901</span></span>
-<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.4552380 0.04867980</span></span>
-<span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.3965469 0.03610586</span></span>
-<span id="cb13-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0.3786516 0.04033223</span></span>
-<span id="cb13-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.6869355 0.04152550</span></span>
-<span id="cb13-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  0.2846553 0.03760223</span></span>
-<span id="cb13-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  0.2301675 0.04422733</span></span>
-<span id="cb13-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  0.4236369 0.04613036</span></span>
-<span id="cb13-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  0.5577859 0.03594805</span></span>
-<span id="cb13-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 0.2842814 0.04269923</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0.3996257 0.03693858</span></span>
+<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.4423115 0.03663911</span></span>
+<span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.6478248 0.04068844</span></span>
+<span id="cb13-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0.3214638 0.04067210</span></span>
+<span id="cb13-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.4190199 0.04956667</span></span>
+<span id="cb13-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  0.7020633 0.03216789</span></span>
+<span id="cb13-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  0.6749959 0.04166325</span></span>
+<span id="cb13-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  0.1224306 0.03932716</span></span>
+<span id="cb13-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  0.5745258 0.04535562</span></span>
+<span id="cb13-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 0.2726013 0.04182736</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="simulating-from-sampling-distributions-extra-4" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
+<section id="simulating-from-sampling-distributions-4" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
 <p>We can compare the two methods and see that we are sampling from the same data generation process.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
@@ -631,11 +634,11 @@ y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
 </details>
 </div>
 
-<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
-<section id="simulating-from-sampling-distributions-extra-5" class="slide level2">
-<h2>Simulating from sampling distributions [#extra]</h2>
+<img data-src="intro-meta-analysis_files/figure-revealjs/unnamed-chunk-18-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="simulating-from-sampling-distributions-5" class="slide level2">
+<h2>Simulating from sampling distributions</h2>
 <p>The actual advantage is in terms of computational speed. To simulate <span class="math inline">\(k = 10\)</span> studies for 1000 times (similar to a standard Monte Carlo simulation):</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>bench <span class="ot">&lt;-</span> microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
 <span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">sampling =</span> <span class="fu">sim_k_umd</span>(<span class="at">k =</span> <span class="dv">10</span>, <span class="at">n1 =</span> <span class="dv">50</span>, <span class="at">D =</span> <span class="dv">1</span>),</span>
 <span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">participant =</span> <span class="fu">replicate</span>(<span class="dv">10</span>, <span class="fu">sim_umd</span>(<span class="at">n1 =</span> <span class="dv">50</span>, <span class="at">D =</span> <span class="dv">1</span>)),</span>
@@ -643,15 +646,18 @@ y_i \sim \mathcal{N}(\theta, \sqrt{\sigma^2_i})
 <span id="cb15-5"><a aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb15-6"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-7"><a aria-hidden="true" tabindex="-1"></a>(bench <span class="ot">&lt;-</span> <span class="fu">summary</span>(bench))</span>
-<span id="cb15-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          expr      min       lq      mean   median       uq       max neval cld</span></span>
-<span id="cb15-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    sampling  119.705  128.030  153.3401  137.698  152.116   642.825  1000  a </span></span>
-<span id="cb15-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 participant 1533.806 1586.821 1850.0177 1634.110 1831.505 10557.359  1000   b</span></span>
-<span id="cb15-11"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a aria-hidden="true" tabindex="-1"></a>bench<span class="sc">$</span>mean[<span class="dv">2</span>] <span class="sc">/</span> bench<span class="sc">$</span>mean[<span class="dv">1</span>] <span class="co"># faster</span></span>
-<span id="cb15-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 12.0648</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          expr      min        lq      mean    median       uq      max neval</span></span>
+<span id="cb15-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    sampling  121.017  127.5495  147.8443  135.2085  145.162 5771.075  1000</span></span>
+<span id="cb15-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 participant 1546.187 1598.3900 1745.4717 1627.2745 1708.858 7836.305  1000</span></span>
+<span id="cb15-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cld</span></span>
+<span id="cb15-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  a </span></span>
+<span id="cb15-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   b</span></span>
+<span id="cb15-14"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a aria-hidden="true" tabindex="-1"></a>bench<span class="sc">$</span>mean[<span class="dv">2</span>] <span class="sc">/</span> bench<span class="sc">$</span>mean[<span class="dv">1</span>] <span class="co"># faster</span></span>
+<span id="cb15-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11.80615</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="references" class="slide level2 smaller scrollable">
+<section id="references" class="slide level2 refs smaller scrollable">
 <h2>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Borenstein2009-mo" class="csl-entry" role="listitem">

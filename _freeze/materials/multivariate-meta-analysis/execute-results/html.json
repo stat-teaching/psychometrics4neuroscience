@@ -1,0 +1,17 @@
+{
+  "hash": "e9703a3b0c807e44d60b0746b847bc30",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"multivariate-meta-analysis\"\nformat: html\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nsim_multi_meta <- function(k, \n                           p,\n                           mus,\n                           tau2s,\n                           ro = 0,\n                           rs = 0,\n                           n = NULL,\n                           sample_p = FALSE,\n                           sample_n = NULL,\n                           ranef = FALSE){\n    \n    RT <- ro + diag(1 - ro, p)\n    RS <- rs + diag(1 - rs, p)\n    S <- diag(sqrt(tau2s)) %*% RT %*% diag(sqrt(tau2s))\n    \n    TT <- MASS::mvrnorm(k, rep(0, p), S)\n    \n    yi <- vi <- deltai <- vector(mode = \"list\", length = k)\n    \n    for(i in 1:k){\n        X0 <- MASS::mvrnorm(n, rep(0, p), RS)\n        X1 <- MASS::mvrnorm(n, mus + TT[i, ], RS)\n        mm0 <- apply(X0, 2, mean)\n        mm1 <- apply(X1, 2, mean)\n        \n        vv0 <- apply(X0, 2, var)\n        vv1 <- apply(X1, 2, var)\n        \n        yi[[i]] <- mm1 - mm0\n        vi[[i]] <- vv0/n + vv1/n\n        deltai[[i]] <- TT[i, ]\n    }\n    \n    if(sample_p){\n        pi <- sample(1:p, k, replace = TRUE)\n    } else{\n        pi <- rep(p, k)\n    }\n    \n    study <- rep(1:k, each = p)\n    outcome <- rep(1:p, k)\n    \n    sim <- data.frame(\n        study,\n        outcome\n    )\n    \n    sim$yi <- unlist(yi)\n    sim$vi <- unlist(vi)\n    \n    if(ranef){\n        sim$deltai <- unlist(deltai)\n    }\n    \n    # selecting studies\n    siml <- split(sim, sim$study)\n    for(i in 1:k){\n        siml[[i]] <- siml[[i]][1:pi[i], ]\n    }\n    sim <- do.call(rbind, siml)\n    sim$outcome <- factor(paste0(\"o\", sim$outcome))\n    rownames(sim) <- NULL\n    return(sim)\n}\n\n\ndat <- sim_multi_meta(k = 500, \n                      p = 3, \n                      mus = c(0.1, 0.5, 0.1), \n                      tau2s = c(0.1, 0.1, 0.1), \n                      RT = 0.5,\n                      RS = 0.5, \n                      n = 1e3, \n                      ranef = FALSE)\n\n\nlibrary(metafor)\n\nV <- vcalc(vi, cluster = study, obs = outcome, rho = 0.5, data = dat)\n\nfit <- rma.mv(yi, \n              V, \n       mods = ~ 0 + outcome, \n       random = ~outcome|study, \n       data = dat,\n       struct = \"UN\",\n       sparse = TRUE)\n\n\nfit\n```\n:::\n",
+    "supporting": [
+      "multivariate-meta-analysis_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

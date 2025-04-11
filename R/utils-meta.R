@@ -19,9 +19,9 @@ sim_studies <- function(k, es, tau2 = 0, n1, n2 = NULL, add = NULL, fast = FALSE
   } else{
     if(length(n2) == 1) n2 <- rep(n2, k)
   }
-  
+
   if(length(es) == 1) es <- rep(es, k)
-  
+
   if(fast){
     yi <- rnorm(k, es, sqrt(1/n1 + 1/n2 + tau2))
     vi <- (rchisq(k, n1 + n2 - 2) / (n1 + n2 - 2)) * (1/n1 + 1/n2)
@@ -29,28 +29,28 @@ sim_studies <- function(k, es, tau2 = 0, n1, n2 = NULL, add = NULL, fast = FALSE
   } else{
     yi <- rep(NA, k)
     vi <- rep(NA, k)
-    
+
     # random effects
     deltai <- rnorm(k, 0, sqrt(tau2))
-    
+
     for(i in 1:k){
       g1 <- rnorm(n1[i], 0, 1)
       g2 <- rnorm(n2[i], es[i] + deltai[i], 1)
       yi[i] <- mean(g2) - mean(g1)
       vi[i] <- var(g1)/n1[i] + var(g2)/n2[i]
     }
-    
+
     sim <- data.frame(id = 1:k, yi, vi, n1 = n1, n2 = n2)
-  
+
   }
-  
+
   if(!is.null(add)){
     sim <- cbind(sim, add)
   }
-  
+
   # convert to escalc for using metafor methods
   sim <- metafor::escalc(yi = yi, vi = vi, data = sim)
-  
+
   return(sim)
 }
 

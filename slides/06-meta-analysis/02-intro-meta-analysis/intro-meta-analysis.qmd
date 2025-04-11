@@ -20,6 +20,8 @@ devtools::load_all()
 
 # ggplot theme
 theme_set(mtheme())
+
+knitr::opts_chunk$set(fig.align = "center")
 ```
 
 ```{r}
@@ -170,6 +172,8 @@ $$
 
 In this [amazing blog post](https://www.jepusto.com/alternative-formulas-for-the-smd/) James Pustejovsky explained where the equations comes from. Basically, the $\frac{n_1 + n_2}{n_1 n_2}$ term is the same as the $\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}$ while the extra $\frac{d^2}{2(n_1 + n_2)}$ is for the non-centrality induced by the standardized difference.
 
+## Standardized vs unstandardized
+
 ```{r}
 #| code-fold: true
 n <- c(10, 50, 100)
@@ -197,7 +201,7 @@ $$
 V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 $$
 
-Each effect size has a specific formula for the sampling variability. The sample size is usually the most important information. Studies with high sample size have low sampling variability.
+Each effect size has a specific formula for the sampling variability. The sample size is usually the most important information. Studies with higher sample size have lower sampling variability.
 
 ## Effect size sampling variability
 
@@ -408,7 +412,7 @@ The same logic can be applied to any situation. Just understand the data generat
 - the [`metafor::escalc()`](https://wviechtb.github.io/metafor/reference/escalc.html) function implements basically any effect size. You can see also the [source code](https://github.com/wviechtb/metafor/blob/master/R/escalc.r) to see the actual R implementation.
 - [Guide to effect sizes](https://matthewbjane.quarto.pub/guide-to-effect-sizes-and-confidence-intervals): a modern and complete overview of effect sizes
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 The previous simulation examples are participant-level simulations. In fact we simulated $n$ observations then we aggregated calculating the effect sizes.
 
@@ -420,7 +424,7 @@ This is the most flexible and general data simulation strategy but is computatio
 
 Another strategy individuate the exact effect size sampling distribution. Then we can sample directly from it. The downside is that we need to derive (or find) the equation.
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 For example, when generating UMD we can simulate from the sampling distribution presented in @sec-umd-sampling-distribution.
 
@@ -433,7 +437,7 @@ $$
 
 In this way we can sample $k$ effects and sampling variances directly from the sampling distributions. Without generating data and then aggregate.
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 We can again put everything within a function:
 
@@ -446,13 +450,13 @@ sim_k_umd <- function(k, D, n1, n2 = NULL){
 }
 ```
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 ```{r}
 sim_k_umd(k = 10, D = 0.5, n1 = 50)
 ```
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 We can compare the two methods and see that we are sampling from the same data generation process.
 
@@ -478,7 +482,7 @@ hist(ip_umd$yi, breaks = 50, main = "D (from participant-level)", xlab = "", col
 hist(ip_umd$vi, breaks = 50, main = "V_D (from participant-level)", xlab = "", col = "dodgerblue")
 ```
 
-## Simulating from sampling distributions [#extra]
+## Simulating from sampling distributions 
 
 The actual advantage is in terms of computational speed. To simulate $k = 10$ studies for 1000 times (similar to a standard Monte Carlo simulation):
 
@@ -494,7 +498,7 @@ bench <- microbenchmark::microbenchmark(
 bench$mean[2] / bench$mean[1] # faster
 ```
 
-## References
+## References {.refs}
 
 ::: {#refs}
 :::

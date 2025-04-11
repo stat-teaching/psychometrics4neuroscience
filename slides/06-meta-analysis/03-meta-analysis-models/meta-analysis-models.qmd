@@ -4,7 +4,6 @@ execute:
   echo: true
 knitr:
   opts_chunk: 
-    collapse: true
     comment: "#>"
 ---
 
@@ -18,6 +17,7 @@ library(patchwork)
 library(metafor)
 library(here)
 library(ltxplot)
+library(lme4)
 devtools::load_all()
 
 # ggplot theme
@@ -25,6 +25,8 @@ theme_set(mtheme())
 
 # objects
 imgs <- readRDS(here("slides", "06-meta-analysis", "03-meta-analysis-models", "objects", "r-imgs.rds"))
+
+knitr::opts_chunk$set(fig.align = "center")
 ```
 
 ```{r}
@@ -121,7 +123,7 @@ The proposed simulation approach using a `for` loop and separated vectors. For t
 
 For some examples see:
 
-- @Gambarota2023-on
+- @Gambarota2024-lp
 - [www.jepusto.com/simulating-correlated-smds](https://www.jepusto.com/simulating-correlated-smds)
 
 ## Simulation setup - Disclaimer
@@ -1027,7 +1029,75 @@ predict(fit_t) # notice pi.ub/pi.lb vs ci.ub/ci.lb
 fit_z$b[[1]] + qt(c(0.025, 0.975), k - 2) * sqrt(fit_t$se^2 + fit_t$tau2)
 ```
 
-## References
+# Aggregated vs raw data
+
+## Aggregated vs raw data
+
+Meta-analysis is about data aggregation (calculating the effect size at level-2) before modelling. What about using raw data instead? Is aggregating harmful or harmless?
+
+```{r}
+k <- 30
+tau2 <- 0.1
+es <- 0.3
+n0 <- 20 + rpois(k, 50 - 20)
+n1 <- 20 + rpois(k, 50 - 20)
+
+out <- vector(mode = "list", length = k) 
+
+deltai <- rnorm(k, 0, sqrt(tau2))
+
+for(i in 1:k){
+    g0 <- rnorm(n0[i], 0, 1)
+    g1 <- rnorm(n1[i], es + deltai[i], 1)
+    di <- data.frame(
+        study = i,
+        y = c(g0, g1),
+        x = rep(c("g0", "g1"), c(n0[i], n1[i]))
+    )
+    out[[i]] <- di
+}
+
+sim <- do.call(rbind, out)
+
+head(sim)
+```
+
+## Aggregated vs raw data
+
+```{r}
+simMeta <- sim |> 
+    group_by(study, x) |> 
+    summarise(m = mean(y),
+              sd = sd(y),
+              n = n()) |> 
+    pivot_wider(names_from = x,
+                values_from = c(m, sd, n))
+
+simMeta <- escalc("SMD", 
+       m1i = m_g1, m2i = m_g0, 
+       sd1i = sd_g1, sd2i = sd_g0,
+       n1i = n_g1, n2i = n_g0,
+       data = simMeta)
+
+head(simMeta)
+```
+
+## Aggregated vs raw data
+
+```{r}
+fit_lme4 <- lmer(y ~ x + (x|study), data = sim)
+fit_rma <- rma(yi, vi, data = simMeta)
+
+summary(fit_lme4)
+```
+
+## Aggregated vs raw data
+
+```{r}
+summary(fit_rma)
+```
+
+## References {.refs}
 
 ::: {#refs}
 :::

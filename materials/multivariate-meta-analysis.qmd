@@ -1,0 +1,99 @@
+---
+title: "multivariate-meta-analysis"
+format: html
+---
+
+```{r}
+#| eval: false
+sim_multi_meta <- function(k, 
+                           p,
+                           mus,
+                           tau2s,
+                           ro = 0,
+                           rs = 0,
+                           n = NULL,
+                           sample_p = FALSE,
+                           sample_n = NULL,
+                           ranef = FALSE){
+    
+    RT <- ro + diag(1 - ro, p)
+    RS <- rs + diag(1 - rs, p)
+    S <- diag(sqrt(tau2s)) %*% RT %*% diag(sqrt(tau2s))
+    
+    TT <- MASS::mvrnorm(k, rep(0, p), S)
+    
+    yi <- vi <- deltai <- vector(mode = "list", length = k)
+    
+    for(i in 1:k){
+        X0 <- MASS::mvrnorm(n, rep(0, p), RS)
+        X1 <- MASS::mvrnorm(n, mus + TT[i, ], RS)
+        mm0 <- apply(X0, 2, mean)
+        mm1 <- apply(X1, 2, mean)
+        
+        vv0 <- apply(X0, 2, var)
+        vv1 <- apply(X1, 2, var)
+        
+        yi[[i]] <- mm1 - mm0
+        vi[[i]] <- vv0/n + vv1/n
+        deltai[[i]] <- TT[i, ]
+    }
+    
+    if(sample_p){
+        pi <- sample(1:p, k, replace = TRUE)
+    } else{
+        pi <- rep(p, k)
+    }
+    
+    study <- rep(1:k, each = p)
+    outcome <- rep(1:p, k)
+    
+    sim <- data.frame(
+        study,
+        outcome
+    )
+    
+    sim$yi <- unlist(yi)
+    sim$vi <- unlist(vi)
+    
+    if(ranef){
+        sim$deltai <- unlist(deltai)
+    }
+    
+    # selecting studies
+    siml <- split(sim, sim$study)
+    for(i in 1:k){
+        siml[[i]] <- siml[[i]][1:pi[i], ]
+    }
+    sim <- do.call(rbind, siml)
+    sim$outcome <- factor(paste0("o", sim$outcome))
+    rownames(sim) <- NULL
+    return(sim)
+}
+
+
+dat <- sim_multi_meta(k = 500, 
+                      p = 3, 
+                      mus = c(0.1, 0.5, 0.1), 
+                      tau2s = c(0.1, 0.1, 0.1), 
+                      RT = 0.5,
+                      RS = 0.5, 
+                      n = 1e3, 
+                      ranef = FALSE)
+
+
+library(metafor)
+
+V <- vcalc(vi, cluster = study, obs = outcome, rho = 0.5, data = dat)
+
+fit <- rma.mv(yi, 
+              V, 
+       mods = ~ 0 + outcome, 
+       random = ~outcome|study, 
+       data = dat,
+       struct = "UN",
+       sparse = TRUE)
+
+
+fit
+```
+

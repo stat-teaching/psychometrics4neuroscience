@@ -115,5 +115,14 @@
   },
   "scripts-lectures/2025-04-08.qmd": {
     "2025-04-08.html": "78088f2e"
+  },
+  "materials/three-level-meta-analysis.qmd": {
+    "three-level-meta-analysis.html": "bacd9a03"
+  },
+  "materials/meta-analysis-examples.qmd": {
+    "meta-analysis-examples.html": "c876172d"
+  },
+  "materials/multivariate-meta-analysis.qmd": {
+    "multivariate-meta-analysis.html": "d9b04546"
   }
 }
