@@ -6,8 +6,8 @@
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.37">
 
   <meta name="author" content="Filippo Gambarota, PhD">
   <title>Psychometrics4Neuroscience – Introduction to Meta-Analysis</title>
@@ -287,7 +287,7 @@
 <p>To compare results from different studies, we should use a common metric. Frequently meta-analysts use <em>standardized</em> effect sizes. For example the Pearson correlation or the Cohen’s <span class="math inline">\(d\)</span>.</p>
 <p><span id="eq-correlation"><span class="math display">\[
 r = \frac{\sum{(x_i - \bar{x})(y_i - \bar{y})}}{\sqrt{\sum{(x_i - \bar{x})^2}\sum{(y_i - \bar{y})^2}}}
-\qquad(1)\]</span></span></p>
+\tag{1}\]</span></span></p>
 <p><span class="math display">\[
 d = \frac{\bar{x_1} - \bar{x_2}}{s_p}
 \]</span></p>
@@ -324,7 +324,7 @@ s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
 <p>The main difference is (usually) the absence of a effect-size-variance relationship for unstandardized effects. For example, the variance of the difference between two groups is:</p>
 <p><span id="eq-var-umd"><span class="math display">\[
 V_d = \frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}
-\qquad(2)\]</span></span></p>
+\tag{2}\]</span></span></p>
 <p>While the variance of a Cohen’s <span class="math inline">\(d\)</span> can be calculated as:</p>
 <p><span class="math display">\[
 V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
@@ -376,7 +376,7 @@ V_d = \frac{n_1 + n_2}{n_1 n_2} + \frac{d^2}{2(n_1 + n_2)}
 <p>More specifically we simulate hypothetical studies where two independent groups are compared:</p>
 <p><span id="eq-umd"><span class="math display">\[
 \Delta = \overline{X_1} - \overline{X_2}
-\qquad(3)\]</span></span></p>
+\tag{3}\]</span></span></p>
 <p><span class="math display">\[
 SE_{\Delta} = \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}
 \]</span></p>
@@ -865,7 +865,7 @@ Viechtbauer, Wolfgang. 2005. <span>“Bias and Efficiency of Meta-Analytic Varia
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

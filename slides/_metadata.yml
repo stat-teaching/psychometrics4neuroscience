@@ -1,4 +1,6 @@
 author: Filippo Gambarota, PhD
 subtitle: Psicometria per le Neuroscienze Cognitive
 bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
-format: minimal-revealjs
+format: 
+    minimal-revealjs:
+        html-math-method: mathjax
