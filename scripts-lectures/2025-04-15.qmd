@@ -1,0 +1,9 @@
+---
+title: "2025-04-15"
+format: html
+---
+
+Vediamo qualche dataset per applicare i modelli metanalitici.
+
+- il pacchetto [`metadat`](https://cran.r-project.org/web/packages/metadat/metadat.pdf) contiene diversi dataset già predisposti per poter fare una metanalisi.
+- il progetto [`metapsy`](https://www.metapsy.org/database/depression-psychotherapy) raccoglie tutti i randomized-controlled trials riguardo l'efficacia di psicoterapie per diversi tipo di condizioni. contiene molte variabili oltre agli effect sizes quindi si presta bene per le meta-regressions.

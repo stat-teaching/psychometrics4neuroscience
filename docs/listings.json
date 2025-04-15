@@ -15,6 +15,18 @@
     ]
   },
   {
+    "listing": "/scripts-lectures.html",
+    "items": [
+      "/scripts-lectures/2025-04-15.html",
+      "/scripts-lectures/2025-04-08.html",
+      "/scripts-lectures/2025-04-07.html",
+      "/scripts-lectures/2025-04-04.html",
+      "/scripts-lectures/2025-04-01.html",
+      "/scripts-lectures/2025-03-31.html",
+      "/scripts-lectures/2025-03-28.html"
+    ]
+  },
+  {
     "listing": "/materials.html",
     "items": [
       "/materials/baseR-vs-tidyverse.html",
@@ -25,17 +37,6 @@
       "/materials/signal-detection-theory.html",
       "/materials/three-level-meta-analysis.html",
       "/materials/useful-glmer-tools.html"
-    ]
-  },
-  {
-    "listing": "/scripts-lectures.html",
-    "items": [
-      "/scripts-lectures/2025-04-08.html",
-      "/scripts-lectures/2025-04-07.html",
-      "/scripts-lectures/2025-04-04.html",
-      "/scripts-lectures/2025-04-01.html",
-      "/scripts-lectures/2025-03-31.html",
-      "/scripts-lectures/2025-03-28.html"
     ]
   }
 ]
