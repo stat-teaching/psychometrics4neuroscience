@@ -1,0 +1,53 @@
+---
+title: ""
+subtitle: ""
+format: html
+---
+
+# Descrizione
+
+Questo lavoro di gruppo richiede di effettuare una simulazione per pianificare uno
+
+grafico atteso e descrizione esperimento
+
+introduciamo le covariate 
+
+effettuare una design analysis dove si valuta la potenza statistica e la probabilità di errore di primo per un esperimento da laboratorio
+
+```{r}
+dd <- expand.grid(
+    face = c("Neutral", "Anger"),
+    group = c("Control", "Anxiety")
+) 
+
+dd$p <- c(0.55, 0.65, 0.55, 0.8)
+dd$face <- factor(dd$face, levels = c("Neutral", "Anger"))    
+    
+ggplot(dd, aes(x = face, y = p, color = group)) +
+    geom_line(aes(group = group)) +
+    geom_point() +
+    ylim(c(0.4, 1))
+```
+
+
+1. valutare il modello più adeguato per questo tipo di dati
+2. definire valori plausibili per i parametri
+    - coefficienti fissi
+    - coefficienti random
+    - coefficienti di covariate
+3. effetturare la simulazione in diversi scenari plausibili variando:
+    - effect size: piccolo, medio e grande
+    - numbero di soggetti e numero di trials per soggetto
+    - variabilità tra soggetti negli effetti fissi: bassa e media
+4. rappresentare graficamente i risultati delle varie simulazioni commentando i risultati in modo critico. considerare il bilanciamento tra soggetti e trials.
+
+# Vincoli
+
+- in questo tipo di esperimenti c'è una percentuale di trial da eliminare. Introdurre nella simulazione una percentuale di trial eliminati che varia da soggetto a soggetto con valore massimo di 20%.
+- l'accuratezza globale diminuisce leggermente in funzione dell'età dei partecipanti. Introdurre questo aspetto nella simulazione.
+
+# Aspetti generali
+
+- tutti gli step devono essere prodotti in un documento Quarto (html o pdf) riproducibile e self-contained
+- chi vuole può preparare una presentazione in Quarto da utilizzare durante l'esame
+- si faccia particolare attenzione a scrivere codice leggibile, efficiente e che gestisca adeguatamente errori di convergenza e problematiche varie nella simulazione
