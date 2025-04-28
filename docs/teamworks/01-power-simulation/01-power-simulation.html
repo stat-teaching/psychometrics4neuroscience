@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Filippo Gambarota">
+<meta name="author" content="">
 
-<title>2025-04-15 – Psychometrics4Neuroscience</title>
+<title>Lavoro di Gruppo 1 - Simulazione Monte Carlo – Psychometrics4Neuroscience</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,25 +21,79 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,8 +122,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Psychometrics4Neuroscience</span>
     </a>
   </div>
@@ -90,23 +173,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides.html"> 
+    <a class="nav-link" href="../../slides.html"> 
 <span class="menu-text">slides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../materials.html"> 
+    <a class="nav-link" href="../../materials.html"> 
 <span class="menu-text">materials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../scripts-lectures.html"> 
+    <a class="nav-link" href="../../scripts-lectures.html"> 
 <span class="menu-text">scripts-lectures</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teamworks.html"> 
+    <a class="nav-link" href="../../teamworks.html"> 
 <span class="menu-text">teamworks</span></a>
   </li>  
 </ul>
@@ -121,27 +204,29 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#descrizione" id="toc-descrizione" class="nav-link active" data-scroll-target="#descrizione">Descrizione</a></li>
+  <li><a href="#suggerimenti" id="toc-suggerimenti" class="nav-link" data-scroll-target="#suggerimenti">Suggerimenti</a></li>
+  <li><a href="#aspetti-generali" id="toc-aspetti-generali" class="nav-link" data-scroll-target="#aspetti-generali">Aspetti generali</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">2025-04-15</h1>
+<h1 class="title">Lavoro di Gruppo 1 - Simulazione Monte Carlo</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Filippo Gambarota </p>
-          </div>
-  </div>
     
   
     
@@ -152,15 +237,86 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Vediamo qualche dataset per applicare i modelli metanalitici.</p>
+<section id="descrizione" class="level1">
+<h1>Descrizione</h1>
+<p>Questo lavoro di gruppo richiede di effettuare una design analysis per un esperimento in Psicologia. Un gruppo di ricercatori è interessato a testare l’accuratezza per l’elaborazione di volti con espressione facciale in gruppi clinici e di controllo. L’idea di ricerca riguarda il fatto che in alcuni disturbi psicologici come i disturbi d’ansia ci sia un’elaborazione diversa di stimoli a valenza negativa. In questo caso i ricercatori vogliono confrontare soggetti con e senza disturbo d’ansia nell’elaborazione di volti con espressione facciale negativa (rabbia) e neutra.</p>
+<p>L’ipotesi principale riguarda un’accuratezza maggiore nei soggetti ansiosi rispetto a soggetti non ansiosi solo nel caso di volti con espressione di rabbia. L’ipotesi è rappresentata in Figura <a href="#fig-example" class="quarto-xref">1</a>. Chiaramente i valori effettivi variano in base agli scenari di simulazione. Per semplificare il disegno di simulazione si può assumere a zero la differenza tra gruppi nella condizione di volti neutri.</p>
+<p>Oltre all’ipotesi principale i ricercatori vogliono raccogliere le seguenti covariate che dovranno essere inserite nella simulazione e nel modello ma senza essere variate nei vari scenari di simulazione:</p>
 <ul>
-<li>il pacchetto <a href="https://cran.r-project.org/web/packages/metadat/metadat.pdf"><code>metadat</code></a> contiene diversi dataset già predisposti per poter fare una metanalisi.</li>
-<li>il progetto <a href="https://www.metapsy.org/database/depression-psychotherapy"><code>metapsy</code></a> raccoglie tutti i randomized-controlled trials riguardo l’efficacia di psicoterapie per diversi tipo di condizioni. contiene molte variabili oltre agli effect sizes quindi si presta bene per le meta-regressions.</li>
+<li>sesso: i ricercatori si aspettano in base alla letteratura un’accuratezza maggiore (effetto piccolo) globale nei soggetti di sesso femminile</li>
+<li>la percentuale di soggetti di sesso femminile globale è dell’80%</li>
+<li>età: l’età è distribuita in modo uniforme tra 20 e 40 anni. Inoltre l’accuratezza globale diminuisce leggermente (un massimo di 5-10% per il range di età) al crescere dell’età</li>
+</ul>
+<p>La simulazione deve mostrare la potenza statistica nei vari scenari con l’idea sia di avere un quadro completo che sapere quanti soggetti/trial raccogliere per avere una potenza di circa 80%.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">face =</span> <span class="fu">c</span>(<span class="st">"Neutral"</span>, <span class="st">"Anger"</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"Anxiety"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.55</span>, <span class="fl">0.8</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>face <span class="ot">&lt;-</span> <span class="fu">factor</span>(dd<span class="sc">$</span>face, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Neutral"</span>, <span class="st">"Anger"</span>))    </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(<span class="at">x =</span> face, <span class="at">y =</span> p, <span class="at">color =</span> group)) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> group)) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="fl">0.4</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-example" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-power-simulation_files/figure-html/fig-example-1.png" id="fig-example" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>valutare il modello più adeguato per questo tipo di dati e giustificare chiaramente il motivo.</li>
+<li>i ricercatori spesso non sanno che anche il numero di trials può aumentare la potenza fissando il numero di soggetti. Trovare un modo chiaro ma formalmente corretto di spiegare questo punto usando grafici, piccole simulazioni, etc.</li>
+<li>definire valori plausibili per i parametri
+<ul>
+<li>coefficienti fissi dell’esperimento (gruppo ed emozione) e covariate</li>
+<li>coefficienti random (quali è plausibile ipotizzare?)</li>
+</ul></li>
+<li>effetturare la simulazione in diversi scenari plausibili variando:
+<ul>
+<li>effect size: piccolo, medio e grande</li>
+<li>numbero di soggetti e numero di trials per soggetto</li>
+<li>variabilità tra soggetti negli effetti fissi (i.e., effetti random): bassa e media</li>
+</ul></li>
+<li>rispetto al numero di simulazione, scegliere un numero secondo voi adeguato cercando di giustificarlo adeguatamente</li>
+<li>rappresentare graficamente i risultati delle varie simulazioni commentando i risultati in modo critico. considerare il bilanciamento tra soggetti e trials.</li>
+<li>I ricercatori in psicologia sono abituati ad usare i modelli lineari (t-test, ANOVA, etc.) a prescindere dal tipo di variabile. Questo può creare dei bias nelle stime oppure portare a vere e proprie conclusioni erronee. Fare una ulteriore simulazione per dimostrare quali possono essere i problemi nell’utilizzare un modello lineare e non un GLM per questo tipo di dati. Per questa simulazione si possono omettere le covariate e concentrarsi sulle ipotesi sperimentale. Mostrare almeno una problematica. Suggerimento: valutare gli errori di primo tipo per interazioni testate con modelli lineari quando i dati non rispettano queste assunzioni (come in questo caso).</li>
+</ol>
+</section>
+<section id="suggerimenti" class="level1">
+<h1>Suggerimenti</h1>
+<p>Solitamente i ricercatori in psicologia ragionano con effect sizes standardizzati (e.g., Cohen’s <span class="math inline">\(d\)</span>, standardized mean difference). Provare ad impostare i parametri del modello riguardo le ipotesi sperimentali convertendoli da valori di Cohen’s <span class="math inline">\(d\)</span>. Si veda ad esempio <span class="citation" data-cites="Sanchez-Meca2003-tz">Sánchez-Meca, Marín-Martínez, and Chacón-Moscoso (<a href="#ref-Sanchez-Meca2003-tz" role="doc-biblioref">2003</a>)</span>.</p>
+</section>
+<section id="aspetti-generali" class="level1">
+<h1>Aspetti generali</h1>
+<ul>
+<li>Ogni step deve essere accompagnato da una spiegazione narrativa e dove pertinente da rappresentazioni grafiche e tabelle che spieghino in maniera chiara i risultati</li>
+<li>Tutti gli step devono essere prodotti in un documento Quarto (html o pdf) riproducibile e self-contained</li>
+<li>Chi vuole può preparare una presentazione in Quarto da utilizzare durante l’esame</li>
+<li>Si faccia particolare attenzione a scrivere codice leggibile, efficiente e che gestisca adeguatamente errori di convergenza e problematiche varie nella simulazione. Cercare di velocizzare il più possibile la simulazione trovando varie strategie online. Per ogni simulazione salvare anche il tempo di computazione.</li>
 </ul>
 
 
 
-</main> <!-- /main -->
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Sanchez-Meca2003-tz" class="csl-entry" role="listitem">
+Sánchez-Meca, Julio, Fulgencio Marín-Martínez, and Salvador Chacón-Moscoso. 2003. <span>“Effect-Size Indices for Dichotomized Outcomes in Meta-Analysis.”</span> <em>Psychological Methods</em> 8 (December): 448–67. <a href="https://doi.org/10.1037/1082-989X.8.4.448">https://doi.org/10.1037/1082-989X.8.4.448</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

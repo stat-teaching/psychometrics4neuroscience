@@ -1,6 +1,7 @@
 ---
-title: "Analisi di dati ERP"
+title: "Lavoro di Gruppo 2 - Analisi di dati ERP"
 subtitle: ""
+author: ""
 format: html
 ---
 
@@ -23,8 +24,8 @@ I dati sono quelli già usati nelle esercitazioni sulla visualizzazione di dati 
 
 1. Importare i dati in un unico dataframe in R
 2. Eseguire l'esplorazione del dataset rispetto alla **differenza tra facce e facce scrambled** su tutti gli elettrodi\
-2a. Creare una rappresentazione grafica delle waveform delle due condizioni sperimentali per tutti gli elettrodi\
-2b. Riportare le statistiche descrittive per le due condizioni sperimentali nella finestra 150-190 ms (per tutti gli elettrodi)
+    2a. Creare una rappresentazione grafica delle waveform delle due condizioni sperimentali per tutti gli elettrodi
+    2b. Riportare le statistiche descrittive per le due condizioni sperimentali nella finestra 150-190 ms (per tutti gli elettrodi)
 3. Eseguire l'analisi statistica con un mixed-effects model per spiegare la **differenza tra facce e facce scrambled** nella finestra 150-190 ms in quattro cluster di elettrodi: Cluster Anteriore Destro (F4,FC4, F8), Cluster Anteriore Sinistro (F3, FC3, F7), Cluster Posteriore Destro (PO8, P8, PO4), Cluster Posteriore Sinistro (PO7, P7, PO3)
 4. Eseguire l'analisi statistica con l'approccio _mass univariate_ con la gestione dei confronti multipli attraverso l'approccio _cluster-mass permutation_ per spiegare la **differenza tra facce e facce scrambled** usando tutti gli elettrodi e tutti i time points a disposizione.
 5. Commentare i risultati di entrambi i metodi, evidenziando pro e contro di ognuno

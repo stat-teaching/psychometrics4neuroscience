@@ -1,0 +1,10 @@
+---
+listing:
+  contents:
+      - "teamworks"
+  type: table
+  sort: "filename"
+  fields: [title]
+---
+
+Per la suddivisione nei diversi gruppi potete completare [questo documento](https://docs.google.com/spreadsheets/d/1tg7B3ttsWiPCkyVAsZcY4omEJ5OALLO7NZTQIbjxlUA/edit?gid=1666304831#gid=1666304831).

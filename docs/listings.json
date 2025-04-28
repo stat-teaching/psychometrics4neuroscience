@@ -38,5 +38,13 @@
       "/materials/three-level-meta-analysis.html",
       "/materials/useful-glmer-tools.html"
     ]
+  },
+  {
+    "listing": "/teamworks.html",
+    "items": [
+      "/teamworks/01-power-simulation/01-power-simulation.html",
+      "/teamworks/02-erp-analysis/02-erp-analysis.html",
+      "/teamworks/03-meta-analysis/03-meta-analysis.html"
+    ]
   }
 ]

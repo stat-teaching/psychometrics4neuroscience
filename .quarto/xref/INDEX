@@ -127,5 +127,17 @@
   },
   "scripts-lectures/2025-04-15.qmd": {
     "2025-04-15.html": "da5bc974"
+  },
+  "teamworks/02-erp-analysis/02-erp-analysis.qmd": {
+    "02-erp-analysis.html": "9df1e7d2"
+  },
+  "teamworks/03-meta-analysis/03-meta-analysis.qmd": {
+    "03-meta-analysis.html": "f679ef2e"
+  },
+  "teamworks/01-power-simulation/01-power-simulation.qmd": {
+    "01-power-simulation.html": "365db6ea"
+  },
+  "teamworks.qmd": {
+    "teamworks.html": "cf75437f"
   }
 }

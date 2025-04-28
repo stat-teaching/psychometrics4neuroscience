@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Filippo Gambarota">
+<meta name="author" content="">
 
-<title>2025-04-15 – Psychometrics4Neuroscience</title>
+<title>Lavoro di Gruppo 3 - Metanalisi – Psychometrics4Neuroscience</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,25 +21,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,8 +102,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Psychometrics4Neuroscience</span>
     </a>
   </div>
@@ -90,23 +153,23 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides.html"> 
+    <a class="nav-link" href="../../slides.html"> 
 <span class="menu-text">slides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../materials.html"> 
+    <a class="nav-link" href="../../materials.html"> 
 <span class="menu-text">materials</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../scripts-lectures.html"> 
+    <a class="nav-link" href="../../scripts-lectures.html"> 
 <span class="menu-text">scripts-lectures</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teamworks.html"> 
+    <a class="nav-link" href="../../teamworks.html"> 
 <span class="menu-text">teamworks</span></a>
   </li>  
 </ul>
@@ -121,27 +184,29 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dataset" id="toc-dataset" class="nav-link active" data-scroll-target="#dataset">Dataset</a></li>
+  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps">Steps</a></li>
+  <li><a href="#aspetti-generali" id="toc-aspetti-generali" class="nav-link" data-scroll-target="#aspetti-generali">Aspetti generali</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">2025-04-15</h1>
+<h1 class="title">Lavoro di Gruppo 3 - Metanalisi</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Filippo Gambarota </p>
-          </div>
-  </div>
     
   
     
@@ -152,13 +217,93 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Vediamo qualche dataset per applicare i modelli metanalitici.</p>
+<section id="dataset" class="level1">
+<h1>Dataset</h1>
+<p>Questo lavoro di gruppo richiede di effettuare una metanalisi su un dataset che raccoglie diversi studi di efficacia della psicoterapia cognitivo-comportamentale per i disturbi d’ansia. In questo caso per una tipologia specifica di disturbi d’ansia ovvero l’ansia sociale.</p>
+<blockquote class="blockquote">
+<p>Ansia sociale (o fobia sociale) è un disturbo d’ansia caratterizzato da una paura intensa e persistente di essere giudicati negativamente o di sentirsi in imbarazzo in situazioni sociali o prestazionali. Le persone con ansia sociale tendono a evitare queste situazioni o le affrontano con notevole disagio, compromettendo la qualità della vita e il funzionamento quotidiano (American Psychiatric Association, 2013).</p>
+</blockquote>
+<p>Il dataset si trova nella repository principale del corso dentro la cartella <code>teamworks/03-meta-analysis/social-anxiety-psychotherapy.csv</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"social-anxiety-psychotherapy.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id            paper    g   se year   n recruitment           format
+1  1 Abramowitz, 2009 0.54 0.39 2009  21   Community Guided Self-Help
+2  2   Anderson, 2013 0.73 0.23 2013  67   Community    Group Therapy
+3  3   Anderson, 2013 0.64 0.24 2013  58   Community            Mixed
+4  4  Andersson, 2006 0.64 0.21 2006  64   Community            Mixed
+5  5  Andersson, 2012 0.73 0.12 2012 204   Community Guided Self-Help
+6  6     Beidel, 2014 1.11 0.25 2014  60       Other       Individual
+           intervention_type control_type p_women sessions       country
+1 Cognitive Behavior Therapy     Waitlist     76%        8 North America
+2 Cognitive Behavior Therapy     Waitlist     62%        8 North America
+3 Cognitive Behavior Therapy     Waitlist     62%        8 North America
+4 Cognitive Behavior Therapy     Waitlist     52%       11        Europe
+5 Cognitive Behavior Therapy     Waitlist     60%        9        Europe
+6                   Exposure     Waitlist     52%       24 North America
+  age_group mean_age     risk_bias
+1    Adults       43 Some concerns
+2    Adults       39          High
+3    Adults       39          High
+4    Adults       37 Some concerns
+5    Adults       38 Some concerns
+6    Adults       36          High</code></pre>
+</div>
+</div>
+<p>Le variabili sono le seguenti:</p>
 <ul>
-<li>il pacchetto <a href="https://cran.r-project.org/web/packages/metadat/metadat.pdf"><code>metadat</code></a> contiene diversi dataset già predisposti per poter fare una metanalisi.</li>
-<li>il progetto <a href="https://www.metapsy.org/database/depression-psychotherapy"><code>metapsy</code></a> raccoglie tutti i randomized-controlled trials riguardo l’efficacia di psicoterapie per diversi tipo di condizioni. contiene molte variabili oltre agli effect sizes quindi si presta bene per le meta-regressions.</li>
+<li><code>id</code>: identificativo dell’effetto</li>
+<li><code>paper</code>: identificativo del paper</li>
+<li><code>g</code>: effect size (Hedges’s <span class="math inline">\(g\)</span>)</li>
+<li><code>se</code>: effect size standard error</li>
+<li><code>year</code>: anno di pubblicazione</li>
+<li><code>n</code>: sample size</li>
+<li><code>recruitement</code>: luogo di reclutamente dei pazienti/controlli</li>
+<li><code>format</code>: modalità di psicoterapia</li>
+<li><code>intervention_type</code>: tipo di psicoterapia</li>
+<li><code>control_tupe</code>: tipologia di gruppo di controllo</li>
+<li><code>p_women</code>: percentuale di donne nel campione</li>
+<li><code>sessions</code>: numero di sessioni di psicoterapia</li>
+<li><code>country</code>: dove è stato eseguito lo studio</li>
+<li><code>age_group</code>: categoria d’età</li>
+<li><code>mean_age</code>: età media del campione</li>
+<li><code>risk_bias</code>: livello di rischio che quello studio abbia delle problematiche che potrebbero influenzare i risultati</li>
+</ul>
+</section>
+<section id="steps" class="level1">
+<h1>Steps</h1>
+<p>Gli step da eseguire sono i seguenti:</p>
+<ol type="1">
+<li>descrizione dettagliata del dataset in modo discorsivo con statistiche descrittive e grafici adeguati ad ogni tipo di variabile</li>
+<li>effettuare la metanalisi usando diversi modelli e confrontando i risultati.
+<ul>
+<li>modello a due livelli random-effects e fixed-effects</li>
+<li>modello a due livelli random-effects e fixed-effects aggregando gli effetti nello stesso paper. Si veda il capitolo <code>borenstein-aggregation.pdf</code> ed implementare manualmente la formula adeguata.</li>
+<li>modello a tre livelli per gestire la struttura nested dei dati</li>
+</ul></li>
+<li>valutare e commentare l’effetto dei moderatori e se possibile della loro interazione sia per il modello a due livelli che quello a tre livelli</li>
+<li>valutare il publication bias usando tutti i metodi che sono stati presentati a lezione. Per quanto riguarda i selection models scegliere almeno 3 modelli diversi e confrontare i risultati.</li>
+<li>produrre grafici e tabelle per ogni risultato. in particolare:
+<ul>
+<li>riprodurre i forest plot e funnel plot usando <code>ggplot2</code> (senza usare pacchetti aggiuntivi) che siano più simili possibili a quelli di <code>metafor</code></li>
+<li>produrre dei grafici per l’effetto dei moderatori che rappresentino i risultati in modo adeguato</li>
+<li>produrre delle tabelle che rappresentino i risultati in modo adeguato. Utilizzare il pacchetto e la modalità che si preferisce.</li>
+</ul></li>
+<li>implementare senza utilizzare pacchetti aggiuntivi un test di permutazione per il modello random-effects a due livelli per l’effetto generale</li>
+<li>valutare per il modello a due livelli random-effects (senza aggregare) l’impatto dei singoli paper con una leave-one-out analysis con relativa rappresentazione grafica</li>
+</ol>
+</section>
+<section id="aspetti-generali" class="level1">
+<h1>Aspetti generali</h1>
+<ul>
+<li>Ogni step deve essere accompagnato da una spiegazione narrativa e dove pertinente da rappresentazioni grafiche e tabelle che spieghino in maniera chiara i risultati</li>
+<li>Tutti gli step devono essere prodotti in un documento Quarto (html o pdf) riproducibile e self-contained</li>
+<li>Chi vuole può preparare una presentazione in Quarto da utilizzare durante l’esame</li>
 </ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
