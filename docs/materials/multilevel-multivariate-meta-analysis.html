@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Filippo Gambarota">
+
+<title>Multilevel and Multivariate Meta-analysis – Psychometrics4Neuroscience</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Psychometrics4Neuroscience</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides.html"> 
+<span class="menu-text">slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../materials.html"> 
+<span class="menu-text">materials</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../scripts-lectures.html"> 
+<span class="menu-text">scripts-lectures</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../teamworks.html"> 
+<span class="menu-text">teamworks</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://github.com/stat-teaching/psychometrics4neuroscience" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#quick-recap-of-the-two-level-model" id="toc-quick-recap-of-the-two-level-model" class="nav-link active" data-scroll-target="#quick-recap-of-the-two-level-model">Quick recap of the two-level model</a></li>
+  <li><a href="#dependency" id="toc-dependency" class="nav-link" data-scroll-target="#dependency">Dependency</a></li>
+  <li><a href="#multilevel-meta-analysis" id="toc-multilevel-meta-analysis" class="nav-link" data-scroll-target="#multilevel-meta-analysis">Multilevel meta-analysis</a>
+  <ul class="collapse">
+  <li><a href="#simulating-data" id="toc-simulating-data" class="nav-link" data-scroll-target="#simulating-data">Simulating data</a></li>
+  </ul></li>
+  <li><a href="#multivariate-meta-analysis" id="toc-multivariate-meta-analysis" class="nav-link" data-scroll-target="#multivariate-meta-analysis">Multivariate meta-analysis</a>
+  <ul class="collapse">
+  <li><a href="#multivariate-as-three-level-model" id="toc-multivariate-as-three-level-model" class="nav-link" data-scroll-target="#multivariate-as-three-level-model">Multivariate as three-level model</a></li>
+  <li><a href="#simulating-data-1" id="toc-simulating-data-1" class="nav-link" data-scroll-target="#simulating-data-1">Simulating data</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Multilevel and Multivariate Meta-analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Filippo Gambarota </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="quick-recap-of-the-two-level-model" class="level2">
+<h2 class="anchored" data-anchor-id="quick-recap-of-the-two-level-model">Quick recap of the two-level model</h2>
+<p>What we did so far about the two-level model (fixed/equal or random) is combining primary studies summarising each study with an effect size and precision measure.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/images/multilevel-model_col_sep.png" class="img-fluid figure-img"></p>
+<figcaption>From https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/multilevel-ma.html</figcaption>
+</figure>
+</div>
+<p>In this model, effect sizes (and variances) are considered independent because they are collected on different participants. In other terms each row of a meta-analysis dataset is assumed independent.</p>
+<p>In this example from the <code>dat.bcg</code> dataset (<code>?dat.bcg</code>) each row comes from a different study with different participants.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### calculate log risk ratios and corresponding sampling variances</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">escalc</span>(<span class="at">measure=</span><span class="st">"RR"</span>, <span class="at">ai=</span>tpos, <span class="at">bi=</span>tneg, <span class="at">ci=</span>cpos, <span class="at">di=</span>cneg, <span class="at">data=</span>dat.bcg)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  trial               author year tpos  tneg cpos  cneg ablat     alloc      yi 
+1     1              Aronson 1948    4   119   11   128    44    random -0.8893 
+2     2     Ferguson &amp; Simes 1949    6   300   29   274    55    random -1.5854 
+3     3      Rosenthal et al 1960    3   228   11   209    42    random -1.3481 
+4     4    Hart &amp; Sutherland 1977   62 13536  248 12619    52    random -1.4416 
+5     5 Frimodt-Moller et al 1973   33  5036   47  5761    13 alternate -0.2175 
+6     6      Stein &amp; Aronson 1953  180  1361  372  1079    44 alternate -0.7861 
+      vi 
+1 0.3256 
+2 0.1946 
+3 0.4154 
+4 0.0200 
+5 0.0512 
+6 0.0069 </code></pre>
+</div>
+</div>
+<p>More formally, the two-level random-effects model can be written as:</p>
+<p><span class="math display">\[
+y_i = \mu_{\theta} + \delta_i + \epsilon_i
+\]</span></p>
+<p><span class="math display">\[
+\delta_i \sim \mathcal{N}(0, \tau^2)
+\]</span></p>
+<p><span class="math display">\[
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_{\epsilon_i})
+\]</span></p>
+</section>
+<section id="dependency" class="level2">
+<h2 class="anchored" data-anchor-id="dependency">Dependency</h2>
+<p>There are situations where effect sizes (and variances) are no longer independent. There are mainly two sources of dependency:</p>
+<ol type="1">
+<li>multiple effect sizes within the same paper but with different participants</li>
+<li>multiple effect sizes collected on the same pool of participants</li>
+</ol>
+<p>The first case refer to a situation where the effect sizes are nested within a paper and given that they will share a similar methodology, same authors, etc. they are likely more similar to each other compared to effect sizes from different papers. We can call this situation a <strong>multilevel</strong> dataset.</p>
+<p>In the second case, the effects are correlated because they are collected on the same pool of participants thus sampling errors are correlated. This is the case where multiple outcome measures are collected or multiple time-points (like a longitudinal design). We can call this situation a <strong>multivariate</strong> dataset.</p>
+<p>Importantly, the two type of meta-analysis will be very similar both formally and from the R implementation point of view but they are clearly distincted from an empirical point of view.</p>
+</section>
+<section id="multilevel-meta-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="multilevel-meta-analysis">Multilevel meta-analysis</h2>
+<p>The multilevel data structure can be easily depicted in the figure below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/images/multilevel-model2_col_sep.png" class="img-fluid figure-img"></p>
+<figcaption>From https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/multilevel-ma.html</figcaption>
+</figure>
+</div>
+<p>Also this picture clearly show the data structure and important parameters:</p>
+<p><img src="https://raw.githubusercontent.com/shared-research/simulating-meta-analysis/refs/heads/main/documents/paper/img/multilevel.svg" class="img-fluid"></p>
+<p>We can have several levels beyond the two-level model but usually common meta-analyses have a maximum of 3-4 levels. For example, it is common in experimental Psychology to have papers with more than one experiment with different participants.</p>
+<p>More formally, a three-level model can be written as:</p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+y_{ij} = \mu_{\theta} + \delta_i + \zeta_{ij} + \epsilon_{ij}
+
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\delta_i\sim \mathcal{N}(0, \tau^2)
+
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\zeta_{ij} \sim \mathcal{N}(0, \omega^2)
+
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\epsilon_{ij} \sim \mathcal{N}(0,\sigma_{\epsilon_{ij}}^{2})
+
+\end{gathered}
+\end{align}\]</span></p>
+<p>The only addition is an extra source of heterogeneity <span class="math inline">\(\omega^2\)</span> that can be intepreted as the true heterogeneity between effects nested within the same paper (or whatever is the cluster).</p>
+<p>A data structure in this case need to have an index for the cluster and an index for the effect. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat3l <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">paper =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">effect =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dat3l <span class="ot">&lt;-</span> dat3l[<span class="fu">order</span>(dat3l<span class="sc">$</span>paper), ]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat3l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   paper effect
+1      1      1
+11     1      2
+21     1      3
+2      2      1
+12     2      2
+22     2      3</code></pre>
+</div>
+</div>
+<p>Effects within the same paper are more likely to be similar compared to effects between different papers. This degree of similarity is essentially the intraclass correlation defined as the proportion of variance explained by the clustering.</p>
+<p><span class="math display">\[
+\mbox{ICC} = \frac{\tau^2}{\omega^2 + \tau^2}
+\]</span></p>
+<p>A practical example can be seen with the <code>dat.konstantopoulos2011</code> dataset (see also the <code>metafor</code> blog post <a href="https://www.metafor-project.org/doku.php/analyses:konstantopoulos2011">https://www.metafor-project.org/doku.php/analyses:konstantopoulos2011</a>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dat3l <span class="ot">&lt;-</span> dat.konstantopoulos2011</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat3l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  district school study year     yi    vi 
+1       11      1     1 1976 -0.180 0.118 
+2       11      2     2 1976 -0.220 0.118 
+3       11      3     3 1976  0.230 0.144 
+4       11      4     4 1976 -0.300 0.144 
+5       12      1     5 1989  0.130 0.014 
+6       12      2     6 1989 -0.260 0.014 </code></pre>
+</div>
+</div>
+<p>Here the effect sizes comes from schools (collected on participants) nested within districts. Each district has one or more schools that are likely to have within-district similarity.</p>
+<p>We can start by fitting the standard two-level model but here we are ignoring the (possibile) ICC.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit2l <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat3l)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 56; tau^2 estimator: REML)
+
+  logLik  deviance       AIC       BIC      AICc   
+-16.8455   33.6910   37.6910   41.7057   37.9218   
+
+tau^2 (estimated amount of total heterogeneity): 0.0884 (SE = 0.0202)
+tau (square root of estimated tau^2 value):      0.2974
+I^2 (total heterogeneity / total variability):   94.70%
+H^2 (total variability / sampling variability):  18.89
+
+Test for Heterogeneity:
+Q(df = 55) = 578.8640, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub     
+  0.1279  0.0439  2.9161  0.0035  0.0419  0.2139  ** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>We need to change the fitting function from <code>rma</code> to <code>rma.mv</code> (<code>mv</code> for multivariate but also multilevel). Essentially we need to specify that we have two clustering levels (beyond the usual first level of the two-level model) using the <code>random =</code> argument.</p>
+<p>The two-level model can be fitted also using <code>rma.mv</code> and the result will be practically the same (beyond small numerical differences due to the different algorithm). The two-level model can be written as:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit2l.mv <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>study, <span class="at">data =</span> dat3l)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2l.mv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 56; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+-16.8455   33.6910   37.6910   41.7057   37.9218   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed  factor 
+sigma^2    0.0884  0.2974     56     no   study 
+
+Test for Heterogeneity:
+Q(df = 55) = 578.8640, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub     
+  0.1279  0.0439  2.9161  0.0035  0.0419  0.2139  ** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Both these models are not entirely correct. We have two options here:</p>
+<ol type="1">
+<li>aggregating the effects reducing the three-level structure to a two-level structure</li>
+<li>fitting a proper three-level model</li>
+</ol>
+<p>For the aggregation, the idea is to essentially perform a two-level fixed effect model for each cluster thus having a (weighted) aggregated effect and sampling variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dat3l_l <span class="ot">&lt;-</span> <span class="fu">split</span>(dat3l, dat3l<span class="sc">$</span>district)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit3l_l <span class="ot">&lt;-</span> <span class="fu">lapply</span>(dat3l_l, <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="fu">predict</span>(<span class="fu">rma</span>(yi, vi, <span class="at">data =</span> x, <span class="at">method =</span> <span class="st">"EE"</span>))))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>dat3l_agg <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, fit3l_l)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fit3l_agg <span class="ot">&lt;-</span> <span class="fu">rma</span>(pred, se<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dat3l_agg)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l_agg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 11; tau^2 estimator: REML)
+
+  logLik  deviance       AIC       BIC      AICc   
+ -2.0621    4.1242    8.1242    8.7293    9.8384   
+
+tau^2 (estimated amount of total heterogeneity): 0.0828 (SE = 0.0397)
+tau (square root of estimated tau^2 value):      0.2878
+I^2 (total heterogeneity / total variability):   98.10%
+H^2 (total variability / sampling variability):  52.60
+
+Test for Heterogeneity:
+Q(df = 10) = 415.9203, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub    
+  0.1960  0.0900  2.1785  0.0294  0.0197  0.3724  * 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>This can de done in a more efficient way using the <code>metafor::aggregate()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dat3l_agg <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(dat3l, <span class="at">cluster =</span> district, <span class="at">struct =</span> <span class="st">"ID"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dat3l_agg &lt;- aggregate(dat3l, cluster = district, rho = 0)</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>dat3l_agg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   district school study   year     yi    vi 
+1        11    2.5   2.5 1976.0 -0.126 0.032 
+2        12    2.5   6.5 1989.0  0.067 0.004 
+3        18    2.0  10.0 1994.0  0.350 0.007 
+4        27    2.5  13.5 1976.0  0.500 0.001 
+5        56    2.5  17.5 1997.0  0.051 0.002 
+6        58    6.0  25.0 1976.0 -0.042 0.001 
+7        71    2.0  32.0 1997.0  0.886 0.004 
+8        86    4.5  37.5 1997.0 -0.029 0.000 
+9        91    3.5  44.5 2000.0  0.250 0.002 
+10      108    3.0  50.0 2000.0  0.015 0.006 
+11      644    2.5  54.5 1994.5  0.162 0.019 </code></pre>
+</div>
+</div>
+<p>The argument <code>struct = "ID"</code> indicates that sampling errors are independent within each cluster (district).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit3l_agg <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat3l_agg)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l_agg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 11; tau^2 estimator: REML)
+
+  logLik  deviance       AIC       BIC      AICc   
+ -2.0621    4.1242    8.1242    8.7293    9.8384   
+
+tau^2 (estimated amount of total heterogeneity): 0.0828 (SE = 0.0397)
+tau (square root of estimated tau^2 value):      0.2878
+I^2 (total heterogeneity / total variability):   98.10%
+H^2 (total variability / sampling variability):  52.60
+
+Test for Heterogeneity:
+Q(df = 10) = 415.9203, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub    
+  0.1960  0.0900  2.1785  0.0294  0.0197  0.3724  * 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The aggregation can also be done within the <code>rma.mv</code> function. Essentially we can provide a (block) variance-covariance matrix instead of the <code>vi</code> element indicating how the effects are correlated within studies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">vcalc</span>(<span class="at">vi =</span> vi, <span class="at">cluster =</span> district, <span class="at">obs =</span> study, <span class="at">rho =</span> <span class="dv">0</span>, <span class="at">data =</span> dat3l)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(V) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(V) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"dist"</span>, dat3l<span class="sc">$</span>district)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(V, <span class="dv">2</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       dist11 dist11 dist11 dist11 dist12 dist12 dist12 dist12 dist18 dist18
+dist11   0.12   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+dist11   0.00   0.12   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+dist11   0.00   0.00   0.14   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+dist11   0.00   0.00   0.00   0.14   0.00   0.00   0.00   0.00   0.00   0.00
+dist12   0.00   0.00   0.00   0.00   0.01   0.00   0.00   0.00   0.00   0.00
+dist12   0.00   0.00   0.00   0.00   0.00   0.01   0.00   0.00   0.00   0.00
+dist12   0.00   0.00   0.00   0.00   0.00   0.00   0.01   0.00   0.00   0.00
+dist12   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.02   0.00   0.00
+dist18   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.02   0.00
+dist18   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.04</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or in the block-form</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">blsplit</span>(V, dat3l<span class="sc">$</span>district, <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">round</span>(x, <span class="dv">2</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="co"># first 3 districts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`11`
+       dist11 dist11 dist11 dist11
+dist11   0.12   0.00   0.00   0.00
+dist11   0.00   0.12   0.00   0.00
+dist11   0.00   0.00   0.14   0.00
+dist11   0.00   0.00   0.00   0.14
+
+$`12`
+       dist12 dist12 dist12 dist12
+dist12   0.01   0.00   0.00   0.00
+dist12   0.00   0.01   0.00   0.00
+dist12   0.00   0.00   0.01   0.00
+dist12   0.00   0.00   0.00   0.02
+
+$`18`
+       dist18 dist18 dist18
+dist18   0.02   0.00   0.00
+dist18   0.00   0.04   0.00
+dist18   0.00   0.00   0.01</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fit3l_agg <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, <span class="at">data =</span> dat3l, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>district)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l_agg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 56; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+-32.2165   64.4330   68.4330   72.4476   68.6637   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed    factor 
+sigma^2    0.0828  0.2878     11     no  district 
+
+Test for Heterogeneity:
+Q(df = 55) = 578.8640, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub    
+  0.1960  0.0900  2.1785  0.0294  0.0197  0.3724  * 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>All these models are <strong>exactly</strong> the same. See <a href="https://jepusto.com/posts/Sometimes-aggregating-effect-sizes-is-fine">https://jepusto.com/posts/Sometimes-aggregating-effect-sizes-is-fine</a> for a more detailed explanation of aggregating vs doing the model dropping the lowest nesting level.</p>
+<p>At the same time these models assumes that sampling errors are independent (that is probably true) but they are ignoring that the effects could be dependent because they are nested within the same cluster.</p>
+<p>The most appropriate model can be specified adding the nested level:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit3l <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>district<span class="sc">/</span>study, <span class="at">data =</span> dat3l)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 56; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+ -7.9587   15.9174   21.9174   27.9394   22.3880   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed          factor 
+sigma^2.1  0.0651  0.2551     11     no        district 
+sigma^2.2  0.0327  0.1809     56     no  district/study 
+
+Test for Heterogeneity:
+Q(df = 55) = 578.8640, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub    
+  0.1847  0.0846  2.1845  0.0289  0.0190  0.3504  * 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The argument <code>1|district/study</code> means that effects (study) are nested within clusters (district).</p>
+<p>We can see that the fixed part (Model Results) is the same (in terms of number of parameters not results) as the previous models but now we have two estimated variances, <span class="math inline">\(\omega^2\)</span> and <span class="math inline">\(\tau^2\)</span> as the picture above.</p>
+<p>Also we can see that the sum of the two variances is similar to the heterogeneity estimated by previous models (slightly higher). The core difference is the fixed part where beyond differences in the estimated effects due to different weights, the standard error is very different.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rr <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(<span class="fu">predict</span>(fit2l)), </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit3l_agg)),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit3l)))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>rr<span class="sc">$</span>sigma2 <span class="ot">&lt;-</span> <span class="fu">c</span>(fit2l<span class="sc">$</span>tau2, fit3l_agg<span class="sc">$</span>sigma2, <span class="fu">sum</span>(fit3l<span class="sc">$</span>sigma2))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>rr <span class="ot">&lt;-</span> <span class="fu">round</span>(rr, <span class="dv">4</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>rr<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2l"</span>, <span class="st">"2l_agg"</span>, <span class="st">"3l"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>rr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    pred     se  ci.lb  ci.ub   pi.lb  pi.ub sigma2  model
+1 0.1279 0.0439 0.0419 0.2139 -0.4612 0.7171 0.0884     2l
+2 0.1960 0.0900 0.0197 0.3724 -0.3950 0.7871 0.0828 2l_agg
+3 0.1847 0.0846 0.0190 0.3504 -0.4502 0.8197 0.0978     3l</code></pre>
+</div>
+</div>
+<p>In particular, the two-level model (on the three-level) dataset is underestimating the standard error of the average effect because is considering each row as independent. The model with aggregation is similar to the three-level model while the model without aggregation is very different.</p>
+<p>The difference is related to the ICC parameter:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit3l<span class="sc">$</span>sigma2[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">sum</span>(fit3l<span class="sc">$</span>sigma2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6652655</code></pre>
+</div>
+</div>
+<p>The model can be written in a form where the ICC is directly computed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit3l.icc <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span>study<span class="sc">|</span>district, <span class="at">data =</span> dat3l)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rma.mv(yi, vi, random = ~study|district, data = dat3l, struct = "CS") # struct = "CS" by default</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l.icc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 56; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+ -7.9587   15.9174   21.9174   27.9394   22.3880   
+
+Variance Components:
+
+outer factor: district (nlvls = 11)
+inner factor: study    (nlvls = 56)
+
+            estim    sqrt  fixed 
+tau^2      0.0978  0.3127     no 
+rho        0.6653             no 
+
+Test for Heterogeneity:
+Q(df = 55) = 578.8640, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub    
+  0.1847  0.0846  2.1845  0.0289  0.0190  0.3504  * 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><code>random = ~study|district</code> is defined as <code>inner|outer</code> factors with a compound symmetry structure (<code>struct = CS</code>) by default. The idea is that each study is considered as a different outcome but we estimate a single <span class="math inline">\(\tau^2\)</span> and a single <span class="math inline">\(\rho\)</span> that is the correlation between different outcomes/effects. The two models are exactly the same, only with a different parametrization.</p>
+<p>Checking the impact of using a different correlation compared to ICC:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="at">length.out =</span> <span class="dv">20</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> <span class="fu">length</span>(r))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(r)){</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    V <span class="ot">&lt;-</span> <span class="fu">vcalc</span>(vi, <span class="at">cluster =</span> district, <span class="at">obs =</span> study, <span class="at">rho =</span> r[i], <span class="at">data =</span> dat3l)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>district, <span class="at">data =</span> dat3l)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    fits <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit))</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    fits<span class="sc">$</span>sigma2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(fit<span class="sc">$</span>sigma2)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    fits<span class="sc">$</span>r <span class="ot">&lt;-</span> r[i]</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    res[[i]] <span class="ot">&lt;-</span> fits</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>resd <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, res)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>resd<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>resd3l <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit3l))</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>resd3l<span class="sc">$</span>sigma2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(fit3l.icc<span class="sc">$</span>tau2)</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>resd3l<span class="sc">$</span>r <span class="ot">&lt;-</span> fit3l.icc<span class="sc">$</span>rho</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>resd3l<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>resd <span class="ot">&lt;-</span> <span class="fu">rbind</span>(resd, resd3l)</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>resd <span class="sc">|&gt;</span> </span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(pred, se)) <span class="sc">|&gt;</span> </span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> r, <span class="at">y =</span> value, <span class="at">color =</span> <span class="fu">factor</span>(model))) <span class="sc">+</span></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="multilevel-multivariate-meta-analysis_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Clearly, the assumption of the three-level model is that <span class="math inline">\(\omega^2\)</span> is the same for each cluster thus we are estimating a single <span class="math inline">\(\omega^2\)</span>.</p>
+<section id="simulating-data" class="level3">
+<h3 class="anchored" data-anchor-id="simulating-data">Simulating data</h3>
+<p>Data simulation again here is very useful to understand the model. We need to generate two vectors of random effects compared to the two-level model. Let’s start with a simple data structure with <span class="math inline">\(k\)</span> clusters (e.g., papers) each having <span class="math inline">\(j\)</span> nested effects.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">effect =</span> <span class="dv">1</span><span class="sc">:</span>j,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">paper =</span> <span class="dv">1</span><span class="sc">:</span>k</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dat)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  effect paper id
+1      1     1  1
+2      2     1  2
+3      3     1  3
+4      1     2  4
+5      2     2  5
+6      3     2  6</code></pre>
+</div>
+</div>
+<p>Now we need to set the true parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>es <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>omega2 <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>(icc <span class="ot">&lt;-</span> tau2 <span class="sc">/</span> (tau2 <span class="sc">+</span> omega2)) <span class="co"># real icc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.75</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>deltai <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, tau2) <span class="co"># k random effects</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>zetaij <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dat), <span class="dv">0</span>, omega2) <span class="co"># k * j (or the number of rows) random effects</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>deltai <span class="ot">&lt;-</span> deltai[dat<span class="sc">$</span>paper]</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>zetaij <span class="ot">&lt;-</span> zetaij</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># true effects</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>thetai <span class="ot">&lt;-</span> <span class="fu">with</span>(dat, es <span class="sc">+</span> deltai <span class="sc">+</span> zetaij)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  effect paper id      deltai        zetaij    thetai
+1      1     1  1  0.04967303 -0.0068029343 0.3428701
+2      2     1  2  0.04967303  0.0901059553 0.4397790
+3      3     1  3  0.04967303 -0.0098898288 0.3397832
+4      1     2  4 -0.10358568 -0.0002135816 0.1962007
+5      2     2  5 -0.10358568 -0.0242973401 0.1721170
+6      3     2  6 -0.10358568  0.1017387919 0.2981531</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(paper <span class="sc">%in%</span> <span class="fu">sample</span>(<span class="fu">unique</span>(paper), <span class="dv">10</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> thetai, <span class="at">y =</span> paper)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(paper)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="multilevel-multivariate-meta-analysis_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we can use the usual <code>sim_studies()</code> function or manually to generate a study for each row of this dataframe with the true parameters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>yi <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>vi <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>n0 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(<span class="fu">nrow</span>(dat), <span class="dv">50</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>n1 <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rpois</span>(<span class="fu">nrow</span>(dat), <span class="dv">50</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dat)){</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    g0 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(dat<span class="sc">$</span>n0[i], <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(dat<span class="sc">$</span>n1[i], dat<span class="sc">$</span>thetai[i], <span class="dv">1</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    dat<span class="sc">$</span>yi[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g1) <span class="sc">-</span> <span class="fu">mean</span>(g0)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    dat<span class="sc">$</span>vi[i] <span class="ot">&lt;-</span> <span class="fu">var</span>(g0)<span class="sc">/</span>dat<span class="sc">$</span>n0[i] <span class="sc">+</span> <span class="fu">var</span>(g1)<span class="sc">/</span>dat<span class="sc">$</span>n1[i]</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>paper<span class="sc">/</span>id, <span class="at">data =</span> dat, <span class="at">sparse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>fit.icc <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span> effect<span class="sc">|</span>paper, <span class="at">data =</span> dat, <span class="at">sparse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 90; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+ 14.7427  -29.4854  -23.4854  -16.0195  -23.2030   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed    factor 
+sigma^2.1  0.0107  0.1033     30     no     paper 
+sigma^2.2  0.0015  0.0393     90     no  paper/id 
+
+Test for Heterogeneity:
+Q(df = 89) = 119.1442, p-val = 0.0181
+
+Model Results:
+
+estimate      se     zval    pval   ci.lb   ci.ub      
+  0.3234  0.0272  11.8802  &lt;.0001  0.2701  0.3768  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.icc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 90; method: REML)
+
+  logLik  Deviance       AIC       BIC      AICc   
+ 14.7427  -29.4854  -23.4854  -16.0195  -23.2030   
+
+Variance Components:
+
+outer factor: paper  (nlvls = 30)
+inner factor: effect (nlvls = 3)
+
+            estim    sqrt  fixed 
+tau^2      0.0122  0.1105     no 
+rho        0.8736             no 
+
+Test for Heterogeneity:
+Q(df = 89) = 119.1442, p-val = 0.0181
+
+Model Results:
+
+estimate      se     zval    pval   ci.lb   ci.ub      
+  0.3234  0.0272  11.8802  &lt;.0001  0.2701  0.3768  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>We can put everything within a function to generate data also with heterogeneous number of effects <span class="math inline">\(j\)</span> within each cluster.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>sim_3l_studies <span class="ot">&lt;-</span> <span class="cf">function</span>(k,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                           j,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">es =</span> <span class="dv">0</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">tau2_k =</span> <span class="dv">0</span>,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">tau2_j =</span> <span class="dv">0</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                           n0,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">n1 =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sample_j =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sample_n =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">simulate =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">raw =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(sample_j){</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>        nj <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>j, k, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>        nj <span class="ot">&lt;-</span> <span class="fu">rep</span>(j, k)</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>    study <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(nj, <span class="cf">function</span>(x) <span class="dv">1</span><span class="sc">:</span>x))</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    paper <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>k, nj)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(paper, study)</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>    delta_k <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(k, <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2_k))</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>    delta_j <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(sim), <span class="dv">0</span>, <span class="fu">sqrt</span>(tau2_j))</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    kj <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sim)</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(sample_n)){</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>        n0 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sample_n</span>(kj))</span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>        n1 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sample_n</span>(kj))</span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">length</span>(n0) <span class="sc">==</span> <span class="dv">1</span>) n0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(n0, <span class="fu">nrow</span>(sim))</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">length</span>(n1) <span class="sc">==</span> <span class="dv">1</span>) n1 <span class="ot">&lt;-</span> n0</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>    es_kj <span class="ot">&lt;-</span> es <span class="sc">+</span> delta_k[paper] <span class="sc">+</span> delta_j</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(simulate){</span>
+<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a>        ss <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(<span class="fu">nrow</span>(sim), es_kj, n0, n1, <span class="at">raw =</span> raw)</span>
+<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="sc">!</span>raw){</span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>            ss <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, ss)</span>
+<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a>            res <span class="ot">&lt;-</span> <span class="fu">cbind</span>(sim, ss)</span>
+<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span>{</span>
+<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>            res <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, ss)</span>
+<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a>            paper_r <span class="ot">&lt;-</span> <span class="fu">rep</span>(paper, <span class="fu">sapply</span>(ss, nrow))</span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>            study_r <span class="ot">&lt;-</span> <span class="fu">rep</span>(study, <span class="fu">sapply</span>(ss, nrow))</span>
+<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>            res <span class="ot">&lt;-</span> <span class="fu">cbind</span>(res, <span class="at">paper =</span> paper_r, <span class="at">study =</span> study_r)</span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
+<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">&lt;-</span> sim</span>
+<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a>        res<span class="sc">$</span>es <span class="ot">&lt;-</span> es</span>
+<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a>        res<span class="sc">$</span>delta_k <span class="ot">&lt;-</span> delta_k[paper]</span>
+<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a>        res<span class="sc">$</span>delta_j <span class="ot">&lt;-</span> delta_j</span>
+<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>        res<span class="sc">$</span>theta_kj <span class="ot">&lt;-</span> es_kj</span>
+<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(res)</span>
+<span id="cb43-58"><a href="#cb43-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-59"><a href="#cb43-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a>sim_study <span class="ot">&lt;-</span> <span class="cf">function</span>(es, n0, n1, <span class="at">raw =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a>    g0 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n0, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb43-63"><a href="#cb43-63" aria-hidden="true" tabindex="-1"></a>    g1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n1, es, <span class="dv">1</span>)</span>
+<span id="cb43-64"><a href="#cb43-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(raw){</span>
+<span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a>        N <span class="ot">&lt;-</span> n0 <span class="sc">+</span> n1</span>
+<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">subject =</span> <span class="dv">1</span><span class="sc">:</span>N,</span>
+<span id="cb43-69"><a href="#cb43-69" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="fu">c</span>(n0, n1)),</span>
+<span id="cb43-70"><a href="#cb43-70" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">c</span>(g0, g1)</span>
+<span id="cb43-71"><a href="#cb43-71" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb43-72"><a href="#cb43-72" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
+<span id="cb43-73"><a href="#cb43-73" aria-hidden="true" tabindex="-1"></a>        yi <span class="ot">&lt;-</span> <span class="fu">mean</span>(g1) <span class="sc">-</span> <span class="fu">mean</span>(g0)</span>
+<span id="cb43-74"><a href="#cb43-74" aria-hidden="true" tabindex="-1"></a>        vi <span class="ot">&lt;-</span> <span class="fu">var</span>(g0)<span class="sc">/</span>n0 <span class="sc">+</span> <span class="fu">var</span>(g1)<span class="sc">/</span>n1</span>
+<span id="cb43-75"><a href="#cb43-75" aria-hidden="true" tabindex="-1"></a>        out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb43-76"><a href="#cb43-76" aria-hidden="true" tabindex="-1"></a>            yi, vi</span>
+<span id="cb43-77"><a href="#cb43-77" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb43-78"><a href="#cb43-78" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb43-79"><a href="#cb43-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb43-80"><a href="#cb43-80" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-81"><a href="#cb43-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-82"><a href="#cb43-82" aria-hidden="true" tabindex="-1"></a>sim_studies <span class="ot">&lt;-</span> <span class="cf">function</span>(k, es, n0, <span class="at">n1 =</span> <span class="cn">NULL</span>, <span class="at">raw =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb43-83"><a href="#cb43-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(n0) <span class="sc">==</span> <span class="dv">1</span>) n0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(n0, k)</span>
+<span id="cb43-84"><a href="#cb43-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(n1) <span class="sc">==</span> <span class="dv">1</span>) n1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(n1, k) </span>
+<span id="cb43-85"><a href="#cb43-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(n1)) n1 <span class="ot">&lt;-</span> n0</span>
+<span id="cb43-86"><a href="#cb43-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(es) <span class="sc">==</span> <span class="dv">1</span>) es <span class="ot">&lt;-</span> <span class="fu">rep</span>(es, k)</span>
+<span id="cb43-87"><a href="#cb43-87" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb43-88"><a href="#cb43-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mapply</span>(sim_study, es, n0, n1, <span class="at">raw =</span> raw, <span class="at">SIMPLIFY =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-89"><a href="#cb43-89" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-90"><a href="#cb43-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-91"><a href="#cb43-91" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_3l_studies</span>(<span class="at">k =</span> <span class="dv">100</span>, </span>
+<span id="cb43-92"><a href="#cb43-92" aria-hidden="true" tabindex="-1"></a>                      <span class="at">j =</span> <span class="dv">5</span>, </span>
+<span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a>                      <span class="at">es =</span> <span class="fl">0.3</span>, </span>
+<span id="cb43-94"><a href="#cb43-94" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tau2_k =</span> <span class="fl">0.1</span>, </span>
+<span id="cb43-95"><a href="#cb43-95" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tau2_j =</span> <span class="fl">0.05</span>, </span>
+<span id="cb43-96"><a href="#cb43-96" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n0 =</span> <span class="dv">50</span>, </span>
+<span id="cb43-97"><a href="#cb43-97" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n1 =</span> <span class="dv">50</span>)</span>
+<span id="cb43-98"><a href="#cb43-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-99"><a href="#cb43-99" aria-hidden="true" tabindex="-1"></a>fit<span class="fl">.3</span>l.sim <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>paper<span class="sc">/</span>study, <span class="at">data =</span> dat)</span>
+<span id="cb43-100"><a href="#cb43-100" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit<span class="fl">.3</span>l.sim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 500; method: REML)
+
+   logLik   Deviance        AIC        BIC       AICc   
+-204.3638   408.7276   414.7276   427.3655   414.7761   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed       factor 
+sigma^2.1  0.1021  0.3196    100     no        paper 
+sigma^2.2  0.0519  0.2277    500     no  paper/study 
+
+Test for Heterogeneity:
+Q(df = 499) = 2449.4748, p-val &lt; .0001
+
+Model Results:
+
+estimate      se     zval    pval   ci.lb   ci.ub      
+  0.3487  0.0347  10.0467  &lt;.0001  0.2807  0.4167  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Similarly we can fit the corresponding model having the raw data to see the parameters estimated:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_3l_studies</span>(<span class="at">k =</span> <span class="dv">100</span>, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">j =</span> <span class="dv">5</span>, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">es =</span> <span class="fl">0.3</span>, </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tau2_k =</span> <span class="fl">0.1</span>, </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tau2_j =</span> <span class="fl">0.05</span>, </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n0 =</span> <span class="dv">50</span>, </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n1 =</span> <span class="dv">50</span>,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">raw =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>get_es <span class="ot">&lt;-</span> <span class="cf">function</span>(data){</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    dd <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(x) <span class="sc">|&gt;</span> </span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">m =</span> <span class="fu">mean</span>(y),</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sd =</span> <span class="fu">sd</span>(y),</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> x, <span class="at">values_from =</span> <span class="fu">c</span>(m, sd, n))</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">escalc</span>(<span class="st">"MD"</span>, <span class="at">m1i =</span> m_1, <span class="at">m2i =</span> m_0, <span class="at">sd1i =</span> sd_1, <span class="at">sd2i =</span> sd_0, <span class="at">n1i =</span> n_1, <span class="at">n2i =</span> n_0,</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dd)</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>dat_agg <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span> </span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(paper, study) <span class="sc">|&gt;</span> </span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">es =</span> <span class="fu">map</span>(data, get_es)) <span class="sc">|&gt;</span> </span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(es) <span class="sc">|&gt;</span> </span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>data)</span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a>fit3l <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, vi, <span class="at">random =</span> <span class="sc">~</span><span class="dv">1</span><span class="sc">|</span>paper<span class="sc">/</span>study, <span class="at">data =</span> dat_agg)</span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 500; method: REML)
+
+   logLik   Deviance        AIC        BIC       AICc   
+-223.7331   447.4662   453.4662   466.1041   453.5147   
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed       factor 
+sigma^2.1  0.1053  0.3244    100     no        paper 
+sigma^2.2  0.0602  0.2453    500     no  paper/study 
+
+Test for Heterogeneity:
+Q(df = 499) = 2594.4472, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.2584  0.0354  7.3000  &lt;.0001  0.1890  0.3277  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>x <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>x)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dat<span class="sc">$</span>x) <span class="ot">&lt;-</span> <span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>fit3l.lmer <span class="ot">&lt;-</span> <span class="fu">lmer_alt</span>(y <span class="sc">~</span> x <span class="sc">+</span> (x<span class="sc">||</span>paper<span class="sc">/</span>study), <span class="at">data =</span> dat)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3l.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: y ~ x + (1 + re1.x1 || paper/study)
+   Data: data
+
+REML criterion at convergence: 143341
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.9497 -0.6692 -0.0012  0.6658  4.0552 
+
+Random effects:
+ Groups        Name        Variance Std.Dev.
+ study.paper   re1.x1      0.05917  0.2432  
+ study.paper.1 (Intercept) 0.01186  0.1089  
+ paper         re1.x1      0.10547  0.3248  
+ paper.1       (Intercept) 0.02764  0.1662  
+ Residual                  1.00426  1.0021  
+Number of obs: 50000, groups:  study:paper, 500; paper, 100
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)  0.13202    0.01789 98.97838   7.378 5.03e-11 ***
+x1          -0.25696    0.03540 99.00308  -7.258 8.96e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+   (Intr)
+x1 0.000 
+optimizer (nloptwrap) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00215331 (tol = 0.002, component 1)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="multivariate-meta-analysis" class="level1">
+<h1>Multivariate meta-analysis</h1>
+<p>As introduced at the beginning the term multivariate is used here for data structure where the dependency arises from multiple effects being collected on the same pool of participants.</p>
+<p><img src="https://raw.githubusercontent.com/shared-research/simulating-meta-analysis/refs/heads/main/documents/paper/img/multivariate.svg" class="img-fluid"></p>
+<p>For example, in each primary study we did a group comparison (between two independent groups) on two measures. The two effect sizes are correlated because they are measured on the same participants.</p>
+<p>The data structure is essentially the same but sampling errors are now correlated within clusters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dat.mv <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">outcome =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">paper =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat.mv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  outcome paper
+1       1     1
+2       2     1
+3       1     2
+4       2     2
+5       1     3
+6       2     3</code></pre>
+</div>
+</div>
+<p>How a single study looks like?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>n0 <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.5</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fl">0.6</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> r <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">-</span> r, <span class="dv">2</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>g0 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n0, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), R)</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n0, d, R)</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">&lt;-</span> <span class="fu">apply</span>(g0, <span class="dv">2</span>, mean)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">apply</span>(g1, <span class="dv">2</span>, mean)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>v0 <span class="ot">&lt;-</span> <span class="fu">apply</span>(g0, <span class="dv">2</span>, var)</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">apply</span>(g1, <span class="dv">2</span>, var)</span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>yi <span class="ot">&lt;-</span> m1 <span class="sc">-</span> m0</span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>vi <span class="ot">&lt;-</span> v0<span class="sc">/</span>n0 <span class="sc">+</span> v1<span class="sc">/</span>n1</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>ri <span class="ot">&lt;-</span> <span class="fu">cor</span>(<span class="fu">rbind</span>(g0, g1))</span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>vvi <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">sqrt</span>(vi)) <span class="sc">%*%</span> ri <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sqrt</span>(vi))</span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>vvi <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(vvi)</span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(vvi) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"v1i"</span>, <span class="st">"v2i"</span>)</span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(yi, vi, vvi, n0, n1, <span class="at">outcome =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         yi         vi        v1i        v2i n0 n1 outcome
+1 0.5267601 0.03841446 0.03841446 0.02218897 50 50       1
+2 0.5152258 0.03490942 0.02218897 0.03490942 50 50       2</code></pre>
+</div>
+</div>
+<p>We have two effects, two sampling variances and their correlation/covariance.</p>
+<p>Formally the model (for a single study) can be written as:</p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+y_{1_i} \\
+y_{2_i} \\
+y_{3_i}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mu_{{\theta}_{1}} \\
+\mu_{{\theta}_{2}} \\
+\mu_{{\theta}_{3}}
+\end{bmatrix}
++
+\begin{bmatrix}
+\delta_{1_i} \\
+\delta_{2_i} \\
+\delta_{3_i}
+\end{bmatrix}
++
+\begin{bmatrix}
+\epsilon_{1_i} \\
+\epsilon_{2_i} \\
+\epsilon_{3_i}
+\end{bmatrix}
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+\delta_{1_i} \\
+\delta_{2_i} \\
+\delta_{3_i}
+\end{bmatrix}
+\sim \mathcal{MVN}(0, \mathrm{T})
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+\epsilon_{1_i} \\
+\epsilon_{2_i} \\
+\epsilon_{3_i}
+\end{bmatrix}
+\sim \mathcal{MVN}(0, \mathrm{V})
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\mathrm{T} = \begin{bmatrix}
+\tau_1^2 &amp; &amp; &amp; \\
+\rho_{21}\tau_2\tau_1 &amp; \tau_2^2 &amp; &amp; \\
+\rho_{31}\tau_3\tau_1 &amp; \rho_{32}\tau_3\tau_2 &amp; \tau_3^2
+\end{bmatrix}
+\end{gathered}
+\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}
+\begin{gathered}
+\mathrm{V} = \begin{bmatrix}
+\sigma^2_{\epsilon_1} &amp; &amp; &amp; \\
+\rho_{s_{21}}\sigma_{\epsilon_2}\sigma_{\epsilon_1} &amp; \sigma^2_{\epsilon_2} &amp; &amp; \\
+\rho_{s_{31}}\sigma_{\epsilon_3}\sigma_{\epsilon_1} &amp; \rho_{s_{32}}\sigma_{\epsilon_3}\sigma_{\epsilon_2} &amp; \sigma^2_{\epsilon_3}
+\end{bmatrix}
+\end{gathered}
+\end{align}\]</span></p>
+<p>The <span class="math inline">\(\mbox{V}\)</span> matrix is the same that we created with <code>vcalc</code>. Basically is a block variance-covariance matrix with <span class="math inline">\(k\)</span> matrices (one for each paper/cluster) and number of rows/columns depending on how many outcomes are collected for each paper.</p>
+<p>The <span class="math inline">\(\mbox{T}\)</span> is a <span class="math inline">\(p\times p\)</span> matrix with <span class="math inline">\(p\)</span> being the number of outcomes that represents the random-effects matrix. The diagonal is the true heterogeneity across studies for each outcome and the off-diagonal elements are the correlations between different outcomes across studies.</p>
+<p>The multivariate model needs <span class="math inline">\(\mbox{V}\)</span> (as the <code>vi</code> vector) and estimates <span class="math inline">\(\mbox{T}\)</span> along with the vector of effect sizes.</p>
+<p>Let’s see an example with the <code>dat.berkey1998</code> dataset (see also <a href="https://www.metafor-project.org/doku.php/analyses:berkey1998">https://www.metafor-project.org/doku.php/analyses:berkey1998</a>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat.berkey1998</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   trial           author year ni outcome      yi     vi    v1i    v2i 
+1      1 Pihlstrom et al. 1983 14      PD  0.4700 0.0075 0.0075 0.0030 
+2      1 Pihlstrom et al. 1983 14      AL -0.3200 0.0077 0.0030 0.0077 
+3      2    Lindhe et al. 1982 15      PD  0.2000 0.0057 0.0057 0.0009 
+4      2    Lindhe et al. 1982 15      AL -0.6000 0.0008 0.0009 0.0008 
+5      3   Knowles et al. 1979 78      PD  0.4000 0.0021 0.0021 0.0007 
+6      3   Knowles et al. 1979 78      AL -0.1200 0.0014 0.0007 0.0014 
+7      4  Ramfjord et al. 1987 89      PD  0.2600 0.0029 0.0029 0.0009 
+8      4  Ramfjord et al. 1987 89      AL -0.3100 0.0015 0.0009 0.0015 
+9      5    Becker et al. 1988 16      PD  0.5600 0.0148 0.0148 0.0072 
+10     5    Becker et al. 1988 16      AL -0.3900 0.0304 0.0072 0.0304 </code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Berkey et al.&nbsp;(1998) describe a meta-analytic multivariate model for the analysis of multiple correlated outcomes. The use of the model is illustrated with results from 5 trials comparing surgical and non-surgical treatments for medium-severity periodontal disease. Reported outcomes include the change in probing depth (PD) and attachment level (AL) one year after the treatment. The effect size measure used for this meta-analysis was the (raw) mean difference, calculated in such a way that positive values indicate that surgery was more effective than non-surgical treatment in decreasing the probing depth and increasing the attachment level.</p>
+</blockquote>
+<p>We need to create the <code>V</code> matrix:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">vcalc</span>(<span class="at">vi=</span><span class="dv">1</span>, <span class="at">cluster=</span>author, <span class="at">rvars=</span><span class="fu">c</span>(v1i, v2i), <span class="at">data=</span>dat)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(V, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
+ [1,] 0.007 0.003 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+ [2,] 0.003 0.008 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+ [3,] 0.000 0.000 0.006 0.001 0.000 0.000 0.000 0.000 0.000 0.000
+ [4,] 0.000 0.000 0.001 0.001 0.000 0.000 0.000 0.000 0.000 0.000
+ [5,] 0.000 0.000 0.000 0.000 0.002 0.001 0.000 0.000 0.000 0.000
+ [6,] 0.000 0.000 0.000 0.000 0.001 0.001 0.000 0.000 0.000 0.000
+ [7,] 0.000 0.000 0.000 0.000 0.000 0.000 0.003 0.001 0.000 0.000
+ [8,] 0.000 0.000 0.000 0.000 0.000 0.000 0.001 0.002 0.000 0.000
+ [9,] 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.015 0.007
+[10,] 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.007 0.030</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">blsplit</span>(V, dat<span class="sc">$</span>author, <span class="at">fun =</span> round, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`Pihlstrom et al.`
+      [,1]  [,2]
+[1,] 0.007 0.003
+[2,] 0.003 0.008
+
+$`Lindhe et al.`
+      [,1]  [,2]
+[1,] 0.006 0.001
+[2,] 0.001 0.001
+
+$`Knowles et al.`
+      [,1]  [,2]
+[1,] 0.002 0.001
+[2,] 0.001 0.001
+
+$`Ramfjord et al.`
+      [,1]  [,2]
+[1,] 0.003 0.001
+[2,] 0.001 0.002
+
+$`Becker et al.`
+      [,1]  [,2]
+[1,] 0.015 0.007
+[2,] 0.007 0.030</code></pre>
+</div>
+</div>
+<p>Then the model is the same as the three-level model with the ICC parametrization:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>fit.mv0 <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, <span class="at">random =</span> <span class="sc">~</span>outcome<span class="sc">|</span>trial, <span class="at">data =</span> dat, <span class="at">struct =</span> <span class="st">"UN"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>fit.mv0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 10; method: REML)
+
+Variance Components:
+
+outer factor: trial   (nlvls = 5)
+inner factor: outcome (nlvls = 2)
+
+            estim    sqrt  k.lvl  fixed  level 
+tau^2.1    0.3571  0.5976      5     no     AL 
+tau^2.2    0.0356  0.1887      5     no     PD 
+
+     rho.AL  rho.PD    AL  PD 
+AL        1             -   5 
+PD  -0.6678       1    no   - 
+
+Test for Heterogeneity:
+Q(df = 9) = 784.6078, p-val &lt; .0001
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.2154  0.0592  3.6369  0.0003  0.0993  0.3315  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>What is missing is the fixed part. We are estimating an average outcome effect because we are not differentiating between outcomes. We just need to include <code>outcome</code> as a moderator:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit.mv1 <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">random =</span> <span class="sc">~</span> outcome<span class="sc">|</span>trial, </span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dat, <span class="at">struct =</span> <span class="st">"UN"</span>)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>fit.mv1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 10; method: REML)
+
+Variance Components:
+
+outer factor: trial   (nlvls = 5)
+inner factor: outcome (nlvls = 2)
+
+            estim    sqrt  k.lvl  fixed  level 
+tau^2.1    0.0327  0.1807      5     no     AL 
+tau^2.2    0.0117  0.1083      5     no     PD 
+
+    rho.AL  rho.PD    AL  PD 
+AL       1             -   5 
+PD  0.6088       1    no   - 
+
+Test for Residual Heterogeneity:
+QE(df = 8) = 128.2267, p-val &lt; .0001
+
+Test of Moderators (coefficients 1:2):
+QM(df = 2) = 108.8616, p-val &lt; .0001
+
+Model Results:
+
+           estimate      se     zval    pval    ci.lb    ci.ub      
+outcomeAL   -0.3392  0.0879  -3.8589  0.0001  -0.5115  -0.1669  *** 
+outcomePD    0.3534  0.0588   6.0057  &lt;.0001   0.2381   0.4688  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Now we have the estimated treatment effect and the <span class="math inline">\(\mbox{T}\)</span> matrix.</p>
+<section id="multivariate-as-three-level-model" class="level2">
+<h2 class="anchored" data-anchor-id="multivariate-as-three-level-model">Multivariate as three-level model</h2>
+<p>Sometimes, the correlations between outcomes are missing and we need to put a plausible value. <span class="citation" data-cites="Van_den_Noortgate2013-za">@Van_den_Noortgate2013-za</span> showed that under some assumptions, fitting a three-level model (thus assuming independence) is actually estimating the effects and standard error in a similar way as the multivariate model including or guessing a correlation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fit.mv1 <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">random =</span> <span class="sc">~</span> outcome<span class="sc">|</span>trial, </span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dat, </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">struct =</span> <span class="st">"CS"</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>fit.mv<span class="fl">.3</span>l <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, </span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>                    vi, </span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>trial<span class="sc">/</span>outcome, </span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> dat)</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>fit.mv1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 10; method: REML)
+
+Variance Components:
+
+outer factor: trial   (nlvls = 5)
+inner factor: outcome (nlvls = 2)
+
+            estim    sqrt  fixed 
+tau^2      0.0250  0.1582     no 
+rho        0.5290             no 
+
+Test for Residual Heterogeneity:
+QE(df = 8) = 128.2267, p-val &lt; .0001
+
+Test of Moderators (coefficients 1:2):
+QM(df = 2) = 79.9819, p-val &lt; .0001
+
+Model Results:
+
+           estimate      se     zval    pval    ci.lb    ci.ub      
+outcomeAL   -0.3380  0.0782  -4.3229  &lt;.0001  -0.4912  -0.1847  *** 
+outcomePD    0.3636  0.0788   4.6163  &lt;.0001   0.2092   0.5180  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>fit.mv<span class="fl">.3</span>l</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 10; method: REML)
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed         factor 
+sigma^2.1  0.0143  0.1196      5     no          trial 
+sigma^2.2  0.0102  0.1012     10     no  trial/outcome 
+
+Test for Residual Heterogeneity:
+QE(df = 8) = 124.9021, p-val &lt; .0001
+
+Test of Moderators (coefficients 1:2):
+QM(df = 2) = 78.0792, p-val &lt; .0001
+
+Model Results:
+
+           estimate      se     zval    pval    ci.lb    ci.ub      
+outcomeAL   -0.3323  0.0772  -4.3041  &lt;.0001  -0.4836  -0.1810  *** 
+outcomePD    0.3594  0.0780   4.6056  &lt;.0001   0.2064   0.5123  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The advantage is that in the three-level model we are not imputing values.</p>
+</section>
+<section id="simulating-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="simulating-data-1">Simulating data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>sim_multi_meta <span class="ot">&lt;-</span> <span class="cf">function</span>(k, </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>                           p,</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>                           mus,</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>                           tau2s,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">ro =</span> <span class="dv">0</span>,</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">rs =</span> <span class="dv">0</span>,</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">n =</span> <span class="cn">NULL</span>,</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sample_p =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sample_n =</span> <span class="cn">NULL</span>,</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">ranef =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>    RT <span class="ot">&lt;-</span> ro <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">-</span> ro, p)</span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a>    RS <span class="ot">&lt;-</span> rs <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">-</span> rs, p)</span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>    S <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">sqrt</span>(tau2s)) <span class="sc">%*%</span> RT <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sqrt</span>(tau2s))</span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a>    TT <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(k, <span class="fu">rep</span>(<span class="dv">0</span>, p), S)</span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>    yi <span class="ot">&lt;-</span> vi <span class="ot">&lt;-</span> deltai <span class="ot">&lt;-</span> vvi <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> k)</span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k){</span>
+<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a>        X0 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, p), RS)</span>
+<span id="cb67-22"><a href="#cb67-22" aria-hidden="true" tabindex="-1"></a>        X1 <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(n, mus <span class="sc">+</span> TT[i, ], RS)</span>
+<span id="cb67-23"><a href="#cb67-23" aria-hidden="true" tabindex="-1"></a>        mm0 <span class="ot">&lt;-</span> <span class="fu">apply</span>(X0, <span class="dv">2</span>, mean)</span>
+<span id="cb67-24"><a href="#cb67-24" aria-hidden="true" tabindex="-1"></a>        mm1 <span class="ot">&lt;-</span> <span class="fu">apply</span>(X1, <span class="dv">2</span>, mean)</span>
+<span id="cb67-25"><a href="#cb67-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb67-26"><a href="#cb67-26" aria-hidden="true" tabindex="-1"></a>        vv01 <span class="ot">&lt;-</span> <span class="fu">cov</span>(X0)<span class="sc">/</span>n <span class="sc">+</span> <span class="fu">cov</span>(X1)<span class="sc">/</span>n</span>
+<span id="cb67-27"><a href="#cb67-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb67-28"><a href="#cb67-28" aria-hidden="true" tabindex="-1"></a>        yi[[i]] <span class="ot">&lt;-</span> mm1 <span class="sc">-</span> mm0</span>
+<span id="cb67-29"><a href="#cb67-29" aria-hidden="true" tabindex="-1"></a>        vi[[i]] <span class="ot">&lt;-</span> <span class="fu">diag</span>(vv01)</span>
+<span id="cb67-30"><a href="#cb67-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb67-31"><a href="#cb67-31" aria-hidden="true" tabindex="-1"></a>        vvi[[i]] <span class="ot">&lt;-</span> vv01</span>
+<span id="cb67-32"><a href="#cb67-32" aria-hidden="true" tabindex="-1"></a>        deltai[[i]] <span class="ot">&lt;-</span> TT[i, ]</span>
+<span id="cb67-33"><a href="#cb67-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb67-34"><a href="#cb67-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-35"><a href="#cb67-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(sample_p){</span>
+<span id="cb67-36"><a href="#cb67-36" aria-hidden="true" tabindex="-1"></a>        pi <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>p, k, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb67-37"><a href="#cb67-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
+<span id="cb67-38"><a href="#cb67-38" aria-hidden="true" tabindex="-1"></a>        pi <span class="ot">&lt;-</span> <span class="fu">rep</span>(p, k)</span>
+<span id="cb67-39"><a href="#cb67-39" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb67-40"><a href="#cb67-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-41"><a href="#cb67-41" aria-hidden="true" tabindex="-1"></a>    study <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>k, <span class="at">each =</span> p)</span>
+<span id="cb67-42"><a href="#cb67-42" aria-hidden="true" tabindex="-1"></a>    outcome <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>p, k)</span>
+<span id="cb67-43"><a href="#cb67-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-44"><a href="#cb67-44" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb67-45"><a href="#cb67-45" aria-hidden="true" tabindex="-1"></a>        study,</span>
+<span id="cb67-46"><a href="#cb67-46" aria-hidden="true" tabindex="-1"></a>        outcome</span>
+<span id="cb67-47"><a href="#cb67-47" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb67-48"><a href="#cb67-48" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-49"><a href="#cb67-49" aria-hidden="true" tabindex="-1"></a>    sim<span class="sc">$</span>yi <span class="ot">&lt;-</span> <span class="fu">unlist</span>(yi)</span>
+<span id="cb67-50"><a href="#cb67-50" aria-hidden="true" tabindex="-1"></a>    sim<span class="sc">$</span>vi <span class="ot">&lt;-</span> <span class="fu">unlist</span>(vi)</span>
+<span id="cb67-51"><a href="#cb67-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-52"><a href="#cb67-52" aria-hidden="true" tabindex="-1"></a>    vvi <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, vvi)</span>
+<span id="cb67-53"><a href="#cb67-53" aria-hidden="true" tabindex="-1"></a>    vvi <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(vvi)</span>
+<span id="cb67-54"><a href="#cb67-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(vvi) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"v%si"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(vvi))</span>
+<span id="cb67-55"><a href="#cb67-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-56"><a href="#cb67-56" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">cbind</span>(sim, vvi)</span>
+<span id="cb67-57"><a href="#cb67-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-58"><a href="#cb67-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(ranef){</span>
+<span id="cb67-59"><a href="#cb67-59" aria-hidden="true" tabindex="-1"></a>        sim<span class="sc">$</span>deltai <span class="ot">&lt;-</span> <span class="fu">unlist</span>(deltai)</span>
+<span id="cb67-60"><a href="#cb67-60" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb67-61"><a href="#cb67-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb67-62"><a href="#cb67-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># selecting studies</span></span>
+<span id="cb67-63"><a href="#cb67-63" aria-hidden="true" tabindex="-1"></a>    siml <span class="ot">&lt;-</span> <span class="fu">split</span>(sim, sim<span class="sc">$</span>study)</span>
+<span id="cb67-64"><a href="#cb67-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k){</span>
+<span id="cb67-65"><a href="#cb67-65" aria-hidden="true" tabindex="-1"></a>        siml[[i]] <span class="ot">&lt;-</span> siml[[i]][<span class="dv">1</span><span class="sc">:</span>pi[i], ]</span>
+<span id="cb67-66"><a href="#cb67-66" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb67-67"><a href="#cb67-67" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, siml)</span>
+<span id="cb67-68"><a href="#cb67-68" aria-hidden="true" tabindex="-1"></a>    sim<span class="sc">$</span>outcome <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(<span class="st">"o"</span>, sim<span class="sc">$</span>outcome))</span>
+<span id="cb67-69"><a href="#cb67-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(sim) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb67-70"><a href="#cb67-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(sim)</span>
+<span id="cb67-71"><a href="#cb67-71" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb67-72"><a href="#cb67-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-73"><a href="#cb67-73" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_multi_meta</span>(<span class="at">k =</span> <span class="dv">10</span>, </span>
+<span id="cb67-74"><a href="#cb67-74" aria-hidden="true" tabindex="-1"></a>               <span class="at">p =</span> <span class="dv">3</span>, </span>
+<span id="cb67-75"><a href="#cb67-75" aria-hidden="true" tabindex="-1"></a>               <span class="at">mus =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb67-76"><a href="#cb67-76" aria-hidden="true" tabindex="-1"></a>               <span class="at">tau2s =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), </span>
+<span id="cb67-77"><a href="#cb67-77" aria-hidden="true" tabindex="-1"></a>               <span class="at">ro =</span> <span class="fl">0.5</span>, </span>
+<span id="cb67-78"><a href="#cb67-78" aria-hidden="true" tabindex="-1"></a>               <span class="at">rs =</span> <span class="fl">0.5</span>, </span>
+<span id="cb67-79"><a href="#cb67-79" aria-hidden="true" tabindex="-1"></a>               <span class="at">n =</span> <span class="dv">100</span>)</span>
+<span id="cb67-80"><a href="#cb67-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-81"><a href="#cb67-81" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">vcalc</span>(<span class="at">vi =</span> <span class="dv">1</span>, <span class="at">cluster =</span> study, <span class="at">rvars =</span> <span class="fu">c</span>(v1i, v2i, v3i), <span class="at">data =</span> dat)</span>
+<span id="cb67-82"><a href="#cb67-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-83"><a href="#cb67-83" aria-hidden="true" tabindex="-1"></a>fit.mv <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, </span>
+<span id="cb67-84"><a href="#cb67-84" aria-hidden="true" tabindex="-1"></a>                 V, </span>
+<span id="cb67-85"><a href="#cb67-85" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
+<span id="cb67-86"><a href="#cb67-86" aria-hidden="true" tabindex="-1"></a>                 <span class="at">random =</span> <span class="sc">~</span> outcome<span class="sc">|</span>study, </span>
+<span id="cb67-87"><a href="#cb67-87" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> dat)</span>
+<span id="cb67-88"><a href="#cb67-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-89"><a href="#cb67-89" aria-hidden="true" tabindex="-1"></a>fit.mv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 30; method: REML)
+
+Variance Components:
+
+outer factor: study   (nlvls = 10)
+inner factor: outcome (nlvls = 3)
+
+            estim    sqrt  fixed 
+tau^2      0.0901  0.3002     no 
+rho        0.3491             no 
+
+Test for Residual Heterogeneity:
+QE(df = 27) = 174.6309, p-val &lt; .0001
+
+Test of Moderators (coefficients 1:3):
+QM(df = 3) = 5.1281, p-val = 0.1627
+
+Model Results:
+
+           estimate      se    zval    pval    ci.lb   ci.ub    
+outcomeo1    0.2173  0.1043  2.0820  0.0373   0.0127  0.4218  * 
+outcomeo2    0.1559  0.1049  1.4864  0.1372  -0.0497  0.3614    
+outcomeo3    0.0601  0.1050  0.5720  0.5673  -0.1457  0.2659    
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>fit.mv<span class="fl">.3</span>l <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, </span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>                 vi, </span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>outcome<span class="sc">/</span>study, </span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> dat)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>fit.mv<span class="fl">.3</span>l</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 30; method: REML)
+
+Variance Components:
+
+            estim    sqrt  nlvls  fixed         factor 
+sigma^2.1  0.0202  0.1420      3     no        outcome 
+sigma^2.2  0.0893  0.2989     30     no  outcome/study 
+
+Test for Residual Heterogeneity:
+QE(df = 27) = 154.2751, p-val &lt; .0001
+
+Test of Moderators (coefficients 1:3):
+QM(df = 3) = 2.4282, p-val = 0.4884
+
+Model Results:
+
+           estimate      se    zval    pval    ci.lb   ci.ub    
+outcomeo1    0.2168  0.1760  1.2315  0.2181  -0.1282  0.5618    
+outcomeo2    0.1560  0.1763  0.8847  0.3763  -0.1896  0.5016    
+outcomeo3    0.0633  0.1764  0.3589  0.7197  -0.2824  0.4091    
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

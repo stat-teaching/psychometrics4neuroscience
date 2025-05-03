@@ -1,0 +1,775 @@
+---
+title: "Multilevel and Multivariate Meta-analysis"
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(metafor)
+library(tidyverse)
+library(lme4)
+library(afex)
+```
+
+
+## Quick recap of the two-level model
+
+What we did so far about the two-level model (fixed/equal or random) is combining primary studies summarising each study with an effect size and precision measure.
+
+![From https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/multilevel-ma.html](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/images/multilevel-model_col_sep.png)
+
+In this model, effect sizes (and variances) are considered independent because they are collected on different participants. In other terms each row of a meta-analysis dataset is assumed independent.
+
+In this example from the `dat.bcg` dataset (`?dat.bcg`) each row comes from a different study with different participants.
+
+```{r}
+### calculate log risk ratios and corresponding sampling variances
+dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
+head(dat)
+```
+
+More formally, the two-level random-effects model can be written as:
+
+$$
+y_i = \mu_{\theta} + \delta_i + \epsilon_i
+$$
+
+$$
+\delta_i \sim \mathcal{N}(0, \tau^2)
+$$
+
+$$
+\epsilon_i \sim \mathcal{N}(0, \sigma^2_{\epsilon_i})
+$$
+
+## Dependency
+
+There are situations where effect sizes (and variances) are no longer independent. There are mainly two sources of dependency:
+
+1. multiple effect sizes within the same paper but with different participants
+2. multiple effect sizes collected on the same pool of participants
+
+The first case refer to a situation where the effect sizes are nested within a paper and given that they will share a similar methodology, same authors, etc. they are likely more similar to each other compared to effect sizes from different papers. We can call this situation a **multilevel** dataset.
+
+In the second case, the effects are correlated because they are collected on the same pool of participants thus sampling errors are correlated. This is the case where multiple outcome measures are collected or multiple time-points (like a longitudinal design). We can call this situation a **multivariate** dataset.
+
+Importantly, the two type of meta-analysis will be very similar both formally and from the R implementation point of view but they are clearly distincted from an empirical point of view.
+
+## Multilevel meta-analysis
+
+The multilevel data structure can be easily depicted in the figure below.
+
+![From https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/multilevel-ma.html](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/images/multilevel-model2_col_sep.png)
+
+Also this picture clearly show the data structure and important parameters:
+
+![](https://raw.githubusercontent.com/shared-research/simulating-meta-analysis/refs/heads/main/documents/paper/img/multilevel.svg)
+
+We can have several levels beyond the two-level model but usually common meta-analyses have a maximum of 3-4 levels. For example, it is common in experimental Psychology to have papers with more than one experiment with different participants.
+
+More formally, a three-level model can be written as:
+
+\begin{align}
+\begin{gathered}
+y_{ij} = \mu_{\theta} + \delta_i + \zeta_{ij} + \epsilon_{ij}
+
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\delta_i\sim \mathcal{N}(0, \tau^2)
+
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\zeta_{ij} \sim \mathcal{N}(0, \omega^2)
+
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\epsilon_{ij} \sim \mathcal{N}(0,\sigma_{\epsilon_{ij}}^{2})
+
+\end{gathered}
+\end{align}
+
+The only addition is an extra source of heterogeneity $\omega^2$ that can be intepreted as the true heterogeneity between effects nested within the same paper (or whatever is the cluster).
+
+A data structure in this case need to have an index for the cluster and an index for the effect. For example:
+
+```{r}
+dat3l <- expand.grid(
+    paper = 1:10,
+    effect = 1:3
+)
+
+dat3l <- dat3l[order(dat3l$paper), ]
+
+head(dat3l)
+```
+Effects within the same paper are more likely to be similar compared to effects between different papers. This degree of similarity is essentially the intraclass correlation defined as the proportion of variance explained by the clustering.
+
+$$
+\mbox{ICC} = \frac{\tau^2}{\omega^2 + \tau^2}
+$$
+
+A practical example can be seen with the `dat.konstantopoulos2011` dataset (see also the `metafor` blog post [https://www.metafor-project.org/doku.php/analyses:konstantopoulos2011](https://www.metafor-project.org/doku.php/analyses:konstantopoulos2011))
+
+```{r}
+dat3l <- dat.konstantopoulos2011
+head(dat3l)
+```
+
+Here the effect sizes comes from schools (collected on participants) nested within districts. Each district has one or more schools that are likely to have within-district similarity.
+
+We can start by fitting the standard two-level model but here we are ignoring the (possibile) ICC.
+
+```{r}
+fit2l <- rma(yi, vi, data = dat3l)
+summary(fit2l)
+```
+
+We need to change the fitting function from `rma` to `rma.mv` (`mv` for multivariate but also multilevel). Essentially we need to specify that we have two clustering levels (beyond the usual first level of the two-level model) using the `random =` argument.
+
+The two-level model can be fitted also using `rma.mv` and the result will be practically the same (beyond small numerical differences due to the different algorithm). The two-level model can be written as:
+
+```{r}
+fit2l.mv <- rma.mv(yi, vi, random = ~ 1|study, data = dat3l)
+summary(fit2l.mv)
+```
+
+Both these models are not entirely correct. We have two options here:
+
+1. aggregating the effects reducing the three-level structure to a two-level structure
+2. fitting a proper three-level model
+
+For the aggregation, the idea is to essentially perform a two-level fixed effect model for each cluster thus having a (weighted) aggregated effect and sampling variance.
+
+```{r}
+dat3l_l <- split(dat3l, dat3l$district)
+fit3l_l <- lapply(dat3l_l, function(x) data.frame(predict(rma(yi, vi, data = x, method = "EE"))))
+
+dat3l_agg <- do.call(rbind, fit3l_l)
+fit3l_agg <- rma(pred, se^2, data = dat3l_agg)
+
+summary(fit3l_agg)
+```
+
+This can de done in a more efficient way using the `metafor::aggregate()` function:
+
+```{r}
+dat3l_agg <- aggregate(dat3l, cluster = district, struct = "ID")
+# dat3l_agg <- aggregate(dat3l, cluster = district, rho = 0)
+dat3l_agg
+```
+
+The argument `struct = "ID"` indicates that sampling errors are independent within each cluster (district).
+
+```{r}
+fit3l_agg <- rma(yi, vi, data = dat3l_agg)
+summary(fit3l_agg)
+```
+
+The aggregation can also be done within the `rma.mv` function. Essentially we can provide a (block) variance-covariance matrix instead of the `vi` element indicating how the effects are correlated within studies.
+
+```{r}
+V <- vcalc(vi = vi, cluster = district, obs = study, rho = 0, data = dat3l)
+rownames(V) <- colnames(V) <- paste0("dist", dat3l$district)
+round(V, 2)[1:10, 1:10]
+
+# or in the block-form
+blsplit(V, dat3l$district, fun = function(x) round(x, 2))[1:3] # first 3 districts
+```
+
+```{r}
+fit3l_agg <- rma.mv(yi, V, data = dat3l, random = ~ 1|district)
+summary(fit3l_agg)
+```
+
+All these models are **exactly** the same. See [https://jepusto.com/posts/Sometimes-aggregating-effect-sizes-is-fine](https://jepusto.com/posts/Sometimes-aggregating-effect-sizes-is-fine) for a more detailed explanation of aggregating vs doing the model dropping the lowest nesting level.
+
+At the same time these models assumes that sampling errors are independent (that is probably true) but they are ignoring that the effects could be dependent because they are nested within the same cluster.
+
+The most appropriate model can be specified adding the nested level:
+
+```{r}
+fit3l <- rma.mv(yi, vi, random = ~ 1|district/study, data = dat3l)
+summary(fit3l)
+```
+
+The argument `1|district/study` means that effects (study) are nested within clusters (district).
+
+We can see that the fixed part (Model Results) is the same (in terms of number of parameters not results) as the previous models but now we have two estimated variances, $\omega^2$ and $\tau^2$ as the picture above. 
+
+Also we can see that the sum of the two variances is similar to the heterogeneity estimated by previous models (slightly higher). The core difference is the fixed part where beyond differences in the estimated effects due to different weights, the standard error is very different.
+
+```{r}
+rr <- rbind(data.frame(predict(fit2l)), 
+            data.frame(predict(fit3l_agg)),
+            data.frame(predict(fit3l)))
+rr$sigma2 <- c(fit2l$tau2, fit3l_agg$sigma2, sum(fit3l$sigma2))
+rr <- round(rr, 4)
+rr$model <- c("2l", "2l_agg", "3l")
+rr
+```
+
+In particular, the two-level model (on the three-level) dataset is underestimating the standard error of the average effect because is considering each row as independent. The model with aggregation is similar to the three-level model while the model without aggregation is very different.
+
+The difference is related to the ICC parameter:
+
+```{r}
+fit3l$sigma2[1] / sum(fit3l$sigma2)
+```
+
+The model can be written in a form where the ICC is directly computed:
+
+```{r}
+fit3l.icc <- rma.mv(yi, vi, random = ~study|district, data = dat3l)
+# rma.mv(yi, vi, random = ~study|district, data = dat3l, struct = "CS") # struct = "CS" by default
+summary(fit3l.icc)
+```
+
+`random = ~study|district` is defined as `inner|outer` factors with a compound symmetry structure (`struct = CS`) by default. The idea is that each study is considered as a different outcome but we estimate a single $\tau^2$ and a single $\rho$ that is the correlation between different outcomes/effects. The two models are exactly the same, only with a different parametrization.
+
+Checking the impact of using a different correlation compared to ICC:
+
+```{r}
+r <- seq(0.01, 0.99, length.out = 20)
+res <- vector(mode = "list", length = length(r))
+
+for(i in 1:length(r)){
+    V <- vcalc(vi, cluster = district, obs = study, rho = r[i], data = dat3l)
+    fit <- rma.mv(yi, V, random = ~1|district, data = dat3l)
+    fits <- data.frame(predict(fit))
+    fits$sigma2 <- sum(fit$sigma2)
+    fits$r <- r[i]
+    res[[i]] <- fits
+}
+
+resd <- do.call(rbind, res)
+resd$model <- 0
+
+resd3l <- data.frame(predict(fit3l))
+resd3l$sigma2 <- sum(fit3l.icc$tau2)
+resd3l$r <- fit3l.icc$rho
+resd3l$model <- 1
+
+resd <- rbind(resd, resd3l)
+
+resd |> 
+    pivot_longer(c(pred, se)) |> 
+    ggplot(aes(x = r, y = value, color = factor(model))) +
+    geom_point(size = 3) +
+    facet_wrap(~name, scales = "free")
+```
+
+Clearly, the assumption of the three-level model is that $\omega^2$ is the same for each cluster thus we are estimating a single $\omega^2$.
+
+### Simulating data
+
+Data simulation again here is very useful to understand the model. We need to generate two vectors of random effects compared to the two-level model. Let's start with a simple data structure with $k$ clusters (e.g., papers) each having $j$ nested effects.
+
+```{r}
+k <- 30
+j <- 3
+
+dat <- expand.grid(
+    effect = 1:j,
+    paper = 1:k
+)
+dat$id <- 1:nrow(dat)
+head(dat)
+```
+Now we need to set the true parameters:
+
+```{r}
+es <- 0.3
+tau2 <- 0.15
+omega2 <- 0.05
+(icc <- tau2 / (tau2 + omega2)) # real icc
+
+deltai <- rnorm(k, 0, tau2) # k random effects
+zetaij <- rnorm(nrow(dat), 0, omega2) # k * j (or the number of rows) random effects
+
+dat$deltai <- deltai[dat$paper]
+dat$zetaij <- zetaij
+
+# true effects
+dat$thetai <- with(dat, es + deltai + zetaij)
+
+head(dat)
+
+dat |> 
+    filter(paper %in% sample(unique(paper), 10)) |> 
+    ggplot(aes(x = thetai, y = paper)) +
+    geom_point(aes(color = factor(paper)))
+```
+
+Now we can use the usual `sim_studies()` function or manually to generate a study for each row of this dataframe with the true parameters.
+
+```{r}
+dat$yi <- NA
+dat$vi <- NA
+dat$n0 <- 10 + rpois(nrow(dat), 50)
+dat$n1 <- 10 + rpois(nrow(dat), 50)
+
+for(i in 1:nrow(dat)){
+    g0 <- rnorm(dat$n0[i], 0, 1)
+    g1 <- rnorm(dat$n1[i], dat$thetai[i], 1)
+    dat$yi[i] <- mean(g1) - mean(g0)
+    dat$vi[i] <- var(g0)/dat$n0[i] + var(g1)/dat$n1[i]
+}
+
+fit <- rma.mv(yi, vi, random = ~ 1|paper/id, data = dat, sparse = TRUE)
+fit.icc <- rma.mv(yi, vi, random = ~ effect|paper, data = dat, sparse = TRUE)
+
+summary(fit)
+summary(fit.icc)
+```
+
+We can put everything within a function to generate data also with heterogeneous number of effects $j$ within each cluster.
+
+```{r}
+sim_3l_studies <- function(k,
+                           j,
+                           es = 0,
+                           tau2_k = 0,
+                           tau2_j = 0,
+                           n0,
+                           n1 = NULL,
+                           sample_j = FALSE,
+                           sample_n = NULL,
+                           simulate = TRUE,
+                           raw = FALSE){
+    if(sample_j){
+        nj <- sample(1:j, k, replace = TRUE)
+    } else{
+        nj <- rep(j, k)
+    }
+    
+    study <- unlist(lapply(nj, function(x) 1:x))
+    paper <- rep(1:k, nj)
+    sim <- data.frame(paper, study)
+    
+    delta_k <- rnorm(k, 0, sqrt(tau2_k))
+    delta_j <- rnorm(nrow(sim), 0, sqrt(tau2_j))
+    
+    kj <- nrow(sim)
+    
+    if(!is.null(sample_n)){
+        n0 <- round(sample_n(kj))
+        n1 <- round(sample_n(kj))
+    } else{
+        if(length(n0) == 1) n0 <- rep(n0, nrow(sim))
+        if(length(n1) == 1) n1 <- n0
+    }
+    
+    es_kj <- es + delta_k[paper] + delta_j
+    
+    if(simulate){
+        ss <- sim_studies(nrow(sim), es_kj, n0, n1, raw = raw)
+        if(!raw){
+            ss <- do.call(rbind, ss)
+            res <- cbind(sim, ss)
+        } else{
+            res <- do.call(rbind, ss)
+            paper_r <- rep(paper, sapply(ss, nrow))
+            study_r <- rep(study, sapply(ss, nrow))
+            res <- cbind(res, paper = paper_r, study = study_r)
+        }
+        
+    } else{
+        res <- sim
+        res$es <- es
+        res$delta_k <- delta_k[paper]
+        res$delta_j <- delta_j
+        res$theta_kj <- es_kj
+    }
+    
+    return(res)
+    
+}
+
+sim_study <- function(es, n0, n1, raw = FALSE){
+    g0 <- rnorm(n0, 0, 1)
+    g1 <- rnorm(n1, es, 1)
+    
+    if(raw){
+        N <- n0 + n1
+        out <- data.frame(
+            subject = 1:N,
+            x = rep(0:1, c(n0, n1)),
+            y = c(g0, g1)
+        )
+    } else{
+        yi <- mean(g1) - mean(g0)
+        vi <- var(g0)/n0 + var(g1)/n1
+        out <- data.frame(
+            yi, vi
+        )
+    }
+    return(out)
+}
+
+sim_studies <- function(k, es, n0, n1 = NULL, raw = FALSE){
+    if(length(n0) == 1) n0 <- rep(n0, k)
+    if(length(n1) == 1) n1 <- rep(n1, k) 
+    if(is.null(n1)) n1 <- n0
+    if(length(es) == 1) es <- rep(es, k)
+    
+    mapply(sim_study, es, n0, n1, raw = raw, SIMPLIFY = FALSE)
+}
+
+dat <- sim_3l_studies(k = 100, 
+                      j = 5, 
+                      es = 0.3, 
+                      tau2_k = 0.1, 
+                      tau2_j = 0.05, 
+                      n0 = 50, 
+                      n1 = 50)
+
+fit.3l.sim <- rma.mv(yi, vi, random = ~ 1|paper/study, data = dat)
+summary(fit.3l.sim)
+```
+
+Similarly we can fit the corresponding model having the raw data to see the parameters estimated:
+
+```{r}
+#| cache: true
+dat <- sim_3l_studies(k = 100, 
+                      j = 5, 
+                      es = 0.3, 
+                      tau2_k = 0.1, 
+                      tau2_j = 0.05, 
+                      n0 = 50, 
+                      n1 = 50,
+                      raw = TRUE)
+
+get_es <- function(data){
+    dd <- data |> 
+        group_by(x) |> 
+        summarise(m = mean(y),
+                  sd = sd(y),
+                  n = n()) |> 
+        pivot_wider(names_from = x, values_from = c(m, sd, n))
+    escalc("MD", m1i = m_1, m2i = m_0, sd1i = sd_1, sd2i = sd_0, n1i = n_1, n2i = n_0,
+           data = dd)
+}
+
+dat_agg <- dat |> 
+    group_by(paper, study) |> 
+    nest() |> 
+    mutate(es = map(data, get_es)) |> 
+    unnest(es) |> 
+    select(-data)
+
+fit3l <- rma.mv(yi, vi, random = ~1|paper/study, data = dat_agg)
+summary(fit3l)
+
+dat$x <- factor(dat$x)
+contrasts(dat$x) <- contr.sum(2)/2
+
+fit3l.lmer <- lmer_alt(y ~ x + (x||paper/study), data = dat)
+summary(fit3l.lmer)
+```
+
+# Multivariate meta-analysis
+
+As introduced at the beginning the term multivariate is used here for data structure where the dependency arises from multiple effects being collected on the same pool of participants.
+
+![](https://raw.githubusercontent.com/shared-research/simulating-meta-analysis/refs/heads/main/documents/paper/img/multivariate.svg)
+
+For example, in each primary study we did a group comparison (between two independent groups) on two measures. The two effect sizes are correlated because they are measured on the same participants.
+
+The data structure is essentially the same but sampling errors are now correlated within clusters.
+
+```{r}
+dat.mv <- expand.grid(
+    outcome = 1:2,
+    paper = 1:10
+)
+
+head(dat.mv)
+```
+How a single study looks like?
+
+```{r}
+n0 <- 50
+n1 <- 50
+
+d <- c(0.3, 0.5)
+
+r <- 0.6
+R <- r + diag(1 - r, 2)
+
+g0 <- MASS::mvrnorm(n0, c(0, 0), R)
+g1 <- MASS::mvrnorm(n0, d, R)
+
+m0 <- apply(g0, 2, mean)
+m1 <- apply(g1, 2, mean)
+
+v0 <- apply(g0, 2, var)
+v1 <- apply(g1, 2, var)
+
+yi <- m1 - m0
+vi <- v0/n0 + v1/n1
+ri <- cor(rbind(g0, g1))
+vvi <- diag(sqrt(vi)) %*% ri %*% diag(sqrt(vi))
+vvi <- data.frame(vvi)
+names(vvi) <- c("v1i", "v2i")
+
+cbind(yi, vi, vvi, n0, n1, outcome = c(1, 2))
+```
+
+We have two effects, two sampling variances and their correlation/covariance.
+
+Formally the model (for a single study) can be written as:
+
+\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+y_{1_i} \\
+y_{2_i} \\
+y_{3_i}
+\end{bmatrix} 
+=
+\begin{bmatrix}
+\mu_{{\theta}_{1}} \\
+\mu_{{\theta}_{2}} \\
+\mu_{{\theta}_{3}}
+\end{bmatrix}
++
+\begin{bmatrix}
+\delta_{1_i} \\
+\delta_{2_i} \\
+\delta_{3_i}
+\end{bmatrix}
++
+\begin{bmatrix}
+\epsilon_{1_i} \\
+\epsilon_{2_i} \\
+\epsilon_{3_i}
+\end{bmatrix}
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+\delta_{1_i} \\
+\delta_{2_i} \\
+\delta_{3_i}
+\end{bmatrix}
+\sim \mathcal{MVN}(0, \mathrm{T})
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\begin{bmatrix}
+\epsilon_{1_i} \\
+\epsilon_{2_i} \\
+\epsilon_{3_i}
+\end{bmatrix}
+\sim \mathcal{MVN}(0, \mathrm{V})
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\mathrm{T} = \begin{bmatrix}
+\tau_1^2 & & & \\
+\rho_{21}\tau_2\tau_1 & \tau_2^2 & & \\
+\rho_{31}\tau_3\tau_1 & \rho_{32}\tau_3\tau_2 & \tau_3^2
+\end{bmatrix}
+\end{gathered}
+\end{align}
+
+\begin{align}
+\begin{gathered}
+\mathrm{V} = \begin{bmatrix}
+\sigma^2_{\epsilon_1} & & & \\
+\rho_{s_{21}}\sigma_{\epsilon_2}\sigma_{\epsilon_1} & \sigma^2_{\epsilon_2} & & \\
+\rho_{s_{31}}\sigma_{\epsilon_3}\sigma_{\epsilon_1} & \rho_{s_{32}}\sigma_{\epsilon_3}\sigma_{\epsilon_2} & \sigma^2_{\epsilon_3}
+\end{bmatrix}
+\end{gathered}
+\end{align}
+
+The $\mbox{V}$ matrix is the same that we created with `vcalc`. Basically is a block variance-covariance matrix with $k$ matrices (one for each paper/cluster) and number of rows/columns depending on how many outcomes are collected for each paper.
+
+The $\mbox{T}$ is a $p\times p$ matrix with $p$ being the number of outcomes that represents the random-effects matrix. The diagonal is the true heterogeneity across studies for each outcome and the off-diagonal elements are the correlations between different outcomes across studies.
+
+The multivariate model needs $\mbox{V}$ (as the `vi` vector) and estimates $\mbox{T}$ along with the vector of effect sizes.
+
+Let's see an example with the `dat.berkey1998` dataset (see also [https://www.metafor-project.org/doku.php/analyses:berkey1998](https://www.metafor-project.org/doku.php/analyses:berkey1998))
+
+```{r}
+dat <- dat.berkey1998
+dat
+```
+
+> Berkey et al. (1998) describe a meta-analytic multivariate model for the analysis of multiple correlated outcomes. The use of the model is illustrated with results from 5 trials comparing surgical and non-surgical treatments for medium-severity periodontal disease. Reported outcomes include the change in probing depth (PD) and attachment level (AL) one year after the treatment. The effect size measure used for this meta-analysis was the (raw) mean difference, calculated in such a way that positive values indicate that surgery was more effective than non-surgical treatment in decreasing the probing depth and increasing the attachment level. 
+
+We need to create the `V` matrix:
+
+```{r}
+V <- vcalc(vi=1, cluster=author, rvars=c(v1i, v2i), data=dat)
+round(V, 3)
+blsplit(V, dat$author, fun = round, 3)
+```
+
+Then the model is the same as the three-level model with the ICC parametrization:
+
+```{r}
+fit.mv0 <- rma.mv(yi, V, random = ~outcome|trial, data = dat, struct = "UN")
+fit.mv0
+```
+
+What is missing is the fixed part. We are estimating an average outcome effect because we are not differentiating between outcomes. We just need to include `outcome` as a moderator:
+
+```{r}
+fit.mv1 <- rma.mv(yi, V, 
+                  mods = ~ 0 + outcome, 
+                  random = ~ outcome|trial, 
+                  data = dat, struct = "UN")
+fit.mv1
+```
+
+Now we have the estimated treatment effect and the $\mbox{T}$ matrix.
+
+## Multivariate as three-level model
+
+Sometimes, the correlations between outcomes are missing and we need to put a plausible value. @Van_den_Noortgate2013-za showed that under some assumptions, fitting a three-level model (thus assuming independence) is actually estimating the effects and standard error in a similar way as the multivariate model including or guessing a correlation.
+
+```{r}
+fit.mv1 <- rma.mv(yi, V, 
+                  mods = ~ 0 + outcome, 
+                  random = ~ outcome|trial, 
+                  data = dat, 
+                  struct = "CS")
+
+fit.mv.3l <- rma.mv(yi, 
+                    vi, 
+                    mods = ~ 0 + outcome, 
+                    random = ~ 1|trial/outcome, 
+                    data = dat)
+
+
+
+fit.mv1
+fit.mv.3l
+```
+
+The advantage is that in the three-level model we are not imputing values.
+
+## Simulating data
+
+```{r}
+sim_multi_meta <- function(k, 
+                           p,
+                           mus,
+                           tau2s,
+                           ro = 0,
+                           rs = 0,
+                           n = NULL,
+                           sample_p = FALSE,
+                           sample_n = NULL,
+                           ranef = FALSE){
+    
+    RT <- ro + diag(1 - ro, p)
+    RS <- rs + diag(1 - rs, p)
+    S <- diag(sqrt(tau2s)) %*% RT %*% diag(sqrt(tau2s))
+    
+    TT <- MASS::mvrnorm(k, rep(0, p), S)
+    
+    yi <- vi <- deltai <- vvi <- vector(mode = "list", length = k)
+    
+    for(i in 1:k){
+        X0 <- MASS::mvrnorm(n, rep(0, p), RS)
+        X1 <- MASS::mvrnorm(n, mus + TT[i, ], RS)
+        mm0 <- apply(X0, 2, mean)
+        mm1 <- apply(X1, 2, mean)
+        
+        vv01 <- cov(X0)/n + cov(X1)/n
+        
+        yi[[i]] <- mm1 - mm0
+        vi[[i]] <- diag(vv01)
+        
+        vvi[[i]] <- vv01
+        deltai[[i]] <- TT[i, ]
+    }
+    
+    if(sample_p){
+        pi <- sample(1:p, k, replace = TRUE)
+    } else{
+        pi <- rep(p, k)
+    }
+    
+    study <- rep(1:k, each = p)
+    outcome <- rep(1:p, k)
+    
+    sim <- data.frame(
+        study,
+        outcome
+    )
+    
+    sim$yi <- unlist(yi)
+    sim$vi <- unlist(vi)
+    
+    vvi <- do.call(rbind, vvi)
+    vvi <- data.frame(vvi)
+    names(vvi) <- sprintf("v%si", 1:ncol(vvi))
+    
+    sim <- cbind(sim, vvi)
+    
+    if(ranef){
+        sim$deltai <- unlist(deltai)
+    }
+    
+    # selecting studies
+    siml <- split(sim, sim$study)
+    for(i in 1:k){
+        siml[[i]] <- siml[[i]][1:pi[i], ]
+    }
+    sim <- do.call(rbind, siml)
+    sim$outcome <- factor(paste0("o", sim$outcome))
+    rownames(sim) <- NULL
+    return(sim)
+}
+
+dat <- sim_multi_meta(k = 10, 
+               p = 3, 
+               mus = c(0, 0, 0), 
+               tau2s = c(0.1, 0.1, 0.1), 
+               ro = 0.5, 
+               rs = 0.5, 
+               n = 100)
+
+V <- vcalc(vi = 1, cluster = study, rvars = c(v1i, v2i, v3i), data = dat)
+
+fit.mv <- rma.mv(yi, 
+                 V, 
+                 mods = ~ 0 + outcome, 
+                 random = ~ outcome|study, 
+                 data = dat)
+
+fit.mv
+
+fit.mv.3l <- rma.mv(yi, 
+                 vi, 
+                 mods = ~ 0 + outcome, 
+                 random = ~ 1|outcome/study, 
+                 data = dat)
+
+fit.mv.3l
+```
+
+
+
+
+
