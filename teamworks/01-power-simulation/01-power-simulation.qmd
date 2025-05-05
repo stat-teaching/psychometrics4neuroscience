@@ -55,7 +55,7 @@ ggplot(dd, aes(x = face, y = p, color = group)) +
 
 # Suggerimenti
 
-Solitamente i ricercatori in psicologia ragionano con effect sizes standardizzati (e.g., Cohen's $d$, standardized mean difference). Provare ad impostare i parametri del modello riguardo le ipotesi sperimentali convertendoli da valori di Cohen's $d$. Si veda ad esempio @Sanchez-Meca2003-tz.
+Solitamente i ricercatori in psicologia ragionano con effect sizes standardizzati (e.g., Cohen's $d$, standardized mean difference). Provare ad impostare i parametri del modello riguardo le ipotesi sperimentali convertendoli da valori di Cohen's $d$. Si veda ad esempio @Sanchez-Meca2003-tz [PDF](sanchez2003.pdf).
 
 # Aspetti generali
 
