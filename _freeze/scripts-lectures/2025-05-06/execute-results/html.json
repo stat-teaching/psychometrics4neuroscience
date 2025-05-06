@@ -1,0 +1,17 @@
+{
+  "hash": "af1d6b8f05d7c05bfe431bd78ad39a8e",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: 2025-05-06\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(patchwork)\nlibrary(metafor)\n\ndat <- dat.berkey1998\n\nrho <- seq(0.1, 0.9, 0.05)\nres <- vector(mode = \"list\", length = length(rho))\n\ndat$id <- 1:nrow(dat)\n\nfor(i in 1:length(res)){\n    V <- vcalc(vi, \n               cluster = author, \n               obs = id, \n               rho = rho[i], \n               data = dat)\n    fit <- rma.mv(yi, V, \n                  mods = ~ 0 + outcome, \n                  random = ~ outcome|trial, \n                  data = dat, struct = \"UN\")\n    res[[i]] <- fit\n}\n\nget_res <- function(x){\n    out <- data.frame(\n        outcome = rownames(x$b),\n        b = x$beta[, 1],\n        se = x$se,\n        ci.lb = x$ci.lb,\n        ci.ub = x$ci.ub,\n        tau2 = x$tau2,\n        rho = x$rho\n    )\n    rownames(out) <- NULL\n    out\n}\n\nresd <- lapply(res, get_res)\nresd <- do.call(rbind, resd)\n\nresd$r <- rep(rho, each = 2)\n\nlibrary(ggplot2)\n\np1 <- resd |> \n    ggplot(aes(x = r, y = b, color = outcome)) +\n    geom_pointrange(aes(ymin = ci.ub, ymax = ci.lb))\n\np2 <- resd |> \n    ggplot(aes(x = r, y = tau2, color = outcome)) +\n    geom_point() +\n    geom_line()\n\np3 <- resd |> \n    ggplot(aes(x = r, y = rho)) +\n    geom_point() +\n    geom_line()\n\np1\n```\n\n::: {.cell-output-display}\n![](2025-05-06_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n\n```{.r .cell-code}\np2 / p3\n```\n\n::: {.cell-output-display}\n![](2025-05-06_files/figure-html/unnamed-chunk-1-2.png){width=672}\n:::\n\n```{.r .cell-code}\n# install.packages(\"psymetadata\")\n\nlibrary(psymetadata)\n\ndata(\"gnambs2020\")\ndata(\"spaniol2020\")\n```\n:::\n",
+    "supporting": [
+      "2025-05-06_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,5 +1,6 @@
 ---
 title: "Multilevel and Multivariate Meta-analysis"
+bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
 ---
 
 ```{r}

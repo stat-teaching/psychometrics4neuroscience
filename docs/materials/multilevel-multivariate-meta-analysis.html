@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -70,10 +90,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0df6734a7621d6ae1792cc2a95df2203.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-1322888c997fad56b0b4d776d35cf542.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -749,13 +769,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  effect paper id      deltai        zetaij    thetai
-1      1     1  1  0.04967303 -0.0068029343 0.3428701
-2      2     1  2  0.04967303  0.0901059553 0.4397790
-3      3     1  3  0.04967303 -0.0098898288 0.3397832
-4      1     2  4 -0.10358568 -0.0002135816 0.1962007
-5      2     2  5 -0.10358568 -0.0242973401 0.1721170
-6      3     2  6 -0.10358568  0.1017387919 0.2981531</code></pre>
+<pre><code>  effect paper id      deltai       zetaij    thetai
+1      1     1  1  0.10467002  0.020452242 0.4251223
+2      2     1  2  0.10467002 -0.026584974 0.3780850
+3      3     1  3  0.10467002 -0.006521141 0.3981489
+4      1     2  4 -0.09007871 -0.055364805 0.1545565
+5      2     2  5 -0.09007871 -0.052189956 0.1577313
+6      3     2  6 -0.09007871 -0.009444707 0.2004766</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span> </span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(paper <span class="sc">%in%</span> <span class="fu">sample</span>(<span class="fu">unique</span>(paper), <span class="dv">10</span>)) <span class="sc">|&gt;</span> </span>
@@ -792,21 +812,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 Multivariate Meta-Analysis Model (k = 90; method: REML)
 
   logLik  Deviance       AIC       BIC      AICc   
- 14.7427  -29.4854  -23.4854  -16.0195  -23.2030   
+  9.9399  -19.8798  -13.8798   -6.4138  -13.5974   
 
 Variance Components:
 
             estim    sqrt  nlvls  fixed    factor 
-sigma^2.1  0.0107  0.1033     30     no     paper 
-sigma^2.2  0.0015  0.0393     90     no  paper/id 
+sigma^2.1  0.0113  0.1063     30     no     paper 
+sigma^2.2  0.0060  0.0778     90     no  paper/id 
 
 Test for Heterogeneity:
-Q(df = 89) = 119.1442, p-val = 0.0181
+Q(df = 89) = 133.1547, p-val = 0.0017
 
 Model Results:
 
-estimate      se     zval    pval   ci.lb   ci.ub      
-  0.3234  0.0272  11.8802  &lt;.0001  0.2701  0.3768  *** 
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.2734  0.0285  9.6072  &lt;.0001  0.2176  0.3291  *** 
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -817,7 +837,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 Multivariate Meta-Analysis Model (k = 90; method: REML)
 
   logLik  Deviance       AIC       BIC      AICc   
- 14.7427  -29.4854  -23.4854  -16.0195  -23.2030   
+  9.9399  -19.8798  -13.8798   -6.4138  -13.5974   
 
 Variance Components:
 
@@ -825,16 +845,16 @@ outer factor: paper  (nlvls = 30)
 inner factor: effect (nlvls = 3)
 
             estim    sqrt  fixed 
-tau^2      0.0122  0.1105     no 
-rho        0.8736             no 
+tau^2      0.0174  0.1317     no 
+rho        0.6514             no 
 
 Test for Heterogeneity:
-Q(df = 89) = 119.1442, p-val = 0.0181
+Q(df = 89) = 133.1547, p-val = 0.0017
 
 Model Results:
 
-estimate      se     zval    pval   ci.lb   ci.ub      
-  0.3234  0.0272  11.8802  &lt;.0001  0.2701  0.3768  *** 
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.2734  0.0285  9.6072  &lt;.0001  0.2176  0.3291  *** 
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -947,21 +967,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 Multivariate Meta-Analysis Model (k = 500; method: REML)
 
    logLik   Deviance        AIC        BIC       AICc   
--204.3638   408.7276   414.7276   427.3655   414.7761   
+-182.6122   365.2244   371.2244   383.8622   371.2729   
 
 Variance Components:
 
             estim    sqrt  nlvls  fixed       factor 
-sigma^2.1  0.1021  0.3196    100     no        paper 
-sigma^2.2  0.0519  0.2277    500     no  paper/study 
+sigma^2.1  0.1180  0.3435    100     no        paper 
+sigma^2.2  0.0397  0.1992    500     no  paper/study 
 
 Test for Heterogeneity:
-Q(df = 499) = 2449.4748, p-val &lt; .0001
+Q(df = 499) = 2490.9682, p-val &lt; .0001
 
 Model Results:
 
-estimate      se     zval    pval   ci.lb   ci.ub      
-  0.3487  0.0347  10.0467  &lt;.0001  0.2807  0.4167  *** 
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.2429  0.0366  6.6389  &lt;.0001  0.1712  0.3146  *** 
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -1003,21 +1023,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 Multivariate Meta-Analysis Model (k = 500; method: REML)
 
    logLik   Deviance        AIC        BIC       AICc   
--223.7331   447.4662   453.4662   466.1041   453.5147   
+-194.6568   389.3136   395.3136   407.9514   395.3621   
 
 Variance Components:
 
             estim    sqrt  nlvls  fixed       factor 
-sigma^2.1  0.1053  0.3244    100     no        paper 
-sigma^2.2  0.0602  0.2453    500     no  paper/study 
+sigma^2.1  0.1021  0.3196    100     no        paper 
+sigma^2.2  0.0477  0.2184    500     no  paper/study 
 
 Test for Heterogeneity:
-Q(df = 499) = 2594.4472, p-val &lt; .0001
+Q(df = 499) = 2384.5016, p-val &lt; .0001
 
 Model Results:
 
 estimate      se    zval    pval   ci.lb   ci.ub      
-  0.2584  0.0354  7.3000  &lt;.0001  0.1890  0.3277  *** 
+  0.3256  0.0346  9.4164  &lt;.0001  0.2579  0.3934  *** 
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -1033,33 +1053,31 @@ lmerModLmerTest]
 Formula: y ~ x + (1 + re1.x1 || paper/study)
    Data: data
 
-REML criterion at convergence: 143341
+REML criterion at convergence: 143032.5
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--3.9497 -0.6692 -0.0012  0.6658  4.0552 
+-4.0132 -0.6696 -0.0016  0.6675  3.9603 
 
 Random effects:
  Groups        Name        Variance Std.Dev.
- study.paper   re1.x1      0.05917  0.2432  
- study.paper.1 (Intercept) 0.01186  0.1089  
- paper         re1.x1      0.10547  0.3248  
- paper.1       (Intercept) 0.02764  0.1662  
- Residual                  1.00426  1.0021  
+ study.paper   re1.x1      0.04704  0.2169  
+ study.paper.1 (Intercept) 0.01370  0.1171  
+ paper         re1.x1      0.10271  0.3205  
+ paper.1       (Intercept) 0.02670  0.1634  
+ Residual                  0.99852  0.9993  
 Number of obs: 50000, groups:  study:paper, 500; paper, 100
 
 Fixed effects:
             Estimate Std. Error       df t value Pr(&gt;|t|)    
-(Intercept)  0.13202    0.01789 98.97838   7.378 5.03e-11 ***
-x1          -0.25696    0.03540 99.00308  -7.258 8.96e-11 ***
+(Intercept)  0.15610    0.01773 99.00121   8.803 4.43e-14 ***
+x1          -0.32488    0.03466 98.99474  -9.374 2.54e-15 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
    (Intr)
-x1 0.000 
-optimizer (nloptwrap) convergence code: 0 (OK)
-Model failed to converge with max|grad| = 0.00215331 (tol = 0.002, component 1)</code></pre>
+x1 0.000 </code></pre>
 </div>
 </div>
 </section>
@@ -1116,8 +1134,8 @@ Model failed to converge with max|grad| = 0.00215331 (tol = 0.002, component 1)<
 <span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(yi, vi, vvi, n0, n1, <span class="at">outcome =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         yi         vi        v1i        v2i n0 n1 outcome
-1 0.5267601 0.03841446 0.03841446 0.02218897 50 50       1
-2 0.5152258 0.03490942 0.02218897 0.03490942 50 50       2</code></pre>
+1 0.3330190 0.04401455 0.04401455 0.02350021 50 50       1
+2 0.2875695 0.03896922 0.02350021 0.03896922 50 50       2</code></pre>
 </div>
 </div>
 <p>We have two effects, two sampling variances and their correlation/covariance.</p>
@@ -1333,7 +1351,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Now we have the estimated treatment effect and the <span class="math inline">\(\mbox{T}\)</span> matrix.</p>
 <section id="multivariate-as-three-level-model" class="level2">
 <h2 class="anchored" data-anchor-id="multivariate-as-three-level-model">Multivariate as three-level model</h2>
-<p>Sometimes, the correlations between outcomes are missing and we need to put a plausible value. <span class="citation" data-cites="Van_den_Noortgate2013-za">@Van_den_Noortgate2013-za</span> showed that under some assumptions, fitting a three-level model (thus assuming independence) is actually estimating the effects and standard error in a similar way as the multivariate model including or guessing a correlation.</p>
+<p>Sometimes, the correlations between outcomes are missing and we need to put a plausible value. <span class="citation" data-cites="Van_den_Noortgate2013-za">Van den Noortgate et al. (<a href="#ref-Van_den_Noortgate2013-za" role="doc-biblioref">2013</a>)</span> showed that under some assumptions, fitting a three-level model (thus assuming independence) is actually estimating the effects and standard error in a similar way as the multivariate model including or guessing a correlation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fit.mv1 <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(yi, V, </span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">mods =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> outcome, </span>
@@ -1509,21 +1527,21 @@ outer factor: study   (nlvls = 10)
 inner factor: outcome (nlvls = 3)
 
             estim    sqrt  fixed 
-tau^2      0.0901  0.3002     no 
-rho        0.3491             no 
+tau^2      0.1425  0.3775     no 
+rho        0.7375             no 
 
 Test for Residual Heterogeneity:
-QE(df = 27) = 174.6309, p-val &lt; .0001
+QE(df = 27) = 174.7938, p-val &lt; .0001
 
 Test of Moderators (coefficients 1:3):
-QM(df = 3) = 5.1281, p-val = 0.1627
+QM(df = 3) = 5.2444, p-val = 0.1548
 
 Model Results:
 
-           estimate      se    zval    pval    ci.lb   ci.ub    
-outcomeo1    0.2173  0.1043  2.0820  0.0373   0.0127  0.4218  * 
-outcomeo2    0.1559  0.1049  1.4864  0.1372  -0.0497  0.3614    
-outcomeo3    0.0601  0.1050  0.5720  0.5673  -0.1457  0.2659    
+           estimate      se     zval    pval    ci.lb   ci.ub    
+outcomeo1    0.1345  0.1274   1.0554  0.2912  -0.1152  0.3841    
+outcomeo2   -0.0430  0.1272  -0.3381  0.7353  -0.2922  0.2062    
+outcomeo3    0.1455  0.1271   1.1445  0.2524  -0.1037  0.3947    
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -1542,21 +1560,21 @@ Multivariate Meta-Analysis Model (k = 30; method: REML)
 Variance Components:
 
             estim    sqrt  nlvls  fixed         factor 
-sigma^2.1  0.0202  0.1420      3     no        outcome 
-sigma^2.2  0.0893  0.2989     30     no  outcome/study 
+sigma^2.1  0.0333  0.1825      3     no        outcome 
+sigma^2.2  0.1424  0.3774     30     no  outcome/study 
 
 Test for Residual Heterogeneity:
-QE(df = 27) = 154.2751, p-val &lt; .0001
+QE(df = 27) = 219.2477, p-val &lt; .0001
 
 Test of Moderators (coefficients 1:3):
-QM(df = 3) = 2.4282, p-val = 0.4884
+QM(df = 3) = 0.8082, p-val = 0.8475
 
 Model Results:
 
-           estimate      se    zval    pval    ci.lb   ci.ub    
-outcomeo1    0.2168  0.1760  1.2315  0.2181  -0.1282  0.5618    
-outcomeo2    0.1560  0.1763  0.8847  0.3763  -0.1896  0.5016    
-outcomeo3    0.0633  0.1764  0.3589  0.7197  -0.2824  0.4091    
+           estimate      se     zval    pval    ci.lb   ci.ub    
+outcomeo1    0.1341  0.2226   0.6025  0.5468  -0.3021  0.5704    
+outcomeo2   -0.0406  0.2225  -0.1826  0.8551  -0.4766  0.3954    
+outcomeo3    0.1427  0.2224   0.6418  0.5210  -0.2932  0.5787    
 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -1564,10 +1582,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Van_den_Noortgate2013-za" class="csl-entry" role="listitem">
+Van den Noortgate, Wim, José Antonio López-López, Fulgencio Marín-Martínez, and Julio Sánchez-Meca. 2013. <span>“Three-Level Meta-Analysis of Dependent Effect Sizes.”</span> <em>Behavior Research Methods</em> 45 (June): 576–94. <a href="https://doi.org/10.3758/s13428-012-0261-6">https://doi.org/10.3758/s13428-012-0261-6</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
