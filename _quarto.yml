@@ -3,6 +3,8 @@ project:
   output-dir: docs
   render:
     - "*.qmd"
+  resources:
+    - "data/*"
   # post-render: 
   #  - quarto-scripts/qmd2R.R
 

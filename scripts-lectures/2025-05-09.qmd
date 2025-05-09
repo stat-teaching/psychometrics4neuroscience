@@ -1,0 +1,33 @@
+---
+title: 2025-05-09
+---
+
+# Esercizi
+
+## Meta-analisi
+
+Dal pacchetto `psymetadata` provate a scegliere un dataset ed analizzarlo e applicare i modelli che abbiamo visto sia per stimare gli effetti che publication bias. Scegliete il dataset che volete, questi sono un paio di consigliati.
+
+```{r}
+# install.packages("psymetadata")
+
+library(psymetadata)
+
+data("gnambs2020")
+data("spaniol2020")
+```
+
+## Mixed-effects models
+
+Il dataset `data/rt.rds` contiene un esperimento di **tempi di reazione** (colonna `rt`). L'ipotesi principale è una differenza in funzione della congruenza dello stimolo (`congruence`). Scegliere il modello più adatto, intepretare gli effetti, etc.
+
+- c'è anche una colonna con la data dell'esperimento. Vedere se c'è un impatto nell'effetto e nei tempi di reazione in funzione al periodo della giornata (mattina < 12:00pm, pomeriggio 12-17, sera dopo le 17:00).
+- vedere relazione tra accuratezza (`correct`) e tempi di reazione
+
+```{r}
+dat <- readRDS(here::here("data", "rt.rds"))
+head(dat)
+```
+
+Il dataset lo potete trovare su Github o scaricarlo [qui](../data/rt.rds).
+
