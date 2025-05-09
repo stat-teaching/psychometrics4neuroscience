@@ -31,3 +31,51 @@ head(dat)
 
 Il dataset lo potete trovare su Github o scaricarlo [qui](../data/rt.rds).
 
+## Permutazioni
+
+Abbiamo visto velocemente come implementare un test di permutazione per la differenza tra due gruppi.
+
+```{r}
+N <- 100
+x <- rep(0:1, each = N/2) # dummy
+y <- 0.5 * x + rnorm(N, 0, 1) # 0.5 effect size + random noise
+
+B <- 5000 # numero di permutazioni
+
+tp <- rep(NA, B) # preallochiamo il vettore
+tp[1] <- t.test(y ~ x)$statistic # prima permutazione i dati osservati
+
+for(i in 2:B){
+    xp <- sample(x)
+    tp[i] <- t.test(y ~ xp)$statistic
+}
+
+hist(tp)
+abline(v = tp[1])
+points(tp[1], 0, pch = 19, cex = 2, col = "firebrick")
+
+# p-value with permutations
+mean(abs(tp) >= abs(tp[1]))
+```
+
+Per un test ad un campione, è necessario permutare il segno:
+
+```{r}
+y <- rnorm(N, 0.3, 1)
+tp <- rep(NA, B)
+tp[1] <- t.test(y, mu = 0)$statistic
+
+for(i in 2:B){
+    s <- sample(c(-1, 1), N, replace = TRUE)
+    yp <- y * s
+    tp[i] <- t.test(yp, mu = 0)$statistic
+}
+
+hist(tp)
+abline(v = tp[1])
+points(tp[1], 0, pch = 19, cex = 2, col = "firebrick")
+
+# p-value with permutations
+mean(abs(tp) >= abs(tp[1]))
+```
+
