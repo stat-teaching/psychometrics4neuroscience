@@ -9,6 +9,7 @@ execute:
 - [Shared Notepad](https://etherpad.wikimedia.org/p/psychometrics4neuroscience): online notepad to share the R code during the class.
 - [Shared Drive](https://drive.google.com/drive/folders/178vPlwIuw0LZMFvNGBGSFeOiPHfPieyf?usp=drive_link): folder to share files and script if necessary
 - [Domande](https://docs.google.com/document/d/1qrVKeqLzvwdI3B8U44yrZa5qJ3DjA3FRjyGV8q2LHtQ/edit?tab=t.0)
+- [Istruzioni Esame](https://docs.google.com/document/d/1AI4YPF00c889yUv035BbI95GG823ap1AK92MtdaMkV4/edit?pli=1&tab=t.0#heading=h.r3ghhemjah7f)
 
 <center>
 **QRcode always redirecting here:**
