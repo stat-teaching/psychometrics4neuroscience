@@ -549,6 +549,11 @@
 <section id="why-the-funnel-plot-can-be-misleading" class="slide level2">
 <h2>Why the funnel plot can be misleading?</h2>
 <p>This funnel plot show an evident asymmetry on the left side. Is there evidence of publication bias? What do you think?</p>
+
+<img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<section id="why-the-funnel-plot-can-be-misleading-1" class="slide level2">
+<h2>Why the funnel plot can be misleading?</h2>
+<p>The data are of course simulated and this is the code. What do you think now?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">50</span></span>
@@ -559,31 +564,15 @@
 <span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat1, dat2)</span>
 <span id="cb14-8"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">dat =</span> dat)</span>
 <span id="cb14-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
-<section id="why-the-funnel-plot-can-be-misleading-1" class="slide level2">
-<h2>Why the funnel plot can be misleading?</h2>
-<p>The data are of course simulated and this is the code. What do you think now?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(k, <span class="dv">10</span>, <span class="dv">200</span>))</span>
-<span id="cb15-4"><a aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(k, <span class="dv">10</span>, <span class="dv">50</span>))</span>
-<span id="cb15-5"><a aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(k, <span class="dv">0</span>, <span class="dv">0</span>, n1, <span class="at">add =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="dv">0</span>))</span>
-<span id="cb15-6"><a aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">&lt;-</span> <span class="fu">sim_studies</span>(k, <span class="fl">0.5</span>, <span class="fl">0.05</span>, n2, <span class="at">add =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="dv">1</span>))</span>
-<span id="cb15-7"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">rbind</span>(dat1, dat2)</span>
-<span id="cb15-8"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">dat =</span> dat)</span>
-<span id="cb15-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="why-the-funnel-plot-can-be-misleading-2" class="slide level2">
 <h2>Why the funnel plot can be misleading?</h2>
 <p>In fact, these are two <strong>unbiased</strong> population of effect sizes. Extra source of heterogeneity could create asymmetry not related to PB.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit)</span>
-<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit, <span class="at">col =</span> dat<span class="sc">$</span>x <span class="sc">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit)</span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(fit, <span class="at">col =</span> dat<span class="sc">$</span>x <span class="sc">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
@@ -591,57 +580,57 @@
 <h2>Why the funnel plot can be misleading?</h2>
 <p>Also the methods to detect/correct for PB are committing a false alarm:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fit)</span>
-<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
-<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
-<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
-<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z =  6.2569, p &lt; .0001</span></span>
-<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Limit Estimate (as sei -&gt; 0):   b = -0.2067 (CI: -0.3460, -0.0675)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fit)</span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z =  6.2569, p &lt; .0001</span></span>
+<span id="cb16-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Limit Estimate (as sei -&gt; 0):   b = -0.2067 (CI: -0.3460, -0.0675)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="why-the-funnel-plot-can-be-misleading-4" class="slide level2">
 <h2>Why the funnel plot can be misleading?</h2>
 <p>Also the methods to detect/correct for PB are committing a false alarm:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">trimfill</span>(fit)</span>
-<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimated number of missing studies on the left side: 32 (SE = 6.3553)</span></span>
-<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 132; tau^2 estimator: REML)</span></span>
-<span id="cb18-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.2183 (SE = 0.0337)</span></span>
-<span id="cb18-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.4672</span></span>
-<span id="cb18-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   86.77%</span></span>
-<span id="cb18-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  7.56</span></span>
-<span id="cb18-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
-<span id="cb18-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 131) = 639.7238, p-val &lt; .0001</span></span>
-<span id="cb18-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
-<span id="cb18-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval    ci.lb   ci.ub    </span></span>
-<span id="cb18-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.0281  0.0457  0.6142  0.5391  -0.0615  0.1177    </span></span>
-<span id="cb18-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb18-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">trimfill</span>(fit)</span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimated number of missing studies on the left side: 32 (SE = 6.3553)</span></span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 132; tau^2 estimator: REML)</span></span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.2183 (SE = 0.0337)</span></span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.4672</span></span>
+<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   86.77%</span></span>
+<span id="cb17-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  7.56</span></span>
+<span id="cb17-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb17-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 131) = 639.7238, p-val &lt; .0001</span></span>
+<span id="cb17-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb17-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval    ci.lb   ci.ub    </span></span>
+<span id="cb17-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.0281  0.0457  0.6142  0.5391  -0.0615  0.1177    </span></span>
+<span id="cb17-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb17-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="why-the-funnel-plot-can-be-misleading-5" class="slide level2">
 <h2>Why the funnel plot can be misleading?</h2>
 <p>The <code>regtest</code> can be applied also with moderators. The idea should be to take into account the moderators effects and then check for asymmetry.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>fitm <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">mods =</span> <span class="sc">~</span>x, <span class="at">data =</span> dat)</span>
-<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fitm)</span>
-<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
-<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
-<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
-<span id="cb19-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb19-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z = -1.0277, p = 0.3041</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a>fitm <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">mods =</span> <span class="sc">~</span>x, <span class="at">data =</span> dat)</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fitm)</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
+<span id="cb18-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
+<span id="cb18-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
+<span id="cb18-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z = -1.0277, p = 0.3041</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="why-the-funnel-plot-can-be-misleading-6" class="slide level2">
@@ -650,11 +639,11 @@
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>ri <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fitm)</span>
-<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a>fitr <span class="ot">&lt;-</span> <span class="fu">rma</span>(ri, vi, <span class="at">data =</span> dat)</span>
-<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot_regtest</span>(fit, <span class="at">main =</span> <span class="st">"Full model"</span>)</span>
-<span id="cb20-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot_regtest</span>(fitr, <span class="at">main =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>ri <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fitm)</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>fitr <span class="ot">&lt;-</span> <span class="fu">rma</span>(ri, vi, <span class="at">data =</span> dat)</span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot_regtest</span>(fit, <span class="at">main =</span> <span class="st">"Full model"</span>)</span>
+<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot_regtest</span>(fitr, <span class="at">main =</span> <span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
@@ -689,10 +678,10 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>SM - Weigth function</h2>
 <p>The weigth function is a simple function that links the p-value with the probability of publishing. The simple example at the beginning (publishing only significant p-values) is a step weigth function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="dv">1</span>)</span>
-<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
-<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, w, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="dv">1</span>)</span>
+<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, w, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"></section>
@@ -700,9 +689,9 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>SM - Weigth function</h2>
 <p>We can add more steps to express a more complex selection process:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="dv">1</span>)</span>
-<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>)</span>
-<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, w, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="dv">1</span>)</span>
+<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>)</span>
+<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, w, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
@@ -710,14 +699,14 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>SM - Weigth function</h2>
 <p>Or we can draw a smooth function assuming certain parameters:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a>wbeta <span class="ot">&lt;-</span> <span class="cf">function</span>(p, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">1</span>) p<span class="sc">^</span>(a <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p)<span class="sc">^</span>(b <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.01</span>)</span>
-<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span>
-<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">5</span>), <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">50</span>), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>wbeta <span class="ot">&lt;-</span> <span class="cf">function</span>(p, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">1</span>) p<span class="sc">^</span>(a <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> p)<span class="sc">^</span>(b <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.01</span>)</span>
+<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb22-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Publishing"</span>)</span>
+<span id="cb22-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">5</span>), <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pval, <span class="fu">wbeta</span>(pval, <span class="dv">1</span>, <span class="dv">50</span>), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
@@ -742,15 +731,15 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>SM - Step model</h2>
 <p>The step model approximate the selection process with thresholds <span class="math inline">\(\alpha\)</span> and the associated weight <span class="math inline">\(w(p_i)\)</span>. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>steps <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.005</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.65</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="fl">0.995</span>, <span class="dv">1</span>)</span>
-<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>moderate_pb <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.99</span>, <span class="fl">0.95</span>, <span class="fl">0.80</span>, <span class="fl">0.75</span>, <span class="fl">0.65</span>, <span class="fl">0.60</span>, <span class="fl">0.55</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>)</span>
-<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>severe_pb <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.99</span>, <span class="fl">0.90</span>, <span class="fl">0.75</span>, <span class="fl">0.60</span>, <span class="fl">0.50</span>, <span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>)</span>
-<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb24-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(steps, moderate_pb, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>, <span class="at">main =</span> <span class="st">"Moderate PB"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb24-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> steps, <span class="at">col =</span> <span class="st">"grey"</span>)</span>
-<span id="cb24-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(steps, severe_pb, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>, <span class="at">main =</span> <span class="st">"Severe PB"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb24-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> steps, <span class="at">col =</span> <span class="st">"grey"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a>steps <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.005</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.65</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="fl">0.995</span>, <span class="dv">1</span>)</span>
+<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a>moderate_pb <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.99</span>, <span class="fl">0.95</span>, <span class="fl">0.80</span>, <span class="fl">0.75</span>, <span class="fl">0.65</span>, <span class="fl">0.60</span>, <span class="fl">0.55</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>)</span>
+<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a>severe_pb <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.99</span>, <span class="fl">0.90</span>, <span class="fl">0.75</span>, <span class="fl">0.60</span>, <span class="fl">0.50</span>, <span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>)</span>
+<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(steps, moderate_pb, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>, <span class="at">main =</span> <span class="st">"Moderate PB"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> steps, <span class="at">col =</span> <span class="st">"grey"</span>)</span>
+<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(steps, severe_pb, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>, <span class="at">main =</span> <span class="st">"Severe PB"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb23-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> steps, <span class="at">col =</span> <span class="st">"grey"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
@@ -758,17 +747,17 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>SM - Negative-Exponential</h2>
 <p>The Negative-Exponential model is very simple and intuitive. The weight function is <span class="math inline">\(e^{-\delta p_i}\)</span> thus the single parameter <span class="math inline">\(\delta\)</span> is the amount of bias. When <span class="math inline">\(\delta = 0\)</span> there is no bias.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-hidden="true" tabindex="-1"></a>wnegexp <span class="ot">&lt;-</span> <span class="cf">function</span>(p, delta){</span>
-<span id="cb25-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>((<span class="sc">-</span>delta)<span class="sc">*</span>p)</span>
-<span id="cb25-3"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>wnegexp <span class="ot">&lt;-</span> <span class="cf">function</span>(p, delta){</span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>((<span class="sc">-</span>delta)<span class="sc">*</span>p)</span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">0</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>)</span>
-<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">1</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">5</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">30</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">sprintf</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">delta = %s$"</span>, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>))), <span class="at">fill =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">0</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">col =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">"p value"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Selection"</span>)</span>
+<span id="cb25-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">1</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb25-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">5</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">3</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb25-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">wnegexp</span>(x, <span class="dv">30</span>), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb25-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">sprintf</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">delta = %s$"</span>, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>))), <span class="at">fill =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
@@ -776,32 +765,32 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>Simulating data with PB</h2>
 <p>The strategy to simulate biased data is to sample from the <code>sim_studies()</code> function but to keep the studies using a probabilistic sampling based on the weight function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">500</span> <span class="co"># high number to check the results</span></span>
-<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a>es <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># H0 true</span></span>
-<span id="cb27-5"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
-<span id="cb27-6"><a aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb27-7"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, k)</span>
-<span id="cb27-8"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-10"><a aria-hidden="true" tabindex="-1"></a><span class="cf">while</span>(i <span class="sc">&lt;=</span> k){</span>
-<span id="cb27-11"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate data</span></span>
-<span id="cb27-12"><a aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
-<span id="cb27-13"><a aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">sim_studies</span>(<span class="dv">1</span>, es, tau2, n))</span>
-<span id="cb27-14"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># get one-tail p-value</span></span>
-<span id="cb27-15"><a aria-hidden="true" tabindex="-1"></a>  pi <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(d<span class="sc">$</span>zi)</span>
-<span id="cb27-16"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># get wi</span></span>
-<span id="cb27-17"><a aria-hidden="true" tabindex="-1"></a>  wpi <span class="ot">&lt;-</span> <span class="fu">wnegexp</span>(pi, delta)</span>
-<span id="cb27-18"><a aria-hidden="true" tabindex="-1"></a>  keep <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, wpi) <span class="sc">==</span> <span class="dv">1</span></span>
-<span id="cb27-19"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(keep){</span>
-<span id="cb27-20"><a aria-hidden="true" tabindex="-1"></a>    dat[[i]] <span class="ot">&lt;-</span> d</span>
-<span id="cb27-21"><a aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb27-22"><a aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb27-23"><a aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb27-24"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-25"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, dat)</span>
-<span id="cb27-26"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">500</span> <span class="co"># high number to check the results</span></span>
+<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a>es <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># H0 true</span></span>
+<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb26-6"><a aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb26-7"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, k)</span>
+<span id="cb26-8"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-10"><a aria-hidden="true" tabindex="-1"></a><span class="cf">while</span>(i <span class="sc">&lt;=</span> k){</span>
+<span id="cb26-11"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate data</span></span>
+<span id="cb26-12"><a aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb26-13"><a aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">sim_studies</span>(<span class="dv">1</span>, es, tau2, n))</span>
+<span id="cb26-14"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># get one-tail p-value</span></span>
+<span id="cb26-15"><a aria-hidden="true" tabindex="-1"></a>  pi <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(d<span class="sc">$</span>zi)</span>
+<span id="cb26-16"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># get wi</span></span>
+<span id="cb26-17"><a aria-hidden="true" tabindex="-1"></a>  wpi <span class="ot">&lt;-</span> <span class="fu">wnegexp</span>(pi, delta)</span>
+<span id="cb26-18"><a aria-hidden="true" tabindex="-1"></a>  keep <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, wpi) <span class="sc">==</span> <span class="dv">1</span></span>
+<span id="cb26-19"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(keep){</span>
+<span id="cb26-20"><a aria-hidden="true" tabindex="-1"></a>    dat[[i]] <span class="ot">&lt;-</span> d</span>
+<span id="cb26-21"><a aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-22"><a aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-23"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-24"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, dat)</span>
+<span id="cb26-26"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-data-with-pb-1" class="slide level2">
@@ -810,10 +799,10 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dat<span class="sc">$</span>yi, <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
-<span id="cb28-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(dat<span class="sc">$</span>zi), <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
-<span id="cb28-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat<span class="sc">$</span>yi, dat<span class="sc">$</span>sei, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">rev</span>(<span class="fu">range</span>(dat<span class="sc">$</span>sei)[<span class="dv">2</span>]), <span class="dv">0</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dat<span class="sc">$</span>yi, <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
+<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(dat<span class="sc">$</span>zi), <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>)</span>
+<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat<span class="sc">$</span>yi, dat<span class="sc">$</span>sei, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">rev</span>(<span class="fu">range</span>(dat<span class="sc">$</span>sei)[<span class="dv">2</span>]), <span class="dv">0</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
 </div>
@@ -822,82 +811,82 @@ f\left(y_i \mid \beta, \tau^2 ; \sigma_i^2\right)=\frac{\mathrm{w}\left(p_i\righ
 <h2>Simulating data with PB</h2>
 <p>Let’s see the model result:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-data-with-pb-3" class="slide level2">
 <h2>Simulating data with PB</h2>
 <p>Let’s see the Egger regression test and the trim-and-fill procedure:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fit)</span>
-<span id="cb30-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
-<span id="cb30-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
-<span id="cb30-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
-<span id="cb30-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z = 4.4739, p &lt; .0001</span></span>
-<span id="cb30-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Limit Estimate (as sei -&gt; 0):   b = 0.2017 (CI: 0.1235, 0.2799)</span></span>
-<span id="cb30-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">trimfill</span>(fit)</span>
-<span id="cb30-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimated number of missing studies on the left side: 106 (SE = 14.6182)</span></span>
-<span id="cb30-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 606; tau^2 estimator: REML)</span></span>
-<span id="cb30-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0474 (SE = 0.0049)</span></span>
-<span id="cb30-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2176</span></span>
-<span id="cb30-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   56.94%</span></span>
-<span id="cb30-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  2.32</span></span>
-<span id="cb30-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
-<span id="cb30-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 605) = 1399.3991, p-val &lt; .0001</span></span>
-<span id="cb30-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
-<span id="cb30-25"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-26"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se     zval    pval   ci.lb   ci.ub      </span></span>
-<span id="cb30-27"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.2927  0.0121  24.1497  &lt;.0001  0.2689  0.3164  *** </span></span>
-<span id="cb30-28"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb30-29"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb30-30"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(fit)</span>
+<span id="cb29-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Regression Test for Funnel Plot Asymmetry</span></span>
+<span id="cb29-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model:     mixed-effects meta-regression model</span></span>
+<span id="cb29-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Predictor: standard error</span></span>
+<span id="cb29-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Funnel Plot Asymmetry: z = 4.4739, p &lt; .0001</span></span>
+<span id="cb29-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Limit Estimate (as sei -&gt; 0):   b = 0.2017 (CI: 0.1235, 0.2799)</span></span>
+<span id="cb29-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">trimfill</span>(fit)</span>
+<span id="cb29-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimated number of missing studies on the left side: 106 (SE = 14.6182)</span></span>
+<span id="cb29-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 606; tau^2 estimator: REML)</span></span>
+<span id="cb29-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0474 (SE = 0.0049)</span></span>
+<span id="cb29-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2176</span></span>
+<span id="cb29-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I^2 (total heterogeneity / total variability):   56.94%</span></span>
+<span id="cb29-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; H^2 (total variability / sampling variability):  2.32</span></span>
+<span id="cb29-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb29-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Q(df = 605) = 1399.3991, p-val &lt; .0001</span></span>
+<span id="cb29-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb29-25"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-26"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se     zval    pval   ci.lb   ci.ub      </span></span>
+<span id="cb29-27"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.2927  0.0121  24.1497  &lt;.0001  0.2689  0.3164  *** </span></span>
+<span id="cb29-28"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb29-29"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb29-30"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-data-with-pb-4" class="slide level2">
 <h2>Simulating data with PB</h2>
 <p>The two methods are detecting the PB but not correcting it appropriately. Let’s see the SM using a <code>negexp</code> method:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">selmodel</span>(fit, <span class="at">type =</span> <span class="st">"negexp"</span>, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span>
-<span id="cb31-2"><a aria-hidden="true" tabindex="-1"></a>sel</span>
-<span id="cb31-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 500; tau^2 estimator: ML)</span></span>
-<span id="cb31-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0800 (SE = 0.0118)</span></span>
-<span id="cb31-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2828</span></span>
-<span id="cb31-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
-<span id="cb31-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LRT(df = 1) = 115.9867, p-val &lt; .0001</span></span>
-<span id="cb31-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
-<span id="cb31-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval    ci.lb   ci.ub    </span></span>
-<span id="cb31-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.0519  0.0381  1.3609  0.1735  -0.0228  0.1266    </span></span>
-<span id="cb31-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Selection Model Parameters:</span></span>
-<span id="cb31-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LRT(df = 1) = 46.6783, p-val &lt; .0001</span></span>
-<span id="cb31-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Selection Model Results:</span></span>
-<span id="cb31-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se     zval    pval   ci.lb   ci.ub      </span></span>
-<span id="cb31-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.7526  0.3818  12.4494  &lt;.0001  4.0044  5.5008  *** </span></span>
-<span id="cb31-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb31-25"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb31-26"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">selmodel</span>(fit, <span class="at">type =</span> <span class="st">"negexp"</span>, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span>
+<span id="cb30-2"><a aria-hidden="true" tabindex="-1"></a>sel</span>
+<span id="cb30-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Random-Effects Model (k = 500; tau^2 estimator: ML)</span></span>
+<span id="cb30-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau^2 (estimated amount of total heterogeneity): 0.0800 (SE = 0.0118)</span></span>
+<span id="cb30-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tau (square root of estimated tau^2 value):      0.2828</span></span>
+<span id="cb30-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Heterogeneity:</span></span>
+<span id="cb30-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LRT(df = 1) = 115.9867, p-val &lt; .0001</span></span>
+<span id="cb30-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Results:</span></span>
+<span id="cb30-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-14"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se    zval    pval    ci.lb   ci.ub    </span></span>
+<span id="cb30-15"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0.0519  0.0381  1.3609  0.1735  -0.0228  0.1266    </span></span>
+<span id="cb30-16"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-17"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Test for Selection Model Parameters:</span></span>
+<span id="cb30-18"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LRT(df = 1) = 46.6783, p-val &lt; .0001</span></span>
+<span id="cb30-19"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-20"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Selection Model Results:</span></span>
+<span id="cb30-21"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-22"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; estimate      se     zval    pval   ci.lb   ci.ub      </span></span>
+<span id="cb30-23"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.7526  0.3818  12.4494  &lt;.0001  4.0044  5.5008  *** </span></span>
+<span id="cb30-24"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-25"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb30-26"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="simulating-data-with-pb-5" class="slide level2">
 <h2>Simulating data with PB</h2>
 <p>We can also plot the results:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="publication-bias_files/figure-revealjs/unnamed-chunk-37-1.png" width="960" class="r-stretch"></section>

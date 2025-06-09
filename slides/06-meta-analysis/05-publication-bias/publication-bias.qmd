@@ -364,6 +364,7 @@ legend("topleft", legend = c("Original", "Corrected"), fill = c("black", "firebr
 This funnel plot show an evident asymmetry on the left side. Is there evidence of publication bias? What do you think?
 
 ```{r}
+#| echo: false
 set.seed(2024)
 k <- 50
 n1 <- round(runif(k, 10, 200))
